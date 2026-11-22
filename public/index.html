@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="테니스 시즌">
+<title>테니스 시즌</title>
+<style>
+:root{--bg:#f5f6f3;--card:#fff;--ink:#1c221f;--mut:#69716c;--line:#e2e5df;--acc:#2f7d4f;--acc2:#e7f2ea;--warn:#b5651d;--warn2:#fbf0e4;--bad:#b33a3a;--bad2:#f8e8e8;--blue:#3a6fb3}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+header{padding:calc(12px + env(safe-area-inset-top)) 16px 0;display:flex;justify-content:space-between;align-items:center}
+h1{font-size:19px;margin:0}
+h2{font-size:16px;margin:0 0 6px}
+h3{font-size:14px;margin:12px 0 4px}
+main{padding:0 12px;max-width:720px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin:10px 0}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;border:0;background:none;padding:11px 0 12px;font-size:14px;color:var(--mut);font-family:inherit}
+nav button.on{color:var(--acc);font-weight:700}
+button{font-family:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 12px;font-size:14px;color:var(--ink)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.btn.s{padding:5px 9px;font-size:13px}
+.btn.w{width:100%}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sb{justify-content:space-between}
+.chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+.seg{display:flex;background:#e9ebe6;border-radius:10px;padding:3px;margin:10px 0 0}
+.seg button{flex:1;border:0;background:none;padding:8px;border-radius:8px;font-size:15px;color:var(--mut)}
+.seg button.on{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.big{font-size:24px;font-weight:700;line-height:1.15}
+.sub{color:var(--mut);font-size:13px}
+.small{font-size:12px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.kv>div{background:#f7f8f5;border-radius:10px;padding:8px 10px}
+.kv b{display:block;font-size:18px}
+.ok{color:var(--acc);font-weight:600}.late{color:var(--warn);font-weight:600}.badc{color:var(--bad);font-weight:600}.mut{color:var(--mut)}
+.todo{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line)}
+.todo:first-of-type{border-top:0}
+.box{width:22px;height:22px;border-radius:6px;border:2px solid #c9cec7;display:inline-flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex:none}
+.box.y{background:var(--acc);border-color:var(--acc)}
+.blk{border-top:1px solid var(--line);padding:9px 0}
+.blk:first-child{border-top:0}
+.blk .t{font-weight:600}
+.blk .pass{color:var(--acc);font-size:13px;margin-top:3px}
+.blk .cue{color:var(--warn);font-size:13px;margin-top:3px}
+.tog{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font-size:13px}
+.tog.y{background:var(--acc2);border-color:#9fcfb0;color:var(--acc);font-weight:600}
+.tog.n{background:var(--bad2);border-color:#e2b3b3;color:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}
+input,select,textarea{font-family:inherit;font-size:16px}
+input[type=date],input[type=text],input[type=number],select,textarea{padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+input[type=number]{width:84px}
+.mrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.mrow:first-of-type{border-top:0}
+.banner{background:var(--warn2);border:1px solid #efd3b4;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:14px}
+.code{font-size:40px;font-weight:800;letter-spacing:6px;text-align:center;margin:8px 0}
+.sync{font-size:12px;color:var(--mut)}
+svg.ch{width:100%;height:auto;display:block}
+.leg{display:flex;gap:12px;font-size:12px;color:var(--mut);margin-top:2px;flex-wrap:wrap}
+.leg i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}
+.wk{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line)}
+.wk:first-child{border-top:0}
+.dots{display:flex;gap:3px}
+.dots span{width:10px;height:10px;border-radius:3px;background:#e3e6e0}
+.dots span.y{background:var(--acc)}
+.dots span.m{background:var(--blue)}
+details summary{cursor:pointer;color:var(--mut);font-size:13px;margin-top:6px}
+.hint{background:#f2f6fb;border:1px solid #d5e2f1;border-radius:10px;padding:9px 11px;font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<header><h1>테니스 시즌</h1><span class="sync" id="sync"></span></header>
+<main id="main"></main>
+<nav>
+<button data-a="tab" data-t="home">대시보드</button>
+<button data-a="tab" data-t="week">이번 주</button>
+<button data-a="tab" data-t="log">기록</button>
+<button data-a="tab" data-t="plan">계획</button>
+</nav>
+<script>
+'use strict';
+/* ================= 날짜 ================= */
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c,12)};
+const ds=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ds(d)};
+const mon=s=>{const d=pd(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return ds(d)};
+const diffD=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const today=()=>ds(new Date());
+const md=s=>{const d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const $=id=>document.getElementById(id);
+
+/* ================= 기본 설정 ================= */
+const DEF_SETTINGS={id:'main',planStart:'2026-11-23',mixedOn:true,
+ leagues:[
+  {id:'singles',disc:'S',name:'TennisLosAngeles 봄 단식 시즌 1',start:'2027-01-19',end:'2027-03-14',goal:'시즌 3승 이상 (3~5승이면 플레이오프)'},
+  {id:'mixed',disc:'D',name:'USTA 혼복 18+ (LA 겨울)',start:'2027-01-09',end:'2027-04-04',goal:'라인 승률 50% 이상'}],
+ level:{S:{cur:'NTRP 3.5 (자가)',goal:'4.0 상대와 대등'},D:{cur:'NTRP 3.5 (자가)',goal:'혼복 7.0~8.0 라인 50% 승'}},
+ deadlines:[
+  {date:'2026-11-30',text:'TLA 봄 시즌 1 조기 등록 마감 ($36.95)'},
+  {date:'2026-12-06',text:'혼복 파트너 정하기'},
+  {date:'2026-12-13',text:'USTA 혼복 로스터 마감 (재확인) · 멤버십 · NTRP 셀프 평가'}],
+ targets:{},weekCount:{}};
+const DISC={S:{n:'단식',league:'singles',tests:['T1','T2','T4','T5','T9'],gameGoal:.55},D:{n:'복식 (혼복)',league:'mixed',tests:['T3','T7','T1'],gameGoal:.5}};
+
+/* ================= 측정 ================= */
+const TESTS={
+ T1:{n:'첫 서브 20개',f:'S',max:20,u:'/20',how:'듀스 10 → 애드 10, 시합 첫 서브 세기. 들어간 수.',tool:'머릿속으로 세기'},
+ T2:{n:'세컨 서브 20개',f:'S',max:20,u:'/20',how:'시합에서 쓰는 세컨 그대로. 들어간 수 (더블폴트 대신 보는 숫자).',tool:'머릿속으로 세기'},
+ T3:{n:'리턴 20개',f:'R',max:20,u:'/20',how:'상대가 세컨 속도로 서브, 크로스로 서비스 라인 넘으면 성공.',tool:'상대가 서브 연습할 때 같이'},
+ T4:{n:'포핸드 크로스 연속',f:'G',streak:1,u:'회',how:'크로스 랠리, 서비스 라인 넘어 떨어진 내 공만. 3번 중 최고.',tool:'랠리할 때 바로 가능'},
+ T5:{n:'백핸드 크로스 연속',f:'G',streak:1,u:'회',how:'같은 방식, 백핸드.',tool:'랠리할 때 바로 가능'},
+ T7:{n:'발리 20개',f:'N',max:20,u:'/20',how:'서비스 라인 한 걸음 앞에서 크로스 발리, 상대 서비스 라인 넘으면 성공.',tool:'워밍업 발리 때'},
+ T9:{n:'스파이더 런',f:'F',low:1,u:'초',how:'베이스라인 가운데 출발 → 5개 지점(양쪽 베이스라인·서비스 라인 교차점, T) 찍고 매번 돌아오기. 2번 중 좋은 기록.',tool:'폰 스톱워치'}
+};
+const FULL=['T1','T2','T3','T4','T5','T7','T9'],WEEKLY=['T1','T2'],OPTW=['T4','T5'];
+const FACT={S:'서브',R:'리턴',G:'랠리 깊이',N:'네트',F:'이동·체력'};
+
+/* ================= 세션 내용 ================= */
+const B={
+ wu:{m:8,t:'워밍업',how:'미니 테니스 4분 → 베이스라인 랠리 4분.'},
+ toss:{m:4,t:'토스만 10번',how:'치지 않고 토스만. 공이 떨어진 자리를 봐요.',pass:'8/10이 왼발 앞 한 뼘·오른쪽 한 뼘',cue:'플랫 서브가 길면 토스가 머리 위·뒤로 간 경우가 많아요. 왼팔 끝까지 뻗고 눈높이 지날 때 놓기.'},
+ ss:{m:12,t:'세컨 서브 3×10',how:'서비스 박스 뒤쪽 절반. 세기보다 회전.',pass:'세트마다 8/10',cue:'공 뒤에서 위로 긁어 네트 위 1m 이상. 컨택까지 머리 들기.'},
+ fs:{m:10,t:'첫 서브 20개 (T 10 · 와이드 10)',how:'목표 구역에 공 캔.',pass:'12/20 in, 목표 구역 5개',cue:'팔 다 편 최고점·몸 앞에서 컨택, 왼발로 코트 안 착지.'},
+ ret:{m:14,t:'리턴 크로스 20개',how:'상대 세컨 속도 서브 → 크로스 깊게.',pass:'15/20',cue:'서버 컨택 때 스플릿 스텝 착지, 백스윙은 어깨 돌리기만, 앞으로 한 발.'},
+ s1:{m:10,t:'서브+1',how:'서브 → 리턴 가운데 → 포핸드로 상대 백 쪽 깊게.',pass:'6/10',cue:'착지 뒤 바로 스플릿 스텝, 백 쪽 공이면 돌아서 포핸드.'},
+ fhx:{m:8,t:'포핸드 크로스 깊게',how:'서비스 라인 넘어 떨어진 공 연속 세기.',pass:'지난 측정 최고 한 번 넘기',cue:'네트 위 1m(라켓 하나 반)로 넘기면 깊이가 나와요. 치고 센터 쪽 2~3걸음 회복.'},
+ bhx:{m:8,t:'백핸드 크로스 깊게',how:'같은 방식.',pass:'지난 측정 최고 한 번 넘기',cue:'짧아지면 스윙 줄이지 말고 높이를 올리기.'},
+ deep:{m:12,t:'깊이 게임 11점',how:'서비스 라인 안에 떨어지면 1점 잃음.',pass:'7점 이상'},
+ short:{m:10,t:'짧은 공 들어가기',how:'짧은 공 → 다운더라인 어프로치 → 첫 발리 → 포인트.',pass:'10번 중 6',cue:'어프로치 치며 걷듯 이어 들어가고, 상대가 칠 때 스플릿 스텝.'},
+ move:{m:12,t:'이동',how:'스파이더 런 2번 + 사이드 셔플 6×15초(쉬기 30초).',pass:'마지막까지 같은 속도',cue:'바깥발로 밀기, 무릎 굽혀 낮게.'},
+ dx:{m:10,t:'반코트 크로스 랠리 (앨리 포함)',how:'크로스만, 서비스 라인 넘어.',pass:'연속 10개 2번'},
+ fv:{m:12,t:'서브 & 첫 발리',how:'서브 넣고 들어가 첫 발리 → 크로스 깊게.',pass:'7/10',cue:'리턴 순간 스플릿 스텝, 무릎 굽혀 낮게, 라켓 면 열어 깊게.'},
+ poach:{m:12,t:'포치',how:'크로스 랠리 중 네트에서 가운데 가로채기. 신호: 등 뒤 주먹 = 간다, 손바닥 = 안 감.',pass:'10번 중 6 득점',cue:'상대가 칠 때 출발(먼저 움직이면 다운더라인 당함), 대각선 앞으로.'},
+ oh:{m:8,t:'오버헤드 + 스위치',how:'높으면 오버헤드, 넘어가면 "스위치" 콜.',pass:'7/10 in'},
+ g1:{m:12,t:'첫 서브 한 번 게임',how:'세컨 없이 첫 서브만, 폴트면 실점. 4게임.',pass:'첫 서브 in 60%+',cue:'세기 70~80%로 깊이·방향 먼저.'},
+ r1:{m:12,t:'리턴+1 포인트',how:'리턴 크로스 깊게 → 다음 공 공격. 10포인트 × 2.',pass:'10점 중 5+'},
+ sp1:{m:10,t:'서브+1 포인트',how:'서브 → 첫 공을 오픈 코트로.',pass:'10점 중 6+',cue:'프로 연구에선 3구째 지표와 승패 연결이 약했어요. 짧게만.'},
+ tb:{m:14,t:'타이브레이크 2개',how:'7점. 점수 소리 내 말하기.',pass:'1개 이상 이기기'},
+ hold:{m:12,t:'서브 게임 지키기',how:'파트너 서브 땐 네트에서 가운데 막기, 내 서브 땐 첫 서브 in 우선. 4게임.',pass:'2/4 이상'},
+ rxm:{m:12,t:'리턴 크로스, 네트맨 피하기',how:'서버 발 앞으로 낮게.',pass:'15/20'},
+ sig:{m:12,t:'포치 신호 포인트',how:'서브 전 신호. 10포인트.',pass:'포치 4번 시도, 2 득점'},
+ lob:{m:8,t:'로브 · 스위치',how:'상대 네트맨 머리 위 로브 + 스위치.',pass:'6/10'},
+ pts:{m:10,t:'포인트 플레이',how:'방금 연습한 기술 나오면 보너스 1점. 7점 게임.'}
+};
+const tb=k=>({...B[k]});
+const MT=(k,m)=>({m,t:TESTS[k].n,how:TESTS[k].how+' → 숫자는 "이번 주 측정"에.'});
+const SES={
+ TA:{n:'측정 A · 서브·리턴·발리',blocks:()=>[{m:10,t:'워밍업',how:'미니 테니스 → 베이스라인, 연습 서브 6개.'},MT('T1',8),MT('T2',8),MT('T3',10),MT('T7',8),{m:16,t:'남은 시간 랠리',how:''}]},
+ TB:{n:'측정 B · 랠리·이동 + 연습 세트',blocks:()=>[{m:10,t:'워밍업',how:''},MT('T4',8),MT('T5',8),MT('T9',6),{m:28,t:'연습 세트',how:'영상 찍어 두면 경기 지표 기준값이 돼요 (기록 탭).'}]},
+ TQ:{n:'재측정 (압축)',blocks:()=>[tb('wu'),MT('T1',6),MT('T2',6),MT('T3',8),MT('T4',6),MT('T5',6),MT('T7',6),MT('T9',6),{m:8,t:'자유 랠리',how:''}]},
+ A:{n:'서브 · 리턴',blocks:()=>[tb('wu'),tb('toss'),tb('ss'),tb('fs'),tb('ret'),tb('s1')],solo:'혼자면: 토스 10 + 세컨 30 + 첫 서브 30 (바구니).'},
+ B:{n:'랠리 · 이동',blocks:()=>[tb('wu'),tb('fhx'),tb('bhx'),tb('deep'),tb('short'),tb('move')],solo:'혼자면: 벽치기 크로스 50·50 + 스파이더 3번.'},
+ C:{n:'연습 경기',blocks:()=>[{m:10,t:'워밍업 + 서브 8개',how:''},{m:45,t:'1세트 또는 8게임 프로세트',how:'폰을 펜스에 세워 찍기 (SwingVision이면 자동 집계).',pass:'게임 득실 50%+'}]},
+ D:{n:'복식 기초',blocks:()=>[tb('wu'),tb('dx'),tb('fv'),tb('poach'),tb('oh'),{m:10,t:'복식 타이브레이크',how:''}]},
+ E1:{n:'단식 시합형',blocks:()=>[{m:8,t:'워밍업 + 서브',how:''},tb('g1'),tb('r1'),tb('sp1'),tb('tb')]},
+ E1s:{n:'시합형 짧게 (40분)',blocks:()=>[{m:8,t:'워밍업',how:''},{...tb('g1'),m:8,how:'2게임만.'},{...tb('r1'),m:10,how:'10포인트.'},{m:10,t:'타이브레이크 1개',how:''}]},
+ E2:{n:'혼복 시합형',blocks:()=>[tb('wu'),tb('hold'),tb('rxm'),tb('sig'),tb('lob'),{m:6,t:'타이브레이크 1개',how:''}]},
+ X:{n:'가볍게',blocks:()=>[{m:10,t:'미니 테니스',how:''},{m:20,t:'베이스라인 랠리 70%',how:'깊이만.'},{m:8,t:'서브 20개 감각',how:'세게 치지 않기.'}]},
+ W:{n:'약점 집중',dyn:1,blocks:()=>{const f=weakest();const L={S:['toss','ss','fs'],R:['ret','r1'],G:['fhx','bhx','deep'],N:['fv','poach','oh'],F:['move','short']}[f];return [tb('wu'),...L.map(tb),tb('pts')]}},
+ L:{n:'리그 경기',blocks:()=>[{m:15,t:'워밍업',how:'미니 → 랠리 → 발리 → 오버헤드 → 서브 각 4개.'},{m:90,t:'리그 경기',how:'폰을 펜스에 세워 찍기. 끝나고 스코어만 넣어도 돼요.'}]}
+};
+const PH={
+ base:{n:'기준 측정',c:'#7d838c',d:'지금 실력을 숫자로. 이 숫자에서 목표 선이 자동으로 그려져요.'},
+ build:{n:'기초 쌓기',c:'#2f7d4f',d:'서브 안정 · 리턴 · 크로스 깊이. 혼복 파트너가 생기면 3회차는 복식.'},
+ retest:{n:'회복 · 재측정',c:'#7a5bb5',d:'양 줄이고 전체 측정. 목표 선과 비교.'},
+ sharp:{n:'시합형',c:'#c27c0e',d:'포인트 플레이와 패턴, 실전 점수 상황.'},
+ taper:{n:'개막 주',c:'#3a7bb3',d:'가볍게, 감각만. 3회차가 개막 경기.'},
+ season:{n:'시즌',c:'#b33a3a',d:'경기 1 + 약점 1 + 패턴 1. 경기가 2개면 약점 회차를 경기로.'},
+ 'season-rt':{n:'시즌 · 재측정',c:'#8e3a6e',d:'시즌 중 전체 측정.'}
+};
+
+/* ================= 데이터 · 동기화 ================= */
+let db=loadCache();
+let outbox=JSON.parse(localStorage.getItem('ts2.outbox')||'[]');
+let net={state:'loading',authed:null};
+function loadCache(){try{const c=JSON.parse(localStorage.getItem('ts2.cache'));if(c&&c.sessions)return c}catch(e){}return {sessions:[],measures:[],matches:[],settings:[]}}
+function saveCache(){localStorage.setItem('ts2.cache',JSON.stringify(db));localStorage.setItem('ts2.outbox',JSON.stringify(outbox))}
+function S(){const s=db.settings.find(x=>x.id==='main');if(!s)return JSON.parse(JSON.stringify(DEF_SETTINGS));for(const k in DEF_SETTINGS)if(s[k]===undefined)s[k]=JSON.parse(JSON.stringify(DEF_SETTINGS[k]));return s}
+function applyLocal(op){const arr=db[op.collection];for(const u of op.upserts||[]){const i=arr.findIndex(r=>r.id===u.id);if(i>=0)arr[i]={...arr[i],...u};else arr.push(u)}for(const id of op.deletes||[]){const i=arr.findIndex(r=>r.id===id);if(i>=0)arr.splice(i,1)}}
+function upsert(collection,rec){rec._u=new Date().toISOString();const op={collection,upserts:[rec]};applyLocal(op);outbox.push(op);saveCache();_plan=null;safeRender();flush()}
+function del(collection,id){const op={collection,deletes:[id]};applyLocal(op);outbox.push(op);saveCache();_plan=null;safeRender();flush()}
+let pendingRender=false;
+const typing=()=>{const a=document.activeElement;return a&&/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)};
+function safeRender(){if(typing()){pendingRender=true;syncLabel();return}render()}
+document.addEventListener('focusout',()=>setTimeout(()=>{if(pendingRender&&!typing()){pendingRender=false;render()}},60));
+function saveSettings(s){upsert('settings',{...s,id:'main'})}
+let flushing=false;
+async function flush(){
+ if(flushing)return;flushing=true;
+ try{
+  while(outbox.length){
+   const r=await fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify(outbox[0])});
+   if(r.status===401){net.authed=false;break}
+   if(!r.ok){net.state='err';break}
+   outbox.shift();saveCache();net.state='ok';net.authed=true;
+  }
+ }catch(e){net.state='offline'}
+ flushing=false;syncLabel();
+}
+async function pull(){
+ try{
+  const r=await fetch('/api/db',{credentials:'same-origin'});
+  if(r.status===401){net.authed=false;net.state='login';syncLabel();render();return}
+  if(!r.ok)throw 0;
+  const d=await r.json();
+  db={sessions:d.sessions||[],measures:d.measures||[],matches:d.matches||[],settings:d.settings||[]};
+  outbox.forEach(applyLocal);saveCache();net.authed=true;net.state='ok';_plan=null;
+  await flush();
+ }catch(e){net.state='offline'}
+ syncLabel();safeRender();
+}
+function syncLabel(){
+ const n=outbox.length;
+ $('sync').textContent=net.authed===false?'이 기기 등록 필요':net.state==='offline'?(n?`오프라인 · ${n}개 대기`:'오프라인'):net.state==='err'?'저장 오류, 다시 시도 중':n?`저장 중 ${n}`:net.state==='ok'?'저장됨 ✓':'';
+}
+setInterval(()=>{if(outbox.length&&net.authed!==false)flush()},15000);
+window.addEventListener('online',flush);
+
+/* 기기 등록 */
+let pair=JSON.parse(localStorage.getItem('ts2.pair')||'null');
+async function pairStart(){
+ const r=await fetch('/api/pair',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'start'})});
+ if(!r.ok){alert('잠시 뒤 다시 해 주세요');return}
+ pair=await r.json();localStorage.setItem('ts2.pair',JSON.stringify(pair));render();pairPoll();
+}
+let polling=false;
+async function pairPoll(){
+ if(polling||!pair)return;polling=true;
+ for(let i=0;i<450&&pair;i++){
+  try{const r=await fetch('/api/pair?nonce='+encodeURIComponent(pair.nonce),{credentials:'same-origin'});const j=await r.json();
+   if(j.ok){pair=null;localStorage.removeItem('ts2.pair');polling=false;await pull();await flush();return}
+   if(r.status===404){pair=null;localStorage.removeItem('ts2.pair');break}}catch(e){}
+  await new Promise(r=>setTimeout(r,4000));
+ }
+ polling=false;safeRender();
+}
+
+/* ================= 계획 (주 단위 역산) ================= */
+let _plan=null;
+const lgBy=id=>S().leagues.find(l=>l.id===id);
+const activeLeagues=()=>S().leagues.filter(l=>l.id!=='mixed'||S().mixedOn);
+const w0=()=>mon(S().planStart);
+const wkOf=d=>Math.floor(diffD(w0(),mon(d))/7)+1;
+const wkStart=n=>addD(w0(),(n-1)*7);
+function plan(){
+ if(_plan)return _plan;
+ const st=S(),L=activeLeagues();
+ const first=L.map(l=>l.start).sort()[0],last=L.map(l=>l.end).sort().slice(-1)[0];
+ const fW=wkOf(first),lW=wkOf(last);
+ const weeks=[];
+ for(let n=1;n<=lW&&n<90;n++){
+  const i=n-1;let ph;
+  if(n===1)ph='base';else if(n>fW)ph='season';else if(n===fW)ph='taper';else if(n===fW-1)ph='sharp';else ph='build';
+  if(i>0&&i%4===0&&ph!=='taper')ph=ph==='season'?'season-rt':'retest';
+  const start=wkStart(n),end=addD(start,6);
+  const sg=L.find(l=>l.id==='singles'),mx=L.find(l=>l.id==='mixed');
+  const sOn=sg&&start<=sg.end&&end>=addD(sg.start,-7),mOn=mx&&start<=mx.end&&end>=addD(mx.start,-7);
+  const E=(sOn&&(!mOn||n%2===1))?'E1':(mOn?'E2':'E1');
+  const T={base:['TA','TB','C'],build:['A','B',(st.mixedOn&&n>=3)?'D':'C'],retest:['TA','TB','X'],sharp:['E1',st.mixedOn?'E2':'C','C'],taper:['E1s','X','L'],season:['W',E,'L'],'season-rt':['TQ',E,'L']}[ph].slice();
+  const cnt=st.weekCount[n]||3;
+  while(T.length<cnt)T.push(ph.startsWith('season')?'B':'C');
+  const types=T.slice(0,cnt);
+  const full=(n===1||ph==='retest'||ph==='season-rt');
+  const marks=[...L.filter(l=>l.start>=start&&l.start<=end).map(l=>`${l.disc==='S'?'단식':'혼복'} 개막 ${md(l.start)}`),...L.filter(l=>l.end>=start&&l.end<=end).map(l=>`${l.disc==='S'?'단식':'혼복'} 끝 ${md(l.end)}`),...st.deadlines.filter(x=>x.date>=start&&x.date<=end).map(x=>`${md(x.date)} ${x.text}`)];
+  weeks.push({n,start,end,ph,types,full,marks,tests:full?FULL.filter(t=>t!=='T7'||st.mixedOn):WEEKLY});
+ }
+ _plan=weeks;return weeks;
+}
+const curWeek=()=>clamp(wkOf(today()),1,plan().length);
+const sess=(n,k)=>db.sessions.find(s=>s.id===`W${n}-${k}`);
+const meas=(n,t)=>db.measures.find(m=>m.id===`W${n}-${t}`);
+function weekStatus(w){
+ const done=w.types.filter((_,k)=>{const s=sess(w.n,k+1);return s&&s.done&&s.mode!=='skip'}).length;
+ const skipped=w.types.filter((_,k)=>{const s=sess(w.n,k+1);return s&&s.mode==='skip'}).length;
+ const mdone=w.tests.filter(t=>meas(w.n,t)).length;
+ return {done,skipped,total:w.types.length,mdone,mtotal:w.tests.length};
+}
+
+/* ================= 목표 · 진행 계산 ================= */
+function series(t){return db.measures.filter(m=>m.t===t).map(m=>({w:m.week,v:+m.v})).sort((a,b)=>a.w-b.w)}
+function tgt(t){
+ const s=series(t);if(!s.length)return null;
+ const b=s[0].v,D=TESTS[t];let t1,t2;
+ if(D.max){t1=Math.min(Math.round(D.max*.9),b+Math.ceil(D.max*.15));t2=Math.min(Math.round(D.max*.95),b+Math.ceil(D.max*.25));t1=Math.max(t1,b);t2=Math.max(t2,t1)}
+ else if(D.streak){t1=b+Math.max(3,Math.round(b*.3));t2=b+Math.max(5,Math.round(b*.6))}
+ else{t1=+(b-.8).toFixed(1);t2=+(b-1.5).toFixed(1)}
+ const o=S().targets[t]||{};
+ return {b,bw:s[0].w,t1:o.t1!=null?+o.t1:t1,t2:o.t2!=null?+o.t2:t2,last:s[s.length-1].v,lw:s[s.length-1].w,s};
+}
+function discWeeks(d){const l=lgBy(DISC[d].league);return {sW:wkOf(l.start),eW:wkOf(l.end),l}}
+function expAt(t,d,x){const g=tgt(t);if(!g)return null;const{sW,eW}=discWeeks(d);
+ if(x<=g.bw)return g.b;if(x<=sW)return g.b+(g.t1-g.b)*(x-g.bw)/Math.max(1,sW-g.bw);if(x<=eW)return g.t1+(g.t2-g.t1)*(x-sW)/Math.max(1,eW-sW);return g.t2}
+function valAt(t,x){const s=series(t).filter(p=>p.w<=x);return s.length?s[s.length-1].v:null}
+function prog(t,v){const g=tgt(t);if(!g||v==null)return null;const span=TESTS[t].low?(g.b-g.t2):(g.t2-g.b);if(span<=0)return 1;return clamp((TESTS[t].low?(g.b-v):(v-g.b))/span,0,1.2)}
+function discProg(d,x,expected){const v=DISC[d].tests.map(t=>{const g=tgt(t);if(!g||g.bw>x)return null;return prog(t,expected?expAt(t,d,x):valAt(t,x))}).filter(v=>v!=null);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null}
+function mstat(m){const g=(+m.gw||0)+(+m.gl||0);return {gp:g?m.gw/g:null}}
+function weakest(){
+ const sc={S:0,R:0,G:0,N:0,F:0},cnt={S:0,R:0,G:0,N:0,F:0};const x=curWeek();
+ for(const t in TESTS){const g=tgt(t);if(!g)continue;const d=['T3','T7'].includes(t)?'D':'S';const gap=(prog(t,expAt(t,d,x))||0)-(prog(t,g.last)||0);sc[TESTS[t].f]+=gap;cnt[TESTS[t].f]++}
+ for(const f in sc)if(cnt[f])sc[f]/=cnt[f];
+ const ms=[...db.matches].sort((a,b)=>a.date<b.date?1:-1).slice(0,3);
+ const avg=k=>{const v=ms.map(m=>m[k]).filter(v=>v!==''&&v!=null).map(Number);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null};
+ const df=avg('df'),fs=avg('fs'),ue=avg('ue');
+ if(df!=null&&df>2.5)sc.S+=.2;if(fs!=null&&fs<60)sc.S+=.1;if(ue!=null&&ue>12)sc.G+=.15;
+ ms.forEach(m=>(m.why||[]).forEach(k=>{const f={serve:'S',ret:'R',rally:'G',net:'N',fit:'F'}[k];if(f)sc[f]+=.12}));
+ if(!S().mixedOn)delete sc.N;
+ return Object.keys(sc).sort((a,b)=>sc[b]-sc[a])[0]||'S';
+}
+
+/* ================= 그래프 ================= */
+function chart(o){
+ const W=340,H=170,L=34,R=8,T=14,Bm=24;
+ const xmin=1,xmax=Math.max(o.xmax,2);
+ let ys=[];o.lines.forEach(l=>l.pts.forEach(p=>ys.push(p[1])));if(o.hline!=null)ys.push(o.hline);
+ if(!ys.length)ys=[0,1];
+ let ymin=o.ymin!=null?o.ymin:Math.min(...ys),ymax=o.ymax!=null?o.ymax:Math.max(...ys);
+ if(ymax-ymin<1e-9){ymin-=1;ymax+=1}const pad=(ymax-ymin)*.08;if(o.ymin==null)ymin-=pad;if(o.ymax==null)ymax+=pad;
+ const X=x=>L+(x-xmin)/(xmax-xmin)*(W-L-R),Y=y=>T+(1-(y-ymin)/(ymax-ymin))*(H-T-Bm);
+ const f=o.fmt||(v=>Math.round(v));
+ let s=`<svg class="ch" viewBox="0 0 ${W} ${H}">`;
+ for(let k=0;k<=3;k++){const y=ymin+(ymax-ymin)*k/3;s+=`<line x1="${L}" x2="${W-R}" y1="${Y(y)}" y2="${Y(y)}" stroke="#eceee9"/><text x="${L-4}" y="${Y(y)+4}" font-size="10" text-anchor="end" fill="#8a918c">${f(y)}</text>`}
+ const step=xmax>12?4:2;for(let x=1;x<=xmax;x+=step)s+=`<text x="${X(x)}" y="${H-8}" font-size="10" text-anchor="middle" fill="#8a918c">W${x}</text>`;
+ (o.vlines||[]).forEach(v=>{s+=`<line x1="${X(v.x)}" x2="${X(v.x)}" y1="${T-4}" y2="${H-Bm}" stroke="${v.c||'#b33a3a'}" stroke-dasharray="3 3"/><text x="${X(v.x)+3}" y="${T+4}" font-size="10" fill="${v.c||'#b33a3a'}">${v.label}</text>`});
+ if(o.now)s+=`<rect x="${X(o.now)-1}" y="${T-4}" width="2" height="${H-Bm-T+4}" fill="#3a6fb3" opacity=".35"/>`;
+ if(o.hline!=null)s+=`<line x1="${L}" x2="${W-R}" y1="${Y(o.hline)}" y2="${Y(o.hline)}" stroke="#c27c0e" stroke-dasharray="5 4"/>`;
+ o.lines.forEach(l=>{if(!l.pts.length)return;const pts=l.pts.map(p=>X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1)).join(' ');
+  if(l.pts.length>1)s+=`<polyline fill="none" stroke="${l.c}" stroke-width="${l.w||2.5}" ${l.dash?'stroke-dasharray="6 5"':''} points="${pts}"/>`;
+  if(l.dots)l.pts.forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3.5" fill="${l.c}"/>`});});
+ return s+'</svg>';
+}
+const LEG=`<div class="leg"><span><i style="background:#2f7d4f"></i>실제</span><span><i style="background:repeating-linear-gradient(90deg,#9aa19c 0 5px,transparent 5px 9px)"></i>목표 선</span><span><i style="background:#3a6fb3;opacity:.5"></i>이번 주</span></div>`;
+
+/* ================= 화면 ================= */
+let tab='home',disc='S',viewWeek=null,open={};
+function render(){
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+ syncLabel();
+ let h='';
+ if(net.authed===false)h+=vPair();
+ h+=({home:vHome,week:vWeek,log:vLog,plan:vPlan})[tab]();
+ $('main').innerHTML=h;
+}
+function vPair(){
+ if(pair)return `<div class="banner"><b>이 기기 등록</b><div class="code">${pair.code}</div>Slack에서 Aside에게 <b>"테니스 코드 ${pair.code}"</b> 라고 보내 주세요. 승인되면 자동으로 저장이 시작돼요(30분 유효). 그 전 기록도 이 폰에 모아 뒀다가 같이 올라가요.<div style="margin-top:8px"><button class="btn s" data-a="pairStart">새 코드</button></div></div>`;
+ return `<div class="banner"><b>저장하려면 이 기기를 한 번 등록해요.</b> 등록 전 기록은 이 폰에 모아 두고, 등록되면 서버에 올라가요.<div style="margin-top:8px"><button class="btn p" data-a="pairStart">등록 코드 받기</button></div></div>`;
+}
+function remain(d1,d2){const t=today();const a=diffD(t,d1);if(a>0)return {label:'개막까지',d:a};const b=diffD(t,d2);if(b>=0)return {label:'시즌 끝까지',d:b};return {label:'끝',d:0}}
+const wd=d=>`${Math.floor(d/7)}주 ${d%7}일`;
+function vHome(){
+ const t=today(),cw=curWeek(),w=plan()[cw-1],stt=weekStatus(w);
+ const D=DISC[disc],l=lgBy(D.league),st=S();
+ let h=`<div class="seg"><button class="${disc==='S'?'on':''}" data-a="disc" data-d="S">단식</button><button class="${disc==='D'?'on':''}" data-a="disc" data-d="D">복식 (혼복)</button></div>`;
+ if(disc==='D'&&!st.mixedOn)return h+`<div class="card">혼복 참가가 꺼져 있어요. 계획 탭 설정에서 켤 수 있어요.</div>`;
+ const r=remain(l.start,l.end),{sW,eW}=discWeeks(disc);
+ const pNow=discProg(disc,cw,false),pExp=discProg(disc,cw,true);
+ let stCls='mut',stTxt='기준 측정 전';
+ if(pNow!=null){const gap=Math.round((pNow-(pExp||0))*100);stCls=gap>=0?'ok':'late';stTxt=gap>=0?'목표 선 위':'목표 선보다 '+(-gap)+'%p 아래'}
+ h+=`<div class="card"><div class="sub">참여 대회</div><h2 style="margin:2px 0 0">${esc(l.name)}</h2><div class="sub">${md(l.start)} ~ ${md(l.end)} · ${esc(l.goal)}</div>
+ <div class="kv"><div><span class="sub">${r.label}</span><b>${r.d?'D-'+r.d:'-'}</b><span class="sub">${r.d?wd(r.d):''}</span></div><div><span class="sub">목표 진행률</span><b class="${stCls}">${pNow!=null?Math.round(pNow*100)+'%':'-'}</b><span class="sub">${stTxt}</span></div>
+ <div><span class="sub">현재 수준</span><b style="font-size:15px">${esc(st.level[disc].cur)}</b></div><div><span class="sub">목표 수준</span><b style="font-size:15px">${esc(st.level[disc].goal)}</b></div></div></div>`;
+ // 진행률 그래프
+ const bws=D.tests.map(t=>tgt(t)).filter(Boolean).map(g=>g.bw);
+ if(bws.length){
+  const b0=Math.min(...bws),exp=[],act=[];
+  for(let x=b0;x<=eW;x++){const e=discProg(disc,x,true);if(e!=null)exp.push([x,e*100])}
+  const lastM=Math.max(...db.measures.map(m=>m.week));
+  for(let x=b0;x<=Math.min(cw,lastM);x++){const a=discProg(disc,x,false);if(a!=null)act.push([x,a*100])}
+  h+=`<div class="card"><h2>목표까지 진행률 (측정 ${D.tests.length}개 평균)</h2>${chart({xmax:eW,lines:[{pts:exp,c:'#9aa19c',dash:1,w:2},{pts:act,c:'#2f7d4f',dots:1}],vlines:[{x:sW,label:'개막'},{x:eW,label:'끝'}],now:cw,ymin:0,ymax:100,fmt:v=>Math.round(v)+'%'})}${LEG}<div class="sub small" style="margin-top:4px">0% = 처음 측정, 100% = 시즌 끝 목표. 회색 선 위에 있으면 제 속도예요.</div></div>`;
+ }else h+=`<div class="card"><h2>목표까지 진행률</h2><div class="sub">W${plan()[0].n} 기준 측정을 넣으면 현재 → 목표 선이 그려져요.</div></div>`;
+ // 측정별
+ h+=`<div class="card"><h2>측정별 변화</h2>`;
+ for(const t of D.tests){
+  const g=tgt(t),T=TESTS[t];
+  h+=`<h3>${T.n} <span class="sub">${T.u}</span></h3>`;
+  if(!g){h+=`<div class="sub">아직 기록 없음 · ${esc(T.tool)}</div>`;continue}
+  const exp=[];for(let x=g.bw;x<=eW;x++)exp.push([x,expAt(t,disc,x)]);
+  const e=expAt(t,disc,cw),ok=T.low?g.last<=e+1e-9:g.last>=e-1e-9;
+  h+=`<div class="row sb small"><span>기준 <b>${g.b}</b> (W${g.bw}) → 지금 <b>${g.last}</b> (W${g.lw})</span><span>개막 목표 <b>${g.t1}</b> · 끝 <b>${g.t2}</b> <span class="${ok?'ok':'late'}">${ok?'제 속도':'뒤처짐'}</span></span></div>`;
+  h+=chart({xmax:eW,lines:[{pts:exp,c:'#9aa19c',dash:1,w:2},{pts:g.s.map(p=>[p.w,p.v]),c:'#2f7d4f',dots:1}],vlines:[{x:sW,label:'개막'}],now:cw,fmt:v=>T.low?v.toFixed(1):Math.round(v)});
+ }
+ h+=LEG+`</div>`;
+ // 경기
+ const ms=db.matches.filter(m=>m.disc===disc).sort((a,b)=>a.date<b.date?-1:1);
+ const lg=ms.filter(m=>m.kind==='league'&&m.date>=l.start&&m.date<=l.end),wins=lg.filter(m=>m.res==='W').length;
+ h+=`<div class="card"><h2>경기 결과</h2><div class="row sb"><span>리그 <b>${wins}승 ${lg.length-wins}패</b></span><span class="sub">연습 포함 ${ms.length}경기</span></div>`;
+ if(ms.length){h+=`<h3>게임 득실률</h3>`+chart({xmax:eW,lines:[{pts:ms.filter(m=>mstat(m).gp!=null).map(m=>[wkOf(m.date),mstat(m).gp*100]),c:'#2f7d4f',dots:1}],hline:D.gameGoal*100,vlines:[{x:sW,label:'개막'}],now:cw,ymin:0,ymax:100,fmt:v=>Math.round(v)+'%'})+`<div class="leg"><span><i style="background:#2f7d4f"></i>경기별</span><span><i style="background:#c27c0e"></i>목표 ${Math.round(D.gameGoal*100)}%</span></div>`;
+  const fs=ms.filter(m=>m.fs!==''&&m.fs!=null);if(fs.length)h+=`<h3>첫 서브 in % (영상·앱 기록)</h3>`+chart({xmax:eW,lines:[{pts:fs.map(m=>[wkOf(m.date),+m.fs]),c:'#2f7d4f',dots:1}],hline:60,now:cw,ymin:30,ymax:90,fmt:v=>Math.round(v)+'%'})+`<div class="sub small">3.5 평균 53.5%, 목표 60% (SwingVision 25만+ 세션)</div>`;}
+ else h+=`<div class="sub">아직 없음. 기록 탭에서 스코어만 넣어도 돼요.</div>`;
+ h+=`</div>`;
+ h+=`<div class="card" data-a="tab" data-t="week" style="cursor:pointer"><div class="row sb"><h2 style="margin:0">이번 주 W${w.n}</h2><span class="chip" style="background:${PH[w.ph].c}">${PH[w.ph].n}</span></div><div class="sub">회차 ${stt.done}/${stt.total} · 측정 ${stt.mdone}/${stt.mtotal} → 눌러서 이번 주 할 것</div></div>`;
+ return h;
+}
+function vWeek(){
+ const P=plan(),n=viewWeek||curWeek(),w=P[n-1],stt=weekStatus(w),cw=curWeek();
+ let h=`<div class="row sb" style="margin-top:10px"><button class="btn s" data-a="wk" data-n="${n-1}" ${n<=1?'disabled':''}>‹</button><div style="text-align:center"><b>W${n}</b> <span class="sub">${md(w.start)}~${md(w.end)}${n===cw?' · 이번 주':''}</span></div><button class="btn s" data-a="wk" data-n="${n+1}" ${n>=P.length?'disabled':''}>›</button></div>`;
+ h+=`<div class="card"><div class="row sb"><h2 style="margin:0">이번 주 할 것</h2><span class="chip" style="background:${PH[w.ph].c}">${PH[w.ph].n}</span></div><div class="sub">${PH[w.ph].d}</div>`;
+ if(w.marks.length)h+=`<div class="hint">${w.marks.map(esc).join('<br>')}</div>`;
+ h+=`<div style="margin-top:8px">`;
+ w.types.forEach((ty,k)=>{const s=sess(n,k+1),d=s&&s.done;h+=`<div class="todo"><span class="box ${d?'y':''}">${d?'✓':''}</span><span style="flex:1">${k+1}회차 · ${SES[ty].n}${ty==='L'&&w.ph==='taper'?' (개막)':''}${s&&s.done?` <span class="sub">${s.mode==='drill'?'드릴':s.mode==='skip'?'건너뜀':'랠리/경기'}</span>`:''}</span></div>`});
+ h+=`<div class="todo"><span class="box ${stt.mdone===stt.mtotal?'y':''}">${stt.mdone===stt.mtotal?'✓':''}</span><span style="flex:1">${w.full?'전체 측정':'주간 측정'} (${stt.mdone}/${stt.mtotal})</span></div></div>`;
+ h+=`<div class="row sub" style="margin-top:6px">회차 수 <select data-s="weekCount" data-n="${n}">${[1,2,3,4].map(c=>`<option ${c===w.types.length?'selected':''}>${c}</option>`).join('')}</select> 요일은 상관없어요. 한 주에 몇 번 했는지만 봐요.</div></div>`;
+ // 측정
+ h+=`<div class="card"><h2>${w.full?'전체 측정 (4주마다)':'주간 측정 (5분)'}</h2><div class="sub">아무 회차 시작할 때. 숫자만 넣으면 바로 저장돼요.</div>`;
+ const list=[...w.tests,...(w.full?[]:OPTW)];
+ for(const t of list){const m=meas(n,t),T=TESTS[t],prev=series(t).filter(p=>p.w<n).slice(-1)[0];const d=['T3','T7'].includes(t)?'D':'S';const e=expAt(t,d,n);
+  h+=`<div class="mrow"><div style="flex:1"><b>${T.n}</b>${!w.tests.includes(t)?' <span class="sub">(랠리했으면)</span>':''}<div class="sub small">${esc(T.how)}</div><div class="sub small">${prev?'지난 '+prev.v+' (W'+prev.w+')':'첫 기록 = 기준'}${e!=null?' · 이번 주 목표 선 '+(T.low?e.toFixed(1):Math.round(e*10)/10):''}</div></div><div class="row" style="flex-wrap:nowrap"><input type="number" inputmode="decimal" step="any" value="${m?m.v:''}" data-m="${t}" data-n="${n}"><span class="sub">${T.u}</span></div></div>`}
+ h+=`</div>`;
+ // 회차 카드
+ w.types.forEach((ty,k)=>{h+=sessCard(w,ty,k+1)});
+ return h;
+}
+function sessCard(w,ty,k){
+ const n=w.n,s=sess(n,k)||{},key=`${n}-${k}`,SE=SES[ty],o=open[key]||(s.mode&&!s.done?s.mode:null);
+ let h=`<div class="card"><div class="row sb"><h2 style="margin:0">${k}회차 · ${SE.n}</h2>${s.done?`<span class="ok">✓ ${s.mode==='drill'?'드릴':s.mode==='skip'?'건너뜀':esc(s.kind||'랠리')}</span>`:''}</div>`;
+ if(SE.dyn)h+=`<div class="sub">지금 목표 선에서 가장 먼 것: ${FACT[weakest()]}</div>`;
+ if(s.done&&!o){h+=`<div class="sub" style="margin-top:4px">${s.date?md(s.date):''} ${s.min?s.min+'분':''} ${s.partner?'· '+esc(s.partner):''} ${s.note?'· '+esc(s.note):''}</div><div class="row" style="margin-top:8px"><button class="btn s" data-a="undoSess" data-n="${n}" data-k="${k}">되돌리기</button></div></div>`;return h}
+ h+=`<div class="seg" style="margin-top:8px"><button class="${o==='drill'?'on':''}" data-a="mode" data-key="${key}" data-v="drill">드릴로</button><button class="${o==='rally'?'on':''}" data-a="mode" data-key="${key}" data-v="rally">그냥 랠리·경기</button></div>`;
+ if(o==='drill'){
+  const bl=SE.blocks(),tot=bl.reduce((a,b)=>a+(b.m||0),0);h+=`<div class="sub" style="margin-top:6px">${tot}분</div>`;
+  bl.forEach((b,j)=>{const p=(s.pass||{})[j];h+=`<div class="blk"><div class="row sb"><span class="t">${b.m?b.m+'분 · ':''}${esc(b.t)}</span>${b.pass?`<button class="tog ${p===true?'y':p===false?'n':''}" data-a="pass" data-n="${n}" data-k="${k}" data-j="${j}" data-ty="${ty}">${p===true?'통과':p===false?'아직':'통과?'}</button>`:''}</div>${b.how?`<div>${esc(b.how)}</div>`:''}${b.pass?`<div class="pass">통과: ${esc(b.pass)}</div>`:''}${b.cue?`<div class="cue">${esc(b.cue)}</div>`:''}</div>`});
+  if(SE.solo)h+=`<div class="sub">${esc(SE.solo)}</div>`;
+  h+=`<details><summary>비 오면</summary><div class="sub">섀도 서브 30번(토스만 10번) · 벽치기 15분 · 스플릿 스텝 + 사이드 셔플 6×20초</div></details>`;
+  h+=`<div class="row" style="margin-top:10px"><button class="btn p" data-a="doneDrill" data-n="${n}" data-k="${k}" data-ty="${ty}">드릴 완료</button><button class="btn" data-a="skip" data-n="${n}" data-k="${k}" data-ty="${ty}">이번엔 건너뜀</button></div>`;
+ }else if(o==='rally'){
+  h+=`<div style="margin-top:8px"><div class="row">${['랠리','연습 경기','리그 경기'].map(x=>`<button class="tog ${(open[key+'k']||'랠리')===x?'y':''}" data-a="kind" data-key="${key}" data-v="${x}">${x}</button>`).join('')}</div>
+  <div class="row" style="margin-top:8px"><input type="number" id="min-${key}" placeholder="분" value="60" style="width:70px"><span class="sub">분</span><input type="text" id="pt-${key}" placeholder="누구랑 (선택)" style="flex:1;min-width:120px"></div>
+  <input type="text" id="nt-${key}" placeholder="한 줄 메모 (선택)" style="width:100%;margin-top:8px">
+  <div class="hint">랠리했으면 위 측정의 크로스 연속도 넣을 수 있어요. 경기였으면 저장 뒤 기록 탭에서 스코어(또는 SwingVision 숫자)를 넣어요.</div>
+  <div class="row" style="margin-top:10px"><button class="btn p" data-a="doneRally" data-n="${n}" data-k="${k}" data-ty="${ty}" data-key="${key}">완료</button><button class="btn" data-a="skip" data-n="${n}" data-k="${k}" data-ty="${ty}">이번엔 건너뜀</button></div></div>`;
+ }
+ return h+`</div>`;
+}
+const SRC={sv:'SwingVision',video:'영상 보고',manual:'직접',aside:'Aside 분석'};
+function vLog(){
+ const t=today(),f=open.mf||{};
+ let h=`<div class="card"><h2>경기 기록</h2><div class="sub">경기 중엔 안 적어도 돼요. 끝나고 스코어만, 지표는 앱·영상에서 옮겨요.</div>
+ <div class="row" style="margin-top:8px"><button class="tog ${(f.disc||'S')==='S'?'y':''}" data-a="mf" data-k="disc" data-v="S">단식</button><button class="tog ${f.disc==='D'?'y':''}" data-a="mf" data-k="disc" data-v="D">복식</button><span style="width:8px"></span><button class="tog ${(f.kind||'practice')==='practice'?'y':''}" data-a="mf" data-k="kind" data-v="practice">연습</button><button class="tog ${f.kind==='league'?'y':''}" data-a="mf" data-k="kind" data-v="league">리그</button></div>
+ <div class="row" style="margin-top:8px"><input type="date" id="f-date" value="${f.date||t}"><input type="text" id="f-opp" placeholder="상대" style="flex:1;min-width:110px" value="${esc(f.opp||'')}"></div>
+ <div class="row" style="margin-top:8px"><span>내 게임</span><input type="number" inputmode="numeric" id="f-gw" style="width:64px"><span>상대 게임</span><input type="number" inputmode="numeric" id="f-gl" style="width:64px"></div>
+ <input type="text" id="f-score" placeholder="스코어 (예: 6-4 3-6 10-8)" style="width:100%;margin-top:8px">
+ <details ${f.more?'open':''}><summary>앱·영상 지표 (있으면)</summary>
+ <div class="row" style="margin-top:8px"><select id="f-src">${Object.entries(SRC).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+ <div class="row" style="margin-top:8px"><label>첫 서브 in % <input type="number" id="f-fs" inputmode="decimal" style="width:70px"></label><label>더블폴트 <input type="number" id="f-df" inputmode="numeric" style="width:64px"></label></div>
+ <div class="row" style="margin-top:8px"><label>언포스드 에러 <input type="number" id="f-ue" inputmode="numeric" style="width:64px"></label><label>위너 <input type="number" id="f-w" inputmode="numeric" style="width:64px"></label></div></details>
+ <div style="margin-top:8px"><span class="sub">가장 많이 잃은 이유</span><br>${[['serve','서브'],['ret','리턴'],['rally','랠리 에러'],['net','네트'],['fit','체력'],['mind','멘탈']].map(([k,v])=>`<button class="tog ${(f.why||[]).includes(k)?'y':''}" data-a="mfwhy" data-k="${k}" style="margin:3px 3px 0 0">${v}</button>`).join('')}</div>
+ <button class="btn p w" style="margin-top:10px" data-a="saveMatch">저장</button></div>`;
+ h+=`<div class="card"><h2>쉽게 기록하는 법</h2>
+ <div class="blk"><span class="t">1. SwingVision (가장 쉬움)</span><div>폰을 펜스에 세우고 SwingVision으로 찍으면 첫 서브 %, 더블폴트, 에러, 위너가 자동으로 나와요. 경기 요약 화면을 캡처해 Slack에 올리면 Aside가 여기 넣어요.</div></div>
+ <div class="blk"><span class="t">2. 그냥 영상 → Aside</span><div>폰 카메라로 찍어 Slack에 올리면 Aside가 보고 스코어·더블폴트·첫 서브를 넣어요. 시범이라 첫 영상으로 정확도부터 확인해요.</div></div>
+ <div class="blk"><span class="t">3. 스코어만</span><div>위 칸에 게임 수만. 게임 득실률 그래프는 이것만으로 그려져요.</div></div>
+ <div class="blk"><span class="t">워치</span><div>테니스 운동만 켜 두면 시간·심박은 맥미니로 자동으로 들어가요(트래커와 같은 길).</div></div></div>`;
+ const ms=[...db.matches].sort((a,b)=>a.date<b.date?1:-1);
+ h+=`<div class="card"><h2>경기 ${ms.length}개</h2>`+(ms.length?`<table><tr><th>날짜</th><th>경기</th><th class="n">게임</th><th class="n">1st/DF</th><th></th></tr>`+ms.map(m=>`<tr><td>${md(m.date)}</td><td>${m.disc==='S'?'단식':'복식'} ${m.kind==='league'?'리그':'연습'}${m.opp?'<br><span class="sub">'+esc(m.opp)+'</span>':''}<br><span class="sub small">${SRC[m.src]||''}</span></td><td class="n"><b class="${m.res==='W'?'ok':'badc'}">${m.res}</b> ${m.gw}-${m.gl}</td><td class="n">${m.fs!==''&&m.fs!=null?m.fs+'%':'-'} / ${m.df!==''&&m.df!=null?m.df:'-'}</td><td class="n"><button class="btn s" data-a="delMatch" data-id="${m.id}">✕</button></td></tr>`).join('')+`</table>`:'<div class="sub">아직 없음</div>')+`</div>`;
+ const mm=[...db.measures].sort((a,b)=>b.week-a.week||a.t.localeCompare(b.t)).slice(0,40);
+ if(mm.length)h+=`<div class="card"><h2>측정 기록</h2><table>`+mm.map(m=>`<tr><td>W${m.week}</td><td>${TESTS[m.t]?TESTS[m.t].n:m.t}</td><td class="n"><b>${m.v}</b> ${TESTS[m.t]?TESTS[m.t].u:''}</td><td class="n"><button class="btn s" data-a="delMeas" data-id="${m.id}">✕</button></td></tr>`).join('')+`</table></div>`;
+ return h;
+}
+function vPlan(){
+ const P=plan(),cw=curWeek(),st=S();
+ let h=`<div class="card"><h2>역산 계획 · 주 3회차</h2><div class="sub">${activeLeagues().map(l=>`${l.disc==='S'?'단식':'혼복'} ${esc(l.name)} ${md(l.start)}~${md(l.end)}`).join('<br>')}<br>4주마다 전체 측정, 나머지 주는 서브 5분 측정. 누르면 그 주로 가요.</div><div class="leg" style="margin-top:6px"><span><i style="background:#2f7d4f;height:8px;width:8px"></i>회차 완료</span><span><i style="background:#3a6fb3;height:8px;width:8px"></i>측정 완료</span></div></div><div class="card">`;
+ for(const w of P){const s=weekStatus(w);h+=`<div class="wk" data-a="gowk" data-n="${w.n}" style="cursor:pointer;${w.n===cw?'background:#f2f7f3;margin:0 -13px;padding-left:13px;padding-right:13px':''}"><b style="width:38px">W${w.n}</b><div style="flex:1"><div class="row"><span class="chip" style="background:${PH[w.ph].c}">${PH[w.ph].n}</span><span class="sub">${md(w.start)}~${md(w.end)}</span></div>${w.marks.length?`<div class="sub small">${w.marks.map(esc).join(' · ')}</div>`:''}</div><div class="dots">${w.types.map((_,k)=>{const x=sess(w.n,k+1);return `<span class="${x&&x.done&&x.mode!=='skip'?'y':''}"></span>`}).join('')}<span class="${s.mdone===s.mtotal?'m':''}" style="border-radius:50%"></span></div></div>`}
+ h+=`</div>`;
+ // 설정
+ h+=`<div class="card"><h2>설정</h2><div class="sub">날짜를 바꾸면 계획과 목표 선이 다시 계산돼요.</div>`;
+ st.leagues.forEach((l,i)=>{h+=`<h3>${l.disc==='S'?'단식':'혼복'} 대회</h3><input type="text" data-s="lname" data-i="${i}" value="${esc(l.name)}" style="width:100%"><div class="row" style="margin-top:6px"><input type="date" data-s="lstart" data-i="${i}" value="${l.start}"> ~ <input type="date" data-s="lend" data-i="${i}" value="${l.end}"></div><input type="text" data-s="lgoal" data-i="${i}" value="${esc(l.goal)}" style="width:100%;margin-top:6px"><div class="row" style="margin-top:6px"><input type="text" data-s="lvcur" data-d="${l.disc}" value="${esc(st.level[l.disc].cur)}" placeholder="현재 수준" style="flex:1"><input type="text" data-s="lvgoal" data-d="${l.disc}" value="${esc(st.level[l.disc].goal)}" placeholder="목표 수준" style="flex:1"></div>`});
+ h+=`<div class="row" style="margin-top:10px"><label><input type="checkbox" data-s="mixedOn" ${st.mixedOn?'checked':''}> 혼복 참가</label></div>`;
+ h+=`<h3>측정 목표 (비우면 자동)</h3><table><tr><th>측정</th><th class="n">기준</th><th class="n">개막</th><th class="n">끝</th></tr>`+Object.keys(TESTS).map(t=>{const g=tgt(t);return `<tr><td>${TESTS[t].n}</td><td class="n">${g?g.b:'-'}</td><td class="n">${g?`<button class="btn s" data-a="setT" data-t="${t}" data-w="t1">${g.t1}</button>`:'-'}</td><td class="n">${g?`<button class="btn s" data-a="setT" data-t="${t}" data-w="t2">${g.t2}</button>`:'-'}</td></tr>`}).join('')+`</table><div class="sub small">자동: 20개짜리 개막 +3 / 끝 +5, 연속 랠리 +30% / +60%, 스파이더 -0.8초 / -1.5초.</div>`;
+ h+=`<h3>마감</h3>`+st.deadlines.map((x,i)=>`<div class="row sb"><span>${md(x.date)} ${esc(x.text)}</span><button class="btn s" data-a="delDl" data-i="${i}">✕</button></div>`).join('')+`<div class="row" style="margin-top:6px"><input type="date" id="dld"><input type="text" id="dlt" placeholder="내용" style="flex:1;min-width:110px"><button class="btn s" data-a="addDl">추가</button></div>`;
+ h+=`<h3>계획 시작 주</h3><input type="date" data-s="planStart" value="${st.planStart}"></div>`;
+ return h;
+}
+
+/* ================= 동작 ================= */
+function recSess(n,k,ty,extra){const prev=sess(n,k)||{};upsert('sessions',{...prev,id:`W${n}-${k}`,week:n,slot:k,type:ty,...extra})}
+const act={
+ tab:d=>{tab=d.t;if(d.t==='week')viewWeek=null;render();scrollTo(0,0)},
+ disc:d=>{disc=d.d;render()},
+ wk:d=>{viewWeek=+d.n;render();scrollTo(0,0)},
+ gowk:d=>{viewWeek=+d.n;tab='week';render();scrollTo(0,0)},
+ mode:d=>{open[d.key]=open[d.key]===d.v?null:d.v;render()},
+ kind:d=>{open[d.key+'k']=d.v;render()},
+ pass:d=>{const s=sess(+d.n,+d.k)||{};const p={...(s.pass||{})};const c=p[d.j];if(c===undefined)p[d.j]=true;else if(c===true)p[d.j]=false;else delete p[d.j];recSess(+d.n,+d.k,d.ty,{pass:p,mode:'drill'})},
+ doneDrill:d=>{open[`${d.n}-${d.k}`]=null;recSess(+d.n,+d.k,d.ty,{mode:'drill',done:true,date:today()})},
+ doneRally:d=>{const key=d.key;const kind=open[key+'k']||'랠리';recSess(+d.n,+d.k,d.ty,{mode:kind==='랠리'?'rally':'match',kind,done:true,date:today(),min:+($('min-'+key).value||0),partner:$('pt-'+key).value.trim(),note:$('nt-'+key).value.trim()});open[key]=null;if(kind!=='랠리'){open.mf={...(open.mf||{}),kind:kind==='리그 경기'?'league':'practice',opp:$('pt-'+key)?$('pt-'+key).value:''};if(confirm('경기 스코어도 지금 넣을까요?')){tab='log';render()}}},
+ skip:d=>{open[`${d.n}-${d.k}`]=null;recSess(+d.n,+d.k,d.ty,{mode:'skip',done:true,date:today()})},
+ undoSess:d=>{const s=sess(+d.n,+d.k);if(s)recSess(+d.n,+d.k,s.type,{done:false,mode:null})},
+ mf:d=>{open.mf={...(open.mf||{}),...keepForm(),[d.k]:d.v};render()},
+ mfwhy:d=>{const f=open.mf=({...(open.mf||{}),...keepForm()});const w=f.why=f.why||[];const i=w.indexOf(d.k);if(i>=0)w.splice(i,1);else w.push(d.k);render()},
+ saveMatch:()=>{const f={...(open.mf||{}),...keepForm()};const gw=$('f-gw').value,gl=$('f-gl').value;if(gw===''||gl===''){alert('게임 수를 넣어 주세요');return}
+  const v=id=>{const x=$(id).value;return x===''?'':+x};
+  upsert('matches',{id:'m'+Date.now().toString(36),date:$('f-date').value||today(),disc:f.disc||'S',kind:f.kind||'practice',opp:$('f-opp').value.trim(),gw:+gw,gl:+gl,res:+gw>+gl?'W':'L',score:$('f-score').value.trim(),src:$('f-src').value,fs:v('f-fs'),df:v('f-df'),ue:v('f-ue'),w:v('f-w'),why:f.why||[]});open.mf=null;render()},
+ delMatch:d=>{if(confirm('이 경기 지울까요?'))del('matches',d.id)},
+ delMeas:d=>{if(confirm('이 측정 지울까요?'))del('measures',d.id)},
+ setT:d=>{const st=S(),g=tgt(d.t);const v=prompt(`${TESTS[d.t].n} ${d.w==='t1'?'개막':'끝'} 목표 (빈칸 = 자동)`,g?g[d.w]:'');if(v===null)return;st.targets[d.t]={...(st.targets[d.t]||{})};if(v==='')delete st.targets[d.t][d.w];else if(!isNaN(+v))st.targets[d.t][d.w]=+v;saveSettings(st)},
+ addDl:()=>{const st=S(),dd=$('dld').value,t=$('dlt').value.trim();if(!dd||!t)return;st.deadlines.push({date:dd,text:t});saveSettings(st)},
+ delDl:d=>{const st=S();st.deadlines.splice(+d.i,1);saveSettings(st)},
+ pairStart:()=>pairStart()
+};
+function keepForm(){const o={};const g=id=>$(id)?$(id).value:undefined;if($('f-date')){o.date=g('f-date');o.opp=g('f-opp');o.more=$('f-src')&&$('f-src').closest('details').open}return o}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.tagName==='INPUT'||b.tagName==='SELECT')return;const f=act[b.dataset.a];if(f)f(b.dataset,b)});
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.dataset.m){const n=+el.dataset.n,t=el.dataset.m,v=el.value;if(v===''){if(meas(n,t))del('measures',`W${n}-${t}`);return}upsert('measures',{id:`W${n}-${t}`,week:n,t,v:+v,date:today(),src:'manual'});return}
+ const s=el.dataset.s;if(!s)return;const st=S(),i=+el.dataset.i;
+ if(s==='lname')st.leagues[i].name=el.value;else if(s==='lgoal')st.leagues[i].goal=el.value;
+ else if(s==='lstart'&&el.value)st.leagues[i].start=el.value;else if(s==='lend'&&el.value)st.leagues[i].end=el.value;
+ else if(s==='lvcur')st.level[el.dataset.d].cur=el.value;else if(s==='lvgoal')st.level[el.dataset.d].goal=el.value;
+ else if(s==='mixedOn')st.mixedOn=el.checked;else if(s==='planStart'&&el.value)st.planStart=el.value;
+ else if(s==='weekCount'){st.weekCount={...st.weekCount,[el.dataset.n]:+el.value}}
+ else return;
+ saveSettings(st);
+});
+render();pull();if(pair)pairPoll();
+</script>
+</body>
+</html>

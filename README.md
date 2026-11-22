@@ -1,8 +1,9 @@
-# 테니스 시즌
+# 테니스 시즌 (v2)
 
-단식·혼복 리그 날짜에서 거꾸로 짠 주 3회 훈련 계획 + 측정·경기 기록 대시보드. `index.html` 하나, 서버 없음. 기록은 기기 브라우저(localStorage)에만, 백업은 .json 내보내기.
+단식·혼복 리그 날짜에서 거꾸로 짠 주 단위(주 3회차) 훈련 계획 + 목표 대비 진행 그래프 + 측정·경기 기록.
 
-- 화면: https://shinki95.github.io/tennis-season/
-- 기본 리그: USTA 혼복 18+ LA 겨울(2027-01-09~04-04), TennisLosAngeles 봄 단식 시즌 1(2027-01-19~03-14). 설정에서 바꾸면 계획이 다시 역산됨.
-- 주기: 기준 측정 1주 → 기초 쌓기 → 4주마다 재측정 → 시합형 → 개막 주 → 시즌(경기 1 + 약점 1 + 패턴 1).
-- 목표: 첫 측정값에서 자동(1차 = 첫 개막, 2차 = 마지막 리그 끝), 직접 수정 가능.
+- 앱: Vercel 프로젝트 tennis-season (public/index.html + api/). 배포는 맥미니 `data/shared/deploy/deploy.sh tennis`.
+- 저장: 비공개 Vercel Blob(tennis-season-db). `api/db.js` 레코드 단위 병합, 읽기 실패 시 쓰지 않음, 매일 backup/YYYY-MM-DD/ 사본.
+- 기기 등록: 앱이 4자리 코드를 보여주면 Aside가 `POST /api/pair {action:'approve',code}` (헤더 x-agent-key, 키는 맥미니 secrets/tennis_agent_key).
+- Aside 쓰기(SwingVision 캡처·영상 분석 결과): `POST /api/db {collection:'matches', upserts:[{id,date,disc:'S'|'D',kind:'league'|'practice',opp,gw,gl,res,fs,df,ue,w,src}]}`.
+- v1(GitHub Pages)은 이 앱으로 넘어감.

@@ -1,0 +1,8 @@
+{
+  "name": "tennis-season",
+  "private": true,
+  "type": "module",
+  "version": "2.0.0",
+  "dependencies": { "@vercel/blob": "^2.8.0" },
+  "engines": { "node": ">=20" }
+}
