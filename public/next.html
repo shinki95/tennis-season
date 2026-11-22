@@ -78,7 +78,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const Q=new URLSearchParams(location.search);const TODAY=Q.get('d')||ds(new Date());
 const TYPES=[['S','game','단식 게임'],['S','rally','단식 랠리'],['S','drill','단식 드릴'],['D','game','복식 게임'],['D','partner','복식 파트너 연습']];
-const TN=(disc,kind)=>(TYPES.find(t=>t[0]===disc&&t[1]===kind)||[0,0,(disc==='D'?'복식 ':'단식 ')+kind])[2];
+const TN=(disc,kind)=>kind==='none'?'고르기 전':(TYPES.find(t=>t[0]===disc&&t[1]===kind)||[0,0,(disc==='D'?'복식 ':'단식 ')+kind])[2];
 const KRT={sessions:{n:'훈련',u:'회'},factor:{n:'드릴',u:'회'},analyzed:{n:'영상 분석',u:'회'},retro:{n:'회고',u:'회'},doubles:{n:'복식',u:'회'},games:{n:'게임',u:'회'}};
 const OKR_DEF=[
  {id:'o-S',disc:'S',v:2,title:'TLA 봄 단식 플레이오프 진출',start:'2026-11-23',end:'2027-03-14',lstart:'2027-01-19',krs:[{id:'f1',type:'factor',fid:'f-serve',per:2},{id:'f2',type:'factor',fid:'f-ground',per:1},{id:'f3',type:'factor',fid:'f-depth',per:1},{id:'f4',type:'factor',fid:'f-return',per:1}],res:[{type:'wins',target:3},{type:'gamepct',target:55}],ms:{}},
@@ -110,7 +110,7 @@ function sessOn(d){const n=wkOf(d);return [n-1,n,n+1].flatMap(weekSlots).filter(
 const allDone=(from,to)=>{const out=[];for(let n=Math.max(1,wkOf(from));n<=Math.min(lastW(),wkOf(to));n++)weekSlots(n).forEach(s=>{if(s.done&&s.date>=from&&s.date<=to)out.push(s)});return out};
 const short=t=>{t=String(t||'');const c=t.split(/(?<=[.。])\s/)[0];return c.length>40?c.slice(0,39)+'…':c};
 /* 할 것: Aside 가 넣은 items 우선, 없으면 기본 */
-function itemsOf(s){if(s.items&&s.items.length)return s.items;
+function itemsOf(s){if(s.kind==='none')return [];if(s.items&&s.items.length)return s.items;
  if(s.kind==='game')return [{k:'g',t:s.disc==='D'?'복식 게임':'단식 게임'}];
  if(s.kind==='rally')return [{k:'r1',t:'포핸드 크로스 랠리',fid:'f-ground'},{k:'r2',t:'백핸드 크로스 랠리',fid:'f-ground'},{k:'r3',t:'깊게 (서비스 라인 넘기기)',fid:'f-depth'},{k:'r4',t:'서브 · 리턴',fid:'f-serve'}];
  const who=s.kind==='partner'?['partner','four']:['one','solo'];const fs=FA().filter(f=>s.disc==='D'?f.disc!=='S':f.disc!=='D');const out=[];
@@ -145,22 +145,23 @@ function resNow(o,r){const G=db.logs.filter(l=>l.disc===o.disc&&l.gw!=null&&l.gw
 /* 화면 */
 function render(){document.getElementById('nav').innerHTML=[['today','오늘'],['plan','일정'],['goal','목표']].map(([k,n])=>`<button class="${tab===k?'on':''}" data-a="tab" data-t="${k}">${n}</button>`).join('');document.getElementById('app').innerHTML=({today:vToday,plan:vPlan,goal:vGoal})[tab]()}
 function dateBtn(id,date,kind){return `<label class="dt">${md(date)} ✎<input type="date" value="${date}" data-${kind}="${id}"></label>`}
-function weekKR(){const ws=mon(day),we=addD(ws,6);return `<div class="card" data-a="tab" data-t="goal" style="cursor:pointer"><div class="row sb"><div class="lbl">이번 주 요소별 훈련</div><span class="mut sm">${md(ws)}~</span></div>${OKR().map(o=>`<div class="kv" style="margin-top:8px"><span style="background:none;padding-left:0"><b>${o.disc==='D'?'복식':'단식'}</b></span>${o.krs.map(k=>{const v=krCount(o,k,ws,we);return `<span style="${v>=k.per?'background:var(--gl);color:var(--g)':''}"><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${COL[k.fid]||'#999'};margin-right:4px"></i>${esc(krName(k))} <b>${v}</b>/${k.per}</span>`}).join('')}</div>`).join('')}</div>`}
+function svDelta(fid){const S=svSeries(fid),P=S.pts;if(!S.name||!P.length)return null;return {last:P[P.length-1][1],d:P.length>1?P[P.length-1][1]-P[0][1]:null,u:S.unit||''}}
+function weekKR(){const ws=mon(day),we=addD(ws,6);return `<div class="card" data-a="tab" data-t="goal" style="cursor:pointer">${OKR().map(o=>{const nx=nextMs(o);return `<div style="margin-top:6px"><div class="row sb"><b style="font-size:17px">${esc(o.title)}</b><span class="tag" style="font-size:12px;background:#F1F3F0;border-radius:8px;padding:3px 8px">${o.disc==='D'?'복식':'단식'}</span></div>${nx?`<div class="mut sm">다음 단계 ${md(nx)} · ${msLabel(o,nx)}</div>`:''}
+ <div style="margin-top:6px">${o.krs.map(k=>{const v=krCount(o,k,ws,we),dv=svDelta(k.fid);return `<div class="row sb" style="padding:6px 0;border-top:1px solid var(--line)"><span class="row" style="gap:6px"><i style="width:9px;height:9px;border-radius:50%;background:${COL[k.fid]||'#999'};display:inline-block"></i><b style="font-size:15px">${esc(krName(k))}</b></span><span class="row" style="gap:12px"><span class="mut sm">이번 주 <b style="color:${v>=k.per?'var(--g)':'var(--ink)'}">${v}/${k.per}</b></span><span class="sm" style="min-width:64px;text-align:right">${dv==null?'<span class="mut">개선 –</span>':dv.d==null?`<span class="mut">${dv.last}${esc(dv.u)}</span>`:`<b style="color:${dv.d>=0?'var(--g)':'var(--r)'}">${dv.d>=0?'▲':'▼'}${Math.abs(dv.d)}${esc(dv.u==='%'?'%p':dv.u)}</b>`}</span></span></div>`}).join('')}</div></div>`}).join('<div style="height:10px"></div>')}</div>`}
 function sessCard(s){const it=itemsOf(s),ck=s.checks||{},step=s.done?'done':s.step||'ready',cur=it.findIndex(x=>!ck[x.k]);
  let h=`<div class="card"><div class="row sb"><span class="lbl">${md(s.date)}</span>${dateBtn(s.id,s.date,'mv')}</div>`;
- if(step==='ready'){h+=`<div class="lbl" style="margin-top:10px">오늘 상대에 맞춰</div><div class="opts">${TYPES.map(([d,k,n])=>`<button class="opt ${s.disc===d&&s.kind===k?'on':''}" data-a="sType" data-id="${s.id}" data-d="${d}" data-k="${k}">${n}</button>`).join('')}<button class="opt" style="color:var(--r)" data-a="sRest" data-id="${s.id}">쉬기</button></div>
-  <div class="lbl" style="margin-top:16px">오늘 할 것</div>${it.map(x=>`<div class="it"><span class="ck" style="width:22px;height:22px;border-style:dashed"></span><span><span class="t">${esc(x.t)}</span>${x.s?`<span class="s">${esc(x.s)}</span>`:''}</span></div>`).join('')}
-  <button class="btn" data-a="sStart" data-id="${s.id}">카메라 켜고 시작</button>`}
- else if(step==='go'){const x=it[cur];h+=`<div class="row sb" style="margin-top:6px"><b style="font-size:20px">${TN(s.disc,s.kind)}</b><span class="mut sm">● 촬영 중</span></div><div class="dots">${it.map(y=>`<i class="${ck[y.k]?'y':''}"></i>`).join('')}</div>
+ if(step==='ready'){const none=s.kind==='none';h+=`<div class="row sb" style="margin-top:10px"><div class="lbl">오늘 상대에 맞춰</div>${none?'':`<button class="sm" style="color:var(--mut);font-weight:700" data-a="sType" data-id="${s.id}" data-d="${s.disc}" data-k="${s.kind}">선택 취소</button>`}</div><div class="opts">${TYPES.map(([d,k,n])=>`<button class="opt ${s.disc===d&&s.kind===k?'on':''}" data-a="sType" data-id="${s.id}" data-d="${d}" data-k="${k}">${n}</button>`).join('')}<button class="opt" style="color:var(--r)" data-a="sRest" data-id="${s.id}">쉬기</button></div>
+  ${none?'':`<div class="lbl" style="margin-top:16px">할 것</div>`+it.map(x=>`<div class="it"><span class="ck" style="width:22px;height:22px;border-style:dashed"></span><span><span class="t">${esc(x.t)}</span>${x.s?`<span class="s">${esc(x.s)}</span>`:''}</span></div>`).join('')+`<button class="btn" data-a="sStart" data-id="${s.id}">카메라 켜고 시작</button>`}`}
+ else if(step==='go'){const x=it[cur];h+=`<div class="row sb" style="margin-top:6px"><b style="font-size:20px">${TN(s.disc,s.kind)}</b><span class="row" style="gap:10px"><span class="mut sm">● 촬영 중</span><button class="sm" style="color:var(--mut);font-weight:700" data-a="sCancel" data-id="${s.id}">취소</button></span></div><div class="dots">${it.map(y=>`<i class="${ck[y.k]?'y':''}"></i>`).join('')}</div>
   ${x?`<div class="now"><div class="mut sm">${cur+1} / ${it.length}</div><div class="t">${esc(x.t)}</div>${x.s?`<div class="mut" style="margin-top:4px">${esc(x.s)}</div>`:''}</div><button class="btn" data-a="iNext" data-id="${s.id}" data-k="${x.k}">${cur===it.length-1?'완료':'다음 →'}</button>`:''}
   <div style="margin-top:10px">${it.map((y,i)=>`<button class="it ${ck[y.k]?'y':''}" data-a="iCk" data-id="${s.id}" data-k="${y.k}"><span class="ck ${ck[y.k]?'y':''}" style="width:22px;height:22px;font-size:12px">${ck[y.k]?'✓':''}</span><span class="t" style="${i===cur?'font-weight:800':''}">${esc(y.t)}</span></button>`).join('')}</div>
   <button class="btn2" style="width:100%;margin-top:10px" data-a="sEnd" data-id="${s.id}">여기서 끝</button>`}
  else{const lg=db.logs.find(l=>l.date===s.date&&l.src!=='quick'),nt=db.notes.find(n=>n.id==='R-'+s.id),nx=(()=>{for(let i=1;i<15;i++){const x=addD(s.date,i);const S=sessOn(x).filter(z=>!z.done);if(S.length)return S[0]}return null})();
   const P=[['up','SwingVision 캡처 Slack에',!!(s.post||{}).up||!!lg],['ana','SV 숫자 반영 (Aside)',!!(lg&&((lg.vals&&Object.keys(lg.vals).length)||(lg.drills&&lg.drills.length)))],['retro','회고',!!nt],['next','다음 훈련 받기',!!(nx&&nx.items&&nx.items.length)]];
-  h+=`<div class="row" style="margin-top:6px"><span class="ck y">✓</span><b style="font-size:20px">${TN(s.disc,s.kind)}</b><button class="btn2 sm" style="margin-left:auto" data-a="sReopen" data-id="${s.id}">다시</button></div><div class="lbl" style="margin-top:14px">끝난 뒤</div>${P.map(([k,t,on])=>`<button class="it ${on?'y':''}" data-a="${k==='retro'?'retroT':k==='up'?'postT':'noop'}" data-id="${s.id}" data-k="${k}"><span class="ck ${on?'y':''}" style="width:22px;height:22px;font-size:12px">${on?'✓':''}</span><span class="t">${t}</span></button>`).join('')}
+  h+=`<div class="row" style="margin-top:6px"><span class="ck y">✓</span><b style="font-size:20px">${TN(s.disc,s.kind)}</b><button class="btn2 sm" style="margin-left:auto" data-a="sReopen" data-id="${s.id}">되돌리기</button></div><div class="lbl" style="margin-top:14px">끝난 뒤</div>${P.map(([k,t,on])=>`<button class="it ${on?'y':''}" data-a="${k==='retro'?'retroT':k==='up'?'postT':'noop'}" data-id="${s.id}" data-k="${k}"><span class="ck ${on?'y':''}" style="width:22px;height:22px;font-size:12px">${on?'✓':''}</span><span class="t">${t}</span></button>`).join('')}
   ${retroOpen===s.id?`<textarea class="inp" id="rt" rows="3" placeholder="잘된 것 / 다음엔">${esc(nt?nt.text:'')}</textarea><button class="btn2" style="margin-top:8px" data-a="retroSave" data-id="${s.id}">저장</button>`:''}`}
  return h+'</div>'}
-function vToday(){const isT=day===TODAY;let h=`<div class="top"><button class="btn2" data-a="dNav" data-v="-1">‹</button><div style="text-align:center"><div class="h1">${isT?'오늘':md(day)}</div>${isT?`<div class="mut sm">${md(day)}</div>`:`<button class="sm" data-a="dToday" style="color:var(--g);font-weight:700">오늘로</button>`}</div><button class="btn2" data-a="dNav" data-v="1">›</button></div>`+weekKR();
+function vToday(){const isT=day===TODAY;let h=`<div class="top"><button class="btn2" data-a="dNav" data-v="-1">‹</button><div style="text-align:center"><label style="position:relative;display:inline-block"><div class="h1">${isT?'오늘':md(day)} <span style="font-size:16px;color:var(--mut)">▾</span></div><input type="date" value="${day}" data-day="1" style="position:absolute;inset:0;opacity:0;width:100%"></label>${isT?`<div class="mut sm">${md(day)}</div>`:`<button class="sm" data-a="dToday" style="color:var(--g);font-weight:700">오늘로</button>`}</div><button class="btn2" data-a="dNav" data-v="1">›</button></div>`+weekKR();
  const S=sessOn(day),evs=EV().filter(e=>e.start<=day&&e.end>=day);evs.forEach(e=>{h+=`<div class="card" style="background:#FDECEC;color:var(--r);font-weight:800">${esc(e.name)}</div>`});
  if(!S.length){let nx=null;for(let i=1;i<15&&!nx;i++){const x=addD(day,i);if(sessOn(x).some(s=>!s.done))nx=x}h+=`<div class="card"><div style="font-size:21px;font-weight:800">쉬는 날</div>${nx?`<button class="mut" style="margin-top:6px" data-a="go" data-d="${nx}">다음: ${md(nx)} ›</button>`:''}<button class="btn2" style="margin-top:12px" data-a="sAdd" data-d="${day}">+ 훈련 추가</button></div>`}
  S.forEach(s=>{h+=sessCard(s)});return h}
@@ -184,13 +185,14 @@ const findS=id=>{for(let n=1;n<=lastW();n++){const s=weekSlots(n).find(x=>x.id==
 const act={
  tab:d=>{tab=d.t;render();scrollTo(0,0);if(d.t==='plan'){const c=document.getElementById('cur');if(c)c.scrollIntoView({block:'start'})}},
  dNav:d=>{day=addD(day,+d.v);render()},dToday:()=>{day=TODAY;render()},go:d=>{day=d.d;tab='today';render();scrollTo(0,0)},
- sType:d=>todoPut(d.id,{disc:d.d,kind:d.k,items:(findS(d.id)||{}).kind===d.k&&(findS(d.id)||{}).disc===d.d?(findS(d.id)||{}).items:null,checks:{}}),
+ sType:d=>{const s=findS(d.id)||{};const same=s.disc===d.d&&s.kind===d.k;todoPut(d.id,same?{kind:'none',items:null,checks:{}}:{disc:d.d,kind:d.k,items:null,checks:{}})},
+ sCancel:d=>{todoPut(d.id,{step:'ready',checks:{}});toast('취소했어요')},
  sRest:d=>{todoPut(d.id,{hidden:true});toast('쉬기로 바꿨어요')},
  sStart:d=>todoPut(d.id,{step:'go'}),
  iNext:d=>{const s=findS(d.id);const c={...(s.checks||{}),[d.k]:true};const all=itemsOf(s).every(x=>c[x.k]);todoPut(d.id,{checks:c,...(all?{done:true,step:'done'}:{})});if(all)toast('끝! SV 캡처는 Slack 기록함에')},
  iCk:d=>{const s=findS(d.id);const c={...(s.checks||{})};c[d.k]=!c[d.k];todoPut(d.id,{checks:c})},
  sEnd:d=>{todoPut(d.id,{done:true,step:'done'});toast('끝! SV 캡처는 Slack 기록함에')},
- sReopen:d=>todoPut(d.id,{done:false,step:'go'}),
+ sReopen:d=>todoPut(d.id,{done:false,step:'ready',checks:{}}),
  postT:d=>{const s=findS(d.id);todoPut(d.id,{post:{...(s.post||{}),up:!(s.post||{}).up}})},
  retroT:d=>{retroOpen=retroOpen===d.id?null:d.id;render()},
  retroSave:d=>{const t=document.getElementById('rt').value.trim();const s=findS(d.id);retroOpen=null;if(t)save('notes',{id:'R-'+d.id,type:'retro',date:s.date,text:t});toast('회고 저장')},
@@ -199,7 +201,7 @@ const act={
  okEdit:()=>{okEdit=!okEdit;render()},gDisc:d=>{gdisc=d.v;render()}
 };
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||['INPUT','TEXTAREA'].includes(b.tagName))return;const f=act[b.dataset.a];if(f){e.preventDefault();f(b.dataset)}});
-document.addEventListener('change',e=>{const el=e.target,x=el.dataset,v=el.value;
+document.addEventListener('change',e=>{const el=e.target,x=el.dataset,v=el.value;if(x.day){if(v){day=v;render()}return}
  if(x.mv){if(el.type==='date'){if(!v)return;todoPut(x.mv,{date:v});toast(`${md(v)}로 옮겼어요`)}else{const[oid,d,kid]=x.mv.split('|');okrSave(L=>{const o=L.find(o=>o.id===oid);o.ms=o.ms||{};o.ms[d]={...(o.ms[d]||{}),[kid]:v===''?null:+v}})}}
  else if(x.ev&&v){const e0=db.events.find(e=>e.id===x.ev);if(e0){save('events',{...e0,start:v,end:addD(v,diffD(e0.start,e0.end))});toast('대회 날짜를 바꿨어요')}}
  else if(x.ot)okrSave(L=>{L.find(o=>o.id===x.ot).title=v});
