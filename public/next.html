@@ -30,8 +30,8 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .ck.y{background:var(--g);border-color:var(--g)}
 .item{padding:12px 0;border-top:1px solid var(--line)}.item:first-child{border-top:0}
 .it-t{font-size:19px;font-weight:800;flex:1}
-.days{display:flex;gap:5px;margin-top:10px;overflow-x:auto}
-.days button{flex:none;min-width:40px;padding:6px 0;border-radius:11px;background:#F1F3F0;font-size:13px;font-weight:700;color:var(--mut);line-height:1.2}
+.days{display:flex;gap:4px;margin-top:10px}
+.days button{flex:1;min-width:0;padding:6px 0;border-radius:11px;background:#F1F3F0;font-size:13px;font-weight:700;color:var(--mut);line-height:1.2}
 .days button.on{background:var(--g);color:#fff}
 .days button b{display:block;font-size:15px;color:inherit}
 .dr{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
@@ -139,7 +139,7 @@ function render(){document.getElementById('nav').innerHTML=[['today','오늘'],[
  document.getElementById('app').innerHTML=ed?vEdit():({today:vToday,cal:vCal,ana:vAna,set:vSet})[tab]()}
 function goalCard(){return `<div class="card" data-a="tab" data-t="ana" style="cursor:pointer"><div class="lbl">목표</div>${['S','D'].map(d=>{const p=discScore(d);return `<div style="margin-top:10px"><div class="row sb"><b>${DN[d]} ${p==null?'<span class="tag">예시</span>':''}</b><span class="mut">${esc(LV(d))}</span></div><div class="bar ${p==null?'ex':''}"><i style="width:${(p==null?.35:p)*100}%"></i></div></div>`}).join('')}</div>`}
 function dayChips(s){const ws=mon(s.date);let h='<div class="days">';for(let k=0;k<7;k++){const d=addD(ws,k);h+=`<button class="${d===s.date?'on':''}" data-a="move" data-id="${s.id}" data-d="${d}">${DOW[pd(d).getDay()]}<b>${pd(d).getDate()}</b></button>`}
- return h+`<button data-a="move" data-id="${s.id}" data-d="${addD(s.date,7)}">다음 주<b>›</b></button><button data-a="rest" data-id="${s.id}" style="color:var(--r)">쉬기<b>–</b></button></div>`}
+ return h+`<button data-a="move" data-id="${s.id}" data-d="${addD(s.date,7)}">다음<b>›</b></button><button data-a="rest" data-id="${s.id}" style="color:var(--r)">쉬기<b>–</b></button></div>`}
 function itemRow(s){return `<div class="item"><div class="row"><button class="ck" data-a="quickDone" data-id="${s.id}"></button><div class="it-t">${DN[s.disc]} ${KN[s.kind]}</div><button class="btn2" data-a="start" data-id="${s.id}">기록</button></div>${dayChips(s)}</div>`}
 function logLine(l){const t=l.kind==='drill'?`${DN[l.disc]} 드릴 · ${(l.drills||[]).length}개`:`${DN[l.disc]} 게임${l.gw!=null&&l.gw!==''?` · ${l.gw}:${l.gl}`:''}`;return `<div class="item row" data-a="editLog" data-id="${l.id}" style="cursor:pointer"><span class="ck y">✓</span><div style="flex:1;min-width:0"><div class="it-t" style="font-size:17px">${t}</div>${l.memo?`<div class="mut sm">${esc(l.memo)}</div>`:''}</div><span class="mut">${md(l.date)}</span></div>`}
 function weekList(n,title){const ws=wkStart(n);let h=`<div class="card"><div class="row sb"><div class="lbl">${title}</div><span class="mut sm">W${n} · ${md(ws)}~</span></div>`;
