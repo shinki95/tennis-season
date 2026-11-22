@@ -119,14 +119,14 @@ function weekSlots(n){if(n<1||n>lastW())return [];const ws=wkStart(n),we=addD(ws
  const S=DAYS().map((dw,k)=>{const id=`W${n}-s${k+1}`,t=db.todos.find(x=>x.id===id)||{};return {...t,id,date:t.date||addD(ws,(dw+6)%7),disc:t.disc||'S',kind:t.kind||'game'}}).filter(s=>!s.hidden);
  db.todos.filter(t=>t.custom&&!t.hidden&&t.kind&&t.date>=ws&&t.date<=we).forEach(t=>S.push({...t,disc:t.disc||'S'}));
  S.forEach(s=>{if(!s.done&&db.logs.some(l=>l.todoId===s.id||(l.date===s.date&&l.src!=='quick')))s.done=true});return S}
-function sessOn(d){const n=wkOf(d);return [n-1,n,n+1].flatMap(weekSlots).filter(s=>s.date===d)}
+function sessOn(d){const n=wkOf(d);const A=[n-1,n,n+1].flatMap(weekSlots).filter(s=>s.date===d);db.todos.filter(t=>t.custom&&!t.hidden&&t.kind&&t.date===d&&!A.some(x=>x.id===t.id)).forEach(t=>{const s={...t,disc:t.disc||'S'};if(!s.done&&db.logs.some(l=>l.todoId===s.id))s.done=true;A.push(s)});return A}
 const allDone=(from,to)=>{const out=[];for(let n=Math.max(1,wkOf(from));n<=Math.min(lastW(),wkOf(to));n++)weekSlots(n).forEach(s=>{if(s.done&&s.date>=from&&s.date<=to)out.push(s)});return out};
 const short=t=>{t=String(t||'');const c=t.split(/(?<=[.。])\s/)[0];return c.length>40?c.slice(0,39)+'…':c};
 /* 할 것: Aside 가 넣은 items 우선, 없으면 기본 */
 function itemsOf(s){if(s.kind==='none')return [];if(s.items&&s.items.length)return s.items;
  if(s.kind==='game')return [{k:'g',t:s.disc==='D'?'복식 게임':'단식 게임'}];
  if(s.kind==='rally')return [{k:'r1',t:'포핸드 크로스 랠리',fid:'f-ground'},{k:'r2',t:'백핸드 크로스 랠리',fid:'f-ground'},{k:'r3',t:'깊게 (서비스 라인 넘기기)',fid:'f-depth'},{k:'r4',t:'서브 · 리턴',fid:'f-serve'}];
- const who=s.kind==='partner'?['partner','four']:['one','solo'];const fs=FA().filter(f=>s.disc==='D'?f.disc!=='S':f.disc!=='D');const out=[];
+ const who=s.kind==='partner'?['partner']:(s.disc==='D'?['four','partner']:['one','solo']);const fs=FA().filter(f=>s.disc==='D'?f.disc!=='S':f.disc!=='D');const out=[];
  for(const f of fs){for(const d of f.drills||[]){if(out.length<4&&!/^게임 중/.test(d.name)&&who.includes(d.who))out.push({k:'d'+out.length,t:d.name,s:short(d.desc||d.how),fid:f.id})}if(out.length>=4)break}
  return out}
 
@@ -196,10 +196,16 @@ function vPlan(){const cw=Math.max(1,wkOf(TODAY));let h=`<div class="top"><div c
  for(let n=Math.max(1,cw-2);n<=Math.min(lastW(),cw+6);n++){const ws=wkStart(n);h+=`<div class="card" ${n===cw?'id="cur"':''}><div class="row sb"><div class="lbl">${n===cw?'이번 주 · ':''}W${n}</div><span class="mut sm">${md(ws)}~</span></div>`;
   for(let k=0;k<7;k++){const d=addD(ws,k),S=sessOn(d),E=EV().filter(e=>e.start===d);if(!S.length&&!E.length)continue;h+=`<div class="wr"><button class="wd" data-a="go" data-d="${d}">${DOW[pd(d).getDay()]} ${pd(d).getDate()}</button><div class="row" style="flex-wrap:wrap;gap:6px;flex:1">${E.map(e=>`<span class="pill ev">${esc(e.name)}</span>`).join('')}${S.map(s=>`<span class="pill ${s.done?'done':''}">${TN(s.disc,s.kind)}</span>`).join('')}</div>${S[0]?dateBtn(S[0].id,S[0].date,'mv'):''}</div>`}
   h+=`</div>`}return h}
+function wkVal(k,n){const m=mOf(k.fid);if(!m)return null;const ws=wkStart(n),we=addD(ws,6);const v=db.logs.filter(l=>l.date>=ws&&l.date<=we).map(l=>(l.vals||{})[m.id]).filter(v=>v!=null&&v!=='').map(Number);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length*10)/10:null}
+function weekTable(o){const cw=Math.max(1,wkOf(TODAY)),last=Math.min(wkOf(o.end),cw+2),ks=o.krs;let h=`<div class="card"><div class="lbl">주차별 · 실제 / 그 주 목표</div><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:13px"><tr><th style="text-align:left;padding:6px 4px;color:var(--mut)">주</th>${ks.map(k=>`<th style="padding:6px 4px;color:${COL[k.fid]};text-align:center">${esc(krName(k))}</th>`).join('')}</tr>`;
+ for(let n=last;n>=1;n--){const we=addD(wkStart(n),6);h+=`<tr style="border-top:1px solid var(--line);${n===cw?'background:#F4F6F3':''}"><td style="padding:7px 4px;white-space:nowrap"><b>W${n}</b><div class="mut" style="font-size:11px">${md(wkStart(n)).replace(/ .+/,'')}~</div></td>${ks.map(k=>{const v=wkVal(k,n),t=msTarget(o,k,we),tr=krCount(o,k,wkStart(n),we);const ok=v==null?null:(kDir(k)<0?v<=t:v>=t);
+   return `<td style="text-align:center;padding:7px 4px"><b style="color:${ok==null?'#C4C9D2':ok?'var(--g)':'var(--r)'}">${v==null?'–':v}</b><span class="mut" style="font-size:11px">/${t}</span><div class="mut" style="font-size:11px">훈련 ${tr}</div></td>`}).join('')}</tr>`}
+ return h+`</table></div><div class="mut sm" style="margin-top:6px">초록 = 그 주 목표 넘음 · 빨강 = 못 미침 · 숫자는 SwingVision</div></div>`}
 function vGoal(){const o=OKR().find(x=>x.disc===gdisc),E=okEdit,ws=mon(TODAY),we=addD(ws,6),nx=nextMs(o);
  let h=`<div class="top"><div class="h1">목표</div><button class="btn2" data-a="okEdit">${E?'완료':'조정'}</button></div><div class="seg">${['S','D'].map(k=>`<button class="${gdisc===k?'on':''}" data-a="gDisc" data-v="${k}">${k==='S'?'단식':'복식'}</button>`).join('')}</div>`;
  h+=`<div class="card">${E?`<input class="inp" style="font-weight:800;font-size:18px" data-ot="${o.id}" value="${esc(o.title)}"><div class="row mut sm" style="margin-top:8px">${dateBtn(o.id,o.start,'os')} ~ ${dateBtn(o.id,o.end,'oe')}</div>`:`<div style="font-size:20px;font-weight:800">${esc(o.title)}</div><div class="mut sm">${md(o.start)} ~ ${md(o.end)}</div>`}
   <div class="lbl" style="margin-top:14px">KR · 요소별 목표값과 추이</div>${o.krs.map(k=>E?`<div class="krr"><div class="row sb"><b>${esc(krName(k))}</b><span class="mut sm">${esc(kMetric(k))}</span></div><div class="row sm" style="margin-top:6px;gap:8px">목표 <input class="ti" data-kt="${o.id}:${k.id}" value="${k.target}">${esc(kUnit(k))} · 주 훈련 <input class="ti" data-kp="${o.id}:${k.id}" value="${k.per}">회</div></div>`:krRow(o,k,true)).join('')}${(o.res||[]).map(r=>resRow(o,r)).join('')}</div>`;
+ h+=weekTable(o);
  const D=msDates(o);h+=`<div class="card"><div class="lbl">단계 (목표에서 거꾸로)</div><div class="tl">${D.map(d=>{const past=d<TODAY;const ok=past?o.krs.every(k=>{const S=kSeries(k).filter(p=>p[0]<=d);if(!S.length)return true;const v=S[S.length-1][1];return kDir(k)<0?v<=msTarget(o,k,d):v>=msTarget(o,k,d)}):null;
   return `<div class="ms ${d===o.end?'goal':d===nx?'next':past?(ok?'ok':'miss'):''}"><span class="nd"></span><div class="row sb"><b>${msLabel(o,d)}</b>${E&&d!==o.end?dateBtn(o.id+'|'+d,d,'md'):`<span class="mut">${md(d)}${d===nx?' · 다음':''}</span>`}</div><div class="kv">${o.krs.map(k=>`<span>${esc(krName(k))} ${E?`<input class="ti" data-mv="${o.id}|${d}|${k.id}" value="${msTarget(o,k,d)}">`:`<b>${msTarget(o,k,d)}</b>`}${esc(kUnit(k))}</span>`).join('')}</div></div>`}).join('')}</div></div>`;
  h+=``;
@@ -208,7 +214,7 @@ function vGoal(){const o=OKR().find(x=>x.disc===gdisc),E=okEdit,ws=mon(TODAY),we
 /* 동작 */
 function todoPut(id,extra){const s=findS(id)||{};const t=db.todos.find(x=>x.id===id)||{id};return save('todos',{...t,id,date:s.date||t.date,disc:s.disc||t.disc,kind:s.kind||t.kind,...extra})}
 function okrSave(fn){const L=JSON.parse(JSON.stringify(OKR()));fn(L);save('settings',{...ST(),id:'main',okr:L})}
-const findS=id=>{for(let n=1;n<=lastW();n++){const s=weekSlots(n).find(x=>x.id===id);if(s)return s}return null};
+const findS=id=>{for(let n=1;n<=lastW();n++){const s=weekSlots(n).find(x=>x.id===id);if(s)return s}const t=db.todos.find(x=>x.id===id);return t?{...t,disc:t.disc||'S'}:null};
 const act={
  tab:d=>{tab=d.t;if(d.d)gdisc=d.d;render();scrollTo(0,0);if(d.t==='plan'){const c=document.getElementById('cur');if(c)c.scrollIntoView({block:'start'})}},
  dNav:d=>{day=addD(day,+d.v);render()},dToday:()=>{day=TODAY;render()},go:d=>{day=d.d;tab='today';render();scrollTo(0,0)},
