@@ -57,11 +57,8 @@ input,textarea{font-family:inherit;font-size:16px}
 .kv{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.kv span{background:#F4F6F3;border-radius:9px;padding:5px 9px;font-size:13px}
 .ti{width:52px;padding:3px 4px;border:1.5px solid var(--line);border-radius:7px;font-size:14px;text-align:center}
 .inp{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px}
-.swipe{position:relative;margin-top:12px;border-radius:22px;overflow:hidden}
-.swipe .swa{position:absolute;right:0;top:0;bottom:0;display:flex}
-.swipe .swa button{width:76px;color:#fff;font-weight:800;font-size:14px}
-.swipe .swf{position:relative;margin-top:0;transition:transform .2s;touch-action:pan-y}
 .ib{width:36px;height:36px;border-radius:50%;background:#F1F3F0;display:inline-flex;align-items:center;justify-content:center;font-size:18px;color:var(--mut)}
+.del{padding:7px 11px;border-radius:10px;font-size:14px;font-weight:700;color:var(--r);background:#FDECEC}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .chip{padding:10px 13px;border-radius:12px;background:#F1F3F0;font-size:15px;font-weight:700;color:var(--ink)}
 .chip.on{background:var(--ink);color:#fff}
@@ -126,7 +123,8 @@ const short=t=>{t=String(t||'');const c=t.split(/(?<=[.。])\s/)[0];return c.len
 function itemsOf(s){if(s.kind==='none')return [];if(s.items&&s.items.length)return s.items;
  if(s.kind==='game')return [{k:'g',t:s.disc==='D'?'복식 게임':'단식 게임'}];
  if(s.kind==='rally')return [{k:'r1',t:'포핸드 크로스 랠리',fid:'f-ground'},{k:'r2',t:'백핸드 크로스 랠리',fid:'f-ground'},{k:'r3',t:'깊게 (서비스 라인 넘기기)',fid:'f-depth'},{k:'r4',t:'서브 · 리턴',fid:'f-serve'}];
- const who=s.kind==='partner'?['partner']:(s.disc==='D'?['four','partner']:['one','solo']);const fs=FA().filter(f=>s.disc==='D'?f.disc!=='S':f.disc!=='D');const out=[];
+ if(s.disc==='D'){const P=[];FA().filter(f=>f.disc!=='S').forEach(f=>(f.drills||[]).forEach(d=>{if(d.who==='partner')P.push({d,f})}));P.sort((a,b)=>(a.d.po||99)-(b.d.po||99));return P.slice(0,5).map((x,i)=>({k:'p'+i,t:x.d.name,s:x.d.how,fid:x.f.id}))}
+ const who=['one','solo'];const fs=FA().filter(f=>f.disc!=='D');const out=[];
  for(const f of fs){for(const d of f.drills||[]){if(out.length<4&&!/^게임 중/.test(d.name)&&who.includes(d.who))out.push({k:'d'+out.length,t:d.name,s:short(d.desc||d.how),fid:f.id})}if(out.length>=4)break}
  return out}
 
@@ -177,17 +175,17 @@ function resRow(o,r){const x=resNow(o,r),pts=r.type==='gamepct'?gameSeries(o):[]
 function goalCard(){return `<div class="card">${OKR().map((o,i)=>{const nx=nextMs(o);return `<div style="${i?'margin-top:16px':''}"><button class="row sb" style="width:100%;text-align:left" data-a="tab" data-t="goal" data-d="${o.disc}"><b style="font-size:17px">${esc(o.title)}</b><span class="mut sm">${o.disc==='D'?'복식':'단식'} ›</span></button>${nx?`<div class="mut sm">다음 단계 ${md(nx)} · ${msLabel(o,nx)}</div>`:''}<div style="margin-top:4px">${o.krs.map(k=>krRow(o,k)).join('')}<div class="mut sm" style="padding-top:8px;border-top:1px solid var(--line)">결과 · ${(o.res||[]).map(r=>{const x=resNow(o,r);return `${x.n} <b style="color:var(--ink)">${x.v==null?'–':x.v}</b>/${r.target}${x.u}`}).join(' · ')}</div></div></div>`}).join('')}</div>`}
 function typeChips(id,s){return `<div class="chips">${TYPES.map(([d,k,n])=>`<button class="chip ${s&&s.disc===d&&s.kind===k?'on':''}" data-a="${id?'sType':'sNew'}" data-id="${id||''}" data-d="${d}" data-k="${k}">${n}</button>`).join('')}</div>`}
 function sessCard(s){const it=itemsOf(s),ck=s.checks||{},step=s.done?'done':s.step||'ready',cur=it.findIndex(x=>!ck[x.k]);
- let h=`<div class="swipe" data-id="${s.id}"><div class="swa"><button style="background:var(--o)" data-a="sTomorrow" data-id="${s.id}">내일로</button><button style="background:var(--mut)" data-a="sRest" data-id="${s.id}">쉬기</button></div><div class="swf card">`;
- if(step==='ready'){h+=`<div class="row sb"><span class="lbl">시작 전</span><span class="row" style="gap:6px">${dateBtn(s.id,s.date,'mv')}<button class="ib" aria-label="더보기 (쉬기·내일로)" data-a="swOpen" data-id="${s.id}">⋯</button></span></div>${typeChips(s.id,s)}
+ const del=`<button class="del" data-a="sDel" data-id="${s.id}">지우기</button>`;let h=`<div class="card" data-sid="${s.id}">`;
+ if(step==='ready'){h+=`<div class="row sb"><span class="lbl">시작 전</span><span class="row" style="gap:6px">${dateBtn(s.id,s.date,'mv')}${del}</span></div>${typeChips(s.id,s)}
   <div style="margin-top:12px">${it.map(x=>`<div class="it"><span class="ck" style="width:22px;height:22px;border-style:dashed"></span><span><span class="t">${esc(x.t)}</span>${x.s?`<span class="s">${esc(x.s)}</span>`:''}</span></div>`).join('')}</div><button class="btn" data-a="sStart" data-id="${s.id}">카메라 켜고 시작</button>`}
- else if(step==='go'){const x=it[cur];h+=`<div class="row sb"><span class="lbl">하는 중 · ● 촬영</span><button class="ib" aria-label="중단" data-a="sCancel" data-id="${s.id}">✕</button></div><b style="font-size:20px">${TN(s.disc,s.kind)}</b><div class="dots">${it.map(y=>`<i class="${ck[y.k]?'y':''}"></i>`).join('')}</div>
+ else if(step==='go'){const x=it[cur];h+=`<div class="row sb"><span class="lbl">하는 중 · ● 촬영</span><span class="row" style="gap:6px"><button class="btn2" data-a="sCancel" data-id="${s.id}">처음부터</button>${del}</span></div><b style="font-size:20px">${TN(s.disc,s.kind)}</b><div class="dots">${it.map(y=>`<i class="${ck[y.k]?'y':''}"></i>`).join('')}</div>
   ${x?`<div class="now"><div class="mut sm">${cur+1} / ${it.length}</div><div class="t">${esc(x.t)}</div>${x.s?`<div class="mut" style="margin-top:4px">${esc(x.s)}</div>`:''}</div><button class="btn" data-a="iNext" data-id="${s.id}" data-k="${x.k}">${cur===it.length-1?'완료':'다음 →'}</button>`:`<button class="btn" data-a="sEnd" data-id="${s.id}">완료</button>`}
   <div style="margin-top:10px">${it.map((y,i)=>`<button class="it ${ck[y.k]?'y':''}" data-a="iCk" data-id="${s.id}" data-k="${y.k}"><span class="ck ${ck[y.k]?'y':''}" style="width:22px;height:22px;font-size:12px">${ck[y.k]?'✓':''}</span><span class="t" style="${i===cur?'font-weight:800':''}">${esc(y.t)}</span></button>`).join('')}</div>${x?`<button class="mut" style="width:100%;margin-top:10px;font-weight:700" data-a="sEnd" data-id="${s.id}">여기까지 하고 끝내기</button>`:''}`}
  else{const lg=db.logs.find(l=>l.date===s.date&&l.src!=='quick'),nt=db.notes.find(n=>n.id==='R-'+s.id),nx=(()=>{for(let i=1;i<15;i++){const x=addD(s.date,i);const S=sessOn(x).filter(z=>!z.done);if(S.length)return S[0]}return null})();
   const P=[['up','SwingVision 캡처 Slack에',!!(s.post||{}).up||!!lg],['ana','SV 숫자 반영 (Aside)',!!(lg&&lg.vals&&Object.keys(lg.vals).length)],['retro','회고',!!nt],['next','다음 훈련 받기',!!(nx&&nx.items&&nx.items.length)]];
-  h+=`<div class="row"><button class="ck y" aria-label="완료 해제" data-a="sReopen" data-id="${s.id}">✓</button><b style="font-size:20px">${TN(s.disc,s.kind)}</b><span class="lbl" style="margin-left:auto">끝남</span></div><div style="margin-top:10px">${P.map(([k,t,on])=>`<button class="it ${on?'y':''}" data-a="${k==='retro'?'retroT':k==='up'?'postT':'noop'}" data-id="${s.id}" data-k="${k}"><span class="ck ${on?'y':''}" style="width:22px;height:22px;font-size:12px">${on?'✓':''}</span><span class="t">${t}</span></button>`).join('')}</div>
+  h+=`<div class="row"><button class="ck y" aria-label="완료 해제" data-a="sReopen" data-id="${s.id}">✓</button><b style="font-size:20px">${TN(s.disc,s.kind)}</b><span class="lbl" style="margin-left:auto">끝남</span>${del}</div><div style="margin-top:10px">${P.map(([k,t,on])=>`<button class="it ${on?'y':''}" data-a="${k==='retro'?'retroT':k==='up'?'postT':'noop'}" data-id="${s.id}" data-k="${k}"><span class="ck ${on?'y':''}" style="width:22px;height:22px;font-size:12px">${on?'✓':''}</span><span class="t">${t}</span></button>`).join('')}</div>
   ${retroOpen===s.id?`<textarea class="inp" id="rt" rows="3" placeholder="잘된 것 / 다음엔">${esc(nt?nt.text:'')}</textarea><button class="btn2" style="margin-top:8px" data-a="retroSave" data-id="${s.id}">저장</button>`:''}`}
- return h+'</div></div>'}
+ return h+'</div>'}
 function vToday(){const isT=day===TODAY;let h=`<div class="top"><button class="ib" aria-label="전날" data-a="dNav" data-v="-1">‹</button><div style="text-align:center"><label style="position:relative;display:inline-block"><div class="h1">${isT?'오늘':md(day)} <span style="font-size:16px;color:var(--mut)">▾</span></div><input type="date" value="${day}" data-day="1" style="position:absolute;inset:0;opacity:0;width:100%"></label>${isT?`<div class="mut sm">${md(day)}</div>`:`<button class="sm" data-a="dToday" style="color:var(--g);font-weight:700">오늘로</button>`}</div><button class="ib" aria-label="다음날" data-a="dNav" data-v="1">›</button></div>`+goalCard();
  const S=sessOn(day),evs=EV().filter(e=>e.start<=day&&e.end>=day);evs.forEach(e=>{h+=`<div class="card" style="background:#FDECEC;color:var(--r);font-weight:800">${esc(e.name)}</div>`});
  S.forEach(s=>{h+=sessCard(s)});
@@ -220,13 +218,13 @@ const act={
  dNav:d=>{day=addD(day,+d.v);render()},dToday:()=>{day=TODAY;render()},go:d=>{day=d.d;tab='today';render();scrollTo(0,0)},
  sType:d=>{const s=findS(d.id)||{};if(s.disc===d.d&&s.kind===d.k)return;undoable(`${TN(d.d,d.k)}로 바꿨어요`,'todos',d.id,()=>todoPut(d.id,{disc:d.d,kind:d.k,items:null,checks:{}}))},
  sNew:d=>{const id='t'+Date.now().toString(36);undoable(`${md(day)} ${TN(d.d,d.k)} 추가`,'todos',id,()=>save('todos',{id,custom:true,kind:d.k,disc:d.d,date:day,week:wkOf(day)}))},
- sRest:d=>undoable('쉬기로 바꿨어요','todos',d.id,()=>todoPut(d.id,{hidden:true})),
- sTomorrow:d=>{const s=findS(d.id);undoable(`${md(addD(s.date,1))}로 옮겼어요`,'todos',d.id,()=>todoPut(d.id,{date:addD(s.date,1)}))},
- swOpen:d=>{const el=document.querySelector(`.swipe[data-id="${d.id}"]`);if(!el)return;const f=el.querySelector('.swf'),open=!el.classList.contains('open');el.classList.toggle('open',open);f.style.transform=open?'translateX(-152px)':''},
+ sDel:d=>{const t=db.todos.find(x=>x.id===d.id);const s=findS(d.id);const m=`${s?md(s.date)+' '+TN(s.disc,s.kind):'훈련'} 지웠어요`;
+  if(t&&t.custom){UNDO={c:'todos',id:d.id,prev:JSON.parse(JSON.stringify(t))};db.todos=db.todos.filter(x=>x.id!==d.id);render();fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({collection:'todos',deletes:[d.id]})});snack(m,true)}
+  else undoable(m,'todos',d.id,()=>todoPut(d.id,{hidden:true}))},
  sStart:d=>todoPut(d.id,{step:'go'}),
  iNext:d=>{const s=findS(d.id);const c={...(s.checks||{}),[d.k]:true};const all=itemsOf(s).every(x=>c[x.k]);todoPut(d.id,{checks:c,...(all?{done:true,step:'done'}:{})});if(all)snack('끝! SV 캡처는 Slack 기록함에')},
  iCk:d=>{const s=findS(d.id);const c={...(s.checks||{})};c[d.k]=!c[d.k];todoPut(d.id,{checks:c})},
- sCancel:d=>undoable('중단했어요','todos',d.id,()=>todoPut(d.id,{step:'ready',checks:{}})),
+ sCancel:d=>undoable('처음부터 다시','todos',d.id,()=>todoPut(d.id,{step:'ready',checks:{}})),
  sEnd:d=>undoable('끝냈어요 · SV 캡처는 Slack 기록함에','todos',d.id,()=>todoPut(d.id,{done:true,step:'done'})),
  sReopen:d=>undoable('완료를 풀었어요','todos',d.id,()=>todoPut(d.id,{done:false,step:'ready'})),
  undo:()=>{if(!UNDO)return;const {c,id,prev}=UNDO;UNDO=null;document.getElementById('toast').innerHTML='';if(prev)save(c,prev);else{db[c]=db[c].filter(r=>r.id!==id);render();fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({collection:c,deletes:[id]})})}},
@@ -246,10 +244,6 @@ document.addEventListener('change',e=>{const el=e.target,x=el.dataset,v=el.value
  else if(x.kt){const[oid,kid]=x.kt.split(':');okrSave(L=>{L.find(o=>o.id===oid).krs.find(k=>k.id===kid).target=+v})}
  else if(x.kp){const[oid,kid]=x.kp.split(':');okrSave(L=>{L.find(o=>o.id===oid).krs.find(k=>k.id===kid).per=+v})}
  else if(x.md&&v){const[oid,d]=x.md.split('|');okrSave(L=>{const o=L.find(o=>o.id===oid);o.msd=[...msDates(o).filter(z=>z!==d),v];if(o.ms&&o.ms[d]){o.ms[v]=o.ms[d];delete o.ms[d]}})}});
-let sw=null;
-document.addEventListener('touchstart',e=>{const el=e.target.closest('.swipe');if(!el||e.target.closest('input,button.chip'))return;sw={el,x:e.touches[0].clientX,y:e.touches[0].clientY,dx:0,lock:null}},{passive:true});
-document.addEventListener('touchmove',e=>{if(!sw)return;const dx=e.touches[0].clientX-sw.x,dy=e.touches[0].clientY-sw.y;if(sw.lock==null)sw.lock=Math.abs(dx)>Math.abs(dy)?'x':'y';if(sw.lock!=='x')return;const base=sw.el.classList.contains('open')?-152:0;sw.dx=clamp(base+dx,-170,0);sw.el.querySelector('.swf').style.transform=`translateX(${sw.dx}px)`},{passive:true});
-document.addEventListener('touchend',()=>{if(!sw)return;if(sw.lock==='x'){const open=sw.dx<-70;sw.el.classList.toggle('open',open);sw.el.querySelector('.swf').style.transform=open?'translateX(-152px)':''}sw=null});
 load();
 </script>
 </body>
