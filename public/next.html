@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2F7D4F">
+<title>오늘 테니스</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--g:#2F7D4F;--g2:#1F5E3B;--gl:#E6F2E9;--ink:#111318;--mut:#6B7280;--line:#E6E9EF;--bg:#F4F6F3}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:16px/1.45 Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--ink)}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+.w{max-width:480px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 18px 40px}
+.date{color:var(--mut);font-size:15px;font-weight:600}
+.card{background:#fff;border-radius:26px;padding:22px 20px;margin-top:14px}
+.kind{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1.15}
+.focus{margin-top:6px;color:var(--g);font-weight:700;font-size:17px}
+.it{display:flex;align-items:center;gap:14px;padding:16px 0;border-top:1px solid var(--line);width:100%;text-align:left;font-size:18px}
+.it:first-child{border-top:0}
+.ck{width:30px;height:30px;border-radius:50%;border:2.5px solid #C9CED8;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.ck.y{background:var(--g);border-color:var(--g)}
+.it.y span.t{color:#9CA3AF;text-decoration:line-through}
+.it .s{display:block;font-size:13px;color:var(--mut);margin-top:2px}
+.big{width:100%;border-radius:18px;padding:18px;font-size:18px;font-weight:800;margin-top:14px;background:var(--g);color:#fff}
+.ghost{width:100%;border-radius:18px;padding:15px;font-size:16px;font-weight:700;margin-top:10px;background:#fff;color:var(--ink)}
+.opt{width:100%;border-radius:18px;padding:18px;font-size:18px;font-weight:700;margin-top:10px;background:#fff;text-align:left}
+.score{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:6px}
+.score input{width:84px;height:84px;border-radius:20px;border:2px solid var(--line);font-size:38px;font-weight:800;text-align:center;font-family:inherit}
+.tg{display:flex;align-items:center;gap:12px;margin-top:18px;font-size:17px}
+.done{font-size:46px;font-weight:800;color:var(--g)}
+.next{color:var(--mut);margin-top:18px;font-size:15px}
+.login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:30px}
+</style>
+</head>
+<body>
+<div id="app" class="w"></div>
+<script>
+'use strict';
+/* 1단계: "오늘 할 것" 하나만. 다른 화면 없음. 데이터는 본 앱과 같은 저장소. */
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c,12)};
+const ds=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ds(d)};
+const mon=s=>{const d=pd(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return ds(d)};
+const diffD=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const DOW=['일','월','화','수','목','금','토'];
+const md=s=>{const d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()+' '+DOW[d.getDay()]};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const Q=new URLSearchParams(location.search);const TODAY=Q.get('d')||ds(new Date());
+let db={logs:[],factors:[],events:[],settings:[],todos:[],notes:[]},ui={end:false,swap:false};
+
+async function load(){const me=await (await fetch('/api/auth?me=1')).json();if(!me.authed){document.getElementById('app').innerHTML=`<div class="login"><div class="kind">오늘 테니스</div><button class="big" onclick="location.href='/api/auth?start=1'">Google로 계속하기</button></div>`;return}
+ db={...db,...(await (await fetch('/api/db')).json())};render()}
+async function save(c,rec){rec._u=new Date().toISOString();const arr=db[c];const i=arr.findIndex(r=>r.id===rec.id);if(i>=0)arr[i]=rec;else arr.push(rec);render();await fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({collection:c,upserts:[rec]})})}
+
+/* 계획: 주마다 화·목·토 3회차 (본 앱과 같은 id) */
+const ST=()=>db.settings.find(x=>x.id==='main')||{planStart:'2026-11-23'};
+const wkOf=d=>Math.floor(diffD(mon(ST().planStart||'2026-11-23'),mon(d))/7)+1;
+const SLOT={2:1,4:2,6:3};
+function sessionFor(d){const n=wkOf(d),k=SLOT[pd(d).getDay()];const custom=db.todos.find(t=>t.date===d&&!t.hidden&&(t.custom||/-s\d$/.test(t.id)));
+ if(custom)return {...custom};if(!k||n<1)return null;const id=`W${n}-s${k}`;const st=db.todos.find(t=>t.id===id)||{};if(st.hidden||(st.date&&st.date!==d))return null;
+ return {id,kind:'game',disc:'S',date:d,...st}}
+function nextSession(d){for(let i=1;i<10;i++){const x=addD(d,i),s=sessionFor(x);if(s)return {d:x,s}}return null}
+const KN={game:'게임',drill:'드릴',rally:'랠리',league:'리그 경기'};const DN={S:'단식',D:'복식'};
+/* 오늘의 한 가지: 첫 요소의 '게임 중 한 가지' (측정이 쌓이면 가장 뒤처진 요소로 바뀜 — 4단계) */
+function focus(){const f=(db.factors||[]).filter(x=>x.active!==false).sort((a,b)=>(a.order||99)-(b.order||99))[0];if(!f)return null;const d=(f.drills||[]).find(x=>/^게임 중/.test(x.name));return d?d.name.replace(/^게임 중 한 가지:\s*/,''):null}
+function drills(s){const who=s.disc==='D'?['partner','four']:['one','solo'];const out=[];for(const f of (db.factors||[]).filter(x=>x.active!==false&&(s.disc==='D'?x.disc!=='S':x.disc!=='D')).sort((a,b)=>(a.order||99)-(b.order||99))){for(const d of f.drills||[]){if(out.length<2&&who.includes(d.who)&&!/^게임 중/.test(d.name))out.push({k:'d'+out.length,t:d.name,s:d.pass?'통과: '+d.pass:''})}}return out}
+function items(s){const wu={k:'wu',t:'워밍업 10분'},sv={k:'sv',t:'SV 켜고 촬영'};if(s.kind==='drill')return [wu,...drills(s),sv];const f=focus();return [wu,...(f?[{k:'focus',t:f,s:'오늘의 한 가지'}]:[]),sv]}
+
+function render(){const a=document.getElementById('app');const s=sessionFor(TODAY);let h=`<div class="date">${md(TODAY)}${s&&wkOf(TODAY)>=1?' · W'+wkOf(TODAY):''}</div>`;
+ if(!s){const nx=nextSession(TODAY);h+=`<div class="card"><div class="kind">쉬는 날</div>${nx?`<div class="next">다음: ${md(nx.d)} · ${DN[nx.s.disc||'S']} ${KN[nx.s.kind]}</div>`:''}</div><button class="ghost" data-a="play">그래도 오늘 친다</button>`;a.innerHTML=h;return}
+ const log=db.logs.find(l=>l.todoId===s.id);
+ if(s.done&&log){const nx=nextSession(TODAY);h+=`<div class="card" style="text-align:center"><div class="kind">${DN[s.disc||'S']} ${KN[s.kind]}</div>${log.gw!=null?`<div class="done">${log.gw} : ${log.gl}</div>`:'<div class="done">끝</div>'}${log.filmed?'<div class="next" style="margin-top:4px">촬영함 · 분석은 나중에</div>':''}${nx?`<div class="next">다음: ${md(nx.d)} · ${DN[nx.s.disc||'S']} ${KN[nx.s.kind]}</div>`:''}</div><button class="ghost" data-a="undo">다시 열기</button>`;a.innerHTML=h;return}
+ if(ui.swap){h+=`<div class="card"><div class="kind" style="font-size:22px">오늘은 무엇을?</div></div>${[['S','game'],['S','drill'],['D','game'],['D','drill'],['S','rally']].map(([d,k])=>`<button class="opt" data-a="pick" data-d="${d}" data-k="${k}">${DN[d]} ${KN[k]}</button>`).join('')}<button class="opt" data-a="skip" style="color:#E5484D">오늘은 안 침</button><button class="ghost" data-a="swapOff">돌아가기</button>`;a.innerHTML=h;return}
+ const ck=s.checks||{},L=items(s);
+ h+=`<div class="card"><div class="kind">${DN[s.disc||'S']} ${KN[s.kind]}</div>${s.kind!=='drill'&&focus()?`<div class="focus">${esc(focus())}</div>`:''}<div style="margin-top:12px">${L.map(it=>`<button class="it ${ck[it.k]?'y':''}" data-a="ck" data-k="${it.k}"><span class="ck ${ck[it.k]?'y':''}">${ck[it.k]?'✓':''}</span><span><span class="t">${esc(it.t)}</span>${it.s&&!ck[it.k]?`<span class="s">${esc(it.s)}</span>`:''}</span></button>`).join('')}</div></div>`;
+ if(ui.end){h+=`<div class="card"><div style="text-align:center;font-weight:700;color:var(--mut)">${s.kind==='game'||s.kind==='league'?'스코어 (게임 수)':'몇 분 쳤어요?'}</div>${s.kind==='game'||s.kind==='league'?`<div class="score"><input id="gw" type="number" inputmode="numeric" placeholder="나"><b style="font-size:28px">:</b><input id="gl" type="number" inputmode="numeric" placeholder="상대"></div>`:`<div class="score"><input id="mn" type="number" inputmode="numeric" value="60"></div>`}<label class="tg"><span class="ck ${ck.sv?'y':''}" data-a="ck" data-k="sv">${ck.sv?'✓':''}</span>촬영했어요 (분석은 나중에)</label></div><button class="big" data-a="finish">저장</button><button class="ghost" data-a="endOff">아직</button>`}
+ else h+=`<button class="big" data-a="end">끝났어요</button><button class="ghost" data-a="swap">다른 걸로 / 안 침</button>`;
+ a.innerHTML=h}
+
+function cur(){return sessionFor(TODAY)}
+function put(s,extra){const base=db.todos.find(t=>t.id===s.id)||{};const r={...base,id:s.id,kind:s.kind,disc:s.disc,date:s.date,...extra};if(s.custom)Object.assign(r,{custom:true,title:s.title||`${DN[s.disc]} ${KN[s.kind]}`,week:wkOf(s.date)});else r.title=`${DN[r.disc||'S']} ${KN[r.kind]}`;return save('todos',r)}
+const act={
+ ck:d=>{const s=cur();const c={...(s.checks||{})};c[d.k]=!c[d.k];put(s,{checks:c})},
+ end:()=>{ui.end=true;render()},endOff:()=>{ui.end=false;render()},
+ swap:()=>{ui.swap=true;render()},swapOff:()=>{ui.swap=false;render()},
+ pick:d=>{const s=cur();ui.swap=false;put(s,{kind:d.k,disc:d.d,checks:{}})},
+ skip:()=>{const s=cur();ui.swap=false;if(s.custom)put(s,{hidden:true});else save('todos',{...(db.todos.find(t=>t.id===s.id)||{}),id:s.id,hidden:true})},
+ play:()=>{const id=uid('t');save('todos',{id,custom:true,kind:'game',disc:'S',date:TODAY,week:wkOf(TODAY),title:'단식 게임'})},
+ finish:()=>{const s=cur(),ck=s.checks||{};const g=document.getElementById('gw'),l=document.getElementById('gl'),mn=document.getElementById('mn');
+  if(g&&(g.value===''||l.value===''))return;const lid=uid('l');const log={id:lid,todoId:s.id,date:s.date,kind:s.kind,disc:s.disc||'S',vals:{},src:'manual'};
+  if(g){log.gw=+g.value;log.gl=+l.value;log.res=log.gw>log.gl?'W':'L'}if(mn)log.min=+mn.value;if(ck.sv){log.filmed=true;log.analysis='pending'}
+  ui.end=false;save('logs',log);put(s,{done:true,logId:lid})},
+ undo:()=>{const s=cur();put(s,{done:false})}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const f=act[b.dataset.a];if(f){e.preventDefault();f(b.dataset)}});
+load();
+</script>
+</body>
+</html>
