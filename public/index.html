@@ -4,471 +4,247 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="테니스 시즌">
 <meta name="theme-color" content="#2F7D4F">
-<title>테니스 시즌</title>
+<title>테니스</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&display=swap">
 <style>
-:root{--blue:#2F5BFF;--blue2:#2149E6;--lime:#D4F25A;--lime2:#C2E23C;--ink:#111318;--bg:#EEF1F6;--card:#fff;--mut:#6B7280;--line:#E6E9EF;--dark:#15171C;--g:#3BA55C;--o:#E39A1B;--r:#E5484D}
+:root{--g:#2F7D4F;--gl:#E6F2E9;--ink:#111318;--mut:#6B7280;--line:#E6E9EF;--bg:#F4F6F3;--r:#E5484D;--o:#E39A1B}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;font:15px/1.45 Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(100px + env(safe-area-inset-bottom))}
-.num{font-family:"Chakra Petch",Pretendard,sans-serif;font-weight:700}
-button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
-.wrap{max-width:560px;margin:0 auto}
-.top{background:var(--blue);color:#fff;border-radius:0 0 30px 30px;padding:calc(14px + env(safe-area-inset-top)) 16px 16px}
-.hdr{display:flex;align-items:center;gap:10px}
-.av{width:40px;height:40px;border-radius:50%;background:var(--lime);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800}
-.ib{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
-.title{font-size:21px;font-weight:800;letter-spacing:-.3px}
-.sub{color:var(--mut);font-size:13px}.top .sub{color:rgba(255,255,255,.75)}
-.small{font-size:12px}
-.wkhd{display:flex;align-items:center;justify-content:space-between;margin:16px 2px 10px}
-.arw{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.16);display:inline-flex;align-items:center;justify-content:center;margin-left:6px}
-.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.day{background:rgba(255,255,255,.12);border-radius:20px;padding:8px 0 7px;text-align:center;position:relative}
-.day .dn{font-size:11px;opacity:.8}.day .dd{font-size:16px;margin-top:2px}
-.day.sel{background:var(--lime);color:var(--ink)}
-.day.tod:not(.sel){box-shadow:inset 0 0 0 2px rgba(255,255,255,.75)}
-.day .ds{display:flex;gap:2px;justify-content:center;height:6px;margin-top:4px}.day .ds i{width:5px;height:5px;border-radius:50%;background:#fff}.day.sel .ds i{background:var(--ink)}
-main{padding:0 14px}
-.card{background:var(--card);border-radius:24px;padding:16px;margin-top:12px}
-.card.lime{background:var(--lime)}
-.card.dark{background:var(--dark);color:#fff}.card.dark .sub{color:#9CA3AF}
-.lbl{font-size:12px;font-weight:700;letter-spacing:.2px;color:var(--mut);text-transform:uppercase}
-.card.lime .lbl{color:#4A5A10}
-h2{font-size:17px;margin:0;font-weight:800}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sb{justify-content:space-between}
-.digits{display:flex;gap:6px}.digits b{background:rgba(255,255,255,.55);border-radius:12px;width:46px;height:60px;display:flex;align-items:center;justify-content:center;font-size:40px}
-.pill{display:inline-flex;align-items:center;gap:6px;background:#fff;border-radius:99px;padding:9px 14px;font-size:14px;font-weight:600}
-.pill.on{background:var(--ink);color:#fff}
-.pill.lm{background:var(--lime);color:var(--ink)}
-.pill.s{padding:6px 11px;font-size:13px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 0}
-.ev{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid rgba(0,0,0,.08)}
-.ev:first-child{border-top:0}
-.pri{width:26px;height:26px;border-radius:9px;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
-.td{display:flex;align-items:center;gap:11px;padding:11px 0;border-top:1px solid var(--line)}
-.td:first-child{border-top:0}
-.ck{width:26px;height:26px;border-radius:50%;border:2px solid #C9CED8;flex:none;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink)}
-.ck.y{background:var(--lime);border-color:var(--lime)}
-.td .tt{flex:1;min-width:0}.td .tt.done{color:#9CA3AF;text-decoration:line-through}
-.dt{font-size:12px;background:#F1F3F7;border-radius:8px;padding:3px 7px;white-space:nowrap;color:#4B5563}
-.dt.none{color:#9CA3AF}
-.more{width:30px;height:30px;border-radius:50%;background:#F1F3F7;display:flex;align-items:center;justify-content:center;flex:none;color:#6B7280}
-.focus{font-size:26px;font-weight:800;line-height:1.2;margin:4px 0 6px;letter-spacing:-.4px}
-.seg{display:flex;background:rgba(255,255,255,.08);border-radius:99px;padding:4px;margin-top:10px}
-.seg button{flex:1;padding:8px;border-radius:99px;font-size:14px;color:#9CA3AF;font-weight:600}
-.seg button.on{background:var(--lime);color:var(--ink)}
-.seg.lt{background:#EEF1F6}.seg.lt button{color:var(--mut)}.seg.lt button.on{background:var(--ink);color:#fff}
-.pace{padding:11px 0;border-top:1px solid rgba(255,255,255,.08)}
-.pace:first-of-type{border-top:0}
-.pbar{position:relative;height:10px;background:rgba(255,255,255,.12);border-radius:9px;margin-top:7px}
-.card:not(.dark) .pbar{background:#EEF1F6}
-.pbar i{position:absolute;left:0;top:0;bottom:0;border-radius:9px;background:var(--lime)}
-.pbar i.o{background:var(--o)}.pbar i.r{background:var(--r)}
-.pbar em{position:absolute;top:-4px;width:3px;height:18px;background:#fff;border-radius:2px}
-.card:not(.dark) .pbar em{background:var(--ink)}
-.st{font-size:12px;font-weight:700}.g{color:var(--g)}.card.dark .g{color:var(--lime)}.o{color:var(--o)}.r{color:var(--r)}.m{color:#9CA3AF}
-.nav{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:532px;margin:0 auto;background:var(--ink);border-radius:32px;display:flex;align-items:center;justify-content:space-between;padding:7px;z-index:10;box-shadow:0 8px 24px rgba(17,19,24,.25)}
-.nav button{height:48px;min-width:48px;border-radius:24px;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:700;padding:0 12px;background:rgba(255,255,255,.08)}
-.nav button.on{background:var(--lime);color:var(--ink)}
-.nav button.plus{background:#fff;color:var(--ink);width:48px;padding:0}
-.cal{display:grid;grid-template-columns:24px repeat(7,1fr);row-gap:6px;text-align:center}
-.cal .h{font-size:11px;color:var(--mut);font-weight:700;padding-bottom:4px}
-.cal .wn{font-size:10px;color:#9CA3AF;display:flex;align-items:center;justify-content:center;font-weight:700}
-.cal .c{display:flex;flex-direction:column;align-items:center;gap:3px;padding:2px 0}
-.cal .c .n{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
-.cal .c.x .n{color:#C4C9D2}
-.cal .c.tod .n{box-shadow:inset 0 0 0 2px var(--blue);color:var(--blue);font-weight:800}
-.cal .c.sel .n{background:var(--lime);color:var(--ink);font-weight:800;box-shadow:none}
-.cal .c .ds{display:flex;gap:2px;height:6px}.cal .c .ds i{width:6px;height:6px;border-radius:50%}
-.cal .c.band .n{background:#EEF3FF}
-.leg{display:flex;gap:12px;font-size:11px;color:var(--mut);flex-wrap:wrap;margin-top:10px}
-.leg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
-.it{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+body{margin:0;font:16px/1.45 Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+input,textarea{font-family:inherit;font-size:16px}
+.w{max-width:480px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 16px 20px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.h1{font-size:24px;font-weight:800;letter-spacing:-.5px}
+.mut{color:var(--mut);font-size:14px}.sm{font-size:12px}
+.card{background:#fff;border-radius:22px;padding:16px;margin-top:12px}
+.lbl{font-size:13px;font-weight:700;color:var(--mut)}
+.row{display:flex;align-items:center;gap:10px}.sb{justify-content:space-between}
+.bar{height:8px;background:#EDF0EA;border-radius:9px;position:relative;margin-top:6px;overflow:hidden}.bar i{position:absolute;inset:0 auto 0 0;background:var(--g);border-radius:9px}
+.btn{width:100%;border-radius:16px;padding:16px;font-size:18px;font-weight:800;background:var(--g);color:#fff;margin-top:12px}
+.btn2{border-radius:12px;padding:9px 13px;font-size:14px;font-weight:700;background:#EEF1EC}
+.seg{display:flex;background:#E9ECE7;border-radius:14px;padding:4px;margin-top:10px}
+.seg button{flex:1;padding:10px;border-radius:11px;font-size:16px;font-weight:700;color:var(--mut)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.ck{width:28px;height:28px;border-radius:50%;border:2.5px solid #C9CED8;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.ck.y{background:var(--g);border-color:var(--g)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.opt{border-radius:14px;padding:14px 10px;font-size:16px;font-weight:700;background:#F1F3F0;text-align:center}
+.opt.on{background:var(--ink);color:#fff}
+.it{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);width:100%;text-align:left}
 .it:first-child{border-top:0}
-.ico{width:36px;height:36px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
-.tag{display:inline-block;padding:2px 8px;border-radius:7px;font-size:11px;font-weight:700;background:#F1F3F7;color:#4B5563;white-space:nowrap}
-svg.ch{width:100%;height:auto;display:block}
-.btn{border-radius:14px;padding:12px 16px;font-size:15px;font-weight:700;background:#F1F3F7}
-.btn.p{background:var(--ink);color:#fff}.btn.lm{background:var(--lime);color:var(--ink)}.btn.d{color:var(--r)}.btn.s{padding:7px 12px;font-size:13px;border-radius:11px}.btn.w{width:100%}
-input,select,textarea{font-family:inherit;font-size:16px;max-width:100%}
-input[type=date],input[type=text],input[type=number],select,textarea{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
-input[type=number]{width:92px}
-label.f{display:block;margin-top:12px;font-size:13px;color:var(--mut);font-weight:600}
-label.f>input,label.f>select,label.f>textarea{display:block;width:100%;margin-top:5px;font-weight:400}
-.tog{border:1px solid var(--line);background:#fff;border-radius:99px;padding:8px 13px;font-size:13px;font-weight:600;margin:3px 5px 3px 0}
-.tog.y{background:var(--ink);border-color:var(--ink);color:#fff}
-.drill{background:#F6F7FA;border-radius:16px;padding:11px 12px;margin-top:8px}
-.drill .ps{color:var(--g);font-size:13px;margin-top:4px;font-weight:600}.drill .cu{color:var(--o);font-size:13px;margin-top:3px}
-.mrow{background:#F6F7FA;border-radius:16px;padding:10px 12px;margin-top:8px}
-#sheet{position:fixed;inset:0;background:rgba(17,19,24,.45);display:none;z-index:30;align-items:flex-end;justify-content:center}
-#sheet.on{display:flex}
-#sheet .in{background:#fff;width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:28px 28px 0 0;padding:12px 16px calc(24px + env(safe-area-inset-bottom))}
-.grab{width:44px;height:5px;border-radius:9px;background:#D5D9E0;margin:0 auto 12px}
-h3{font-size:14px;margin:16px 0 6px;font-weight:800}
-details summary{cursor:pointer;color:var(--mut);font-size:13px;margin-top:8px;font-weight:600}
-.login{min-height:100vh;background:var(--blue);color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:40px 22px calc(40px + env(safe-area-inset-bottom))}
-.login h1{font-size:54px;line-height:1;margin:0;font-weight:800;letter-spacing:-1.5px}.login h1 span{color:var(--lime)}
-.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:var(--ink);border-radius:18px;padding:16px;font-size:16px;font-weight:800;margin-top:28px;width:100%}
-.sync{font-size:11px;color:rgba(255,255,255,.7)}
-.note textarea{width:100%;min-height:62px;margin-top:5px}
-.kv{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.kv span{background:#F1F3F7;border-radius:10px;padding:6px 10px;font-size:13px}
-
-/* 원래 초록 색 (사장님 2026-11-22 "색깔 원래버전이 나은 거 같아") */
-:root{--blue:#2F7D4F;--blue2:#1F5E3B;--lime:#E6F2E9}
-.top{background:linear-gradient(135deg,#1F5E3B,#2F7D4F)}
-.av{background:#fff;color:#1F5E3B}
-.day.sel{background:#fff;color:#1F5E3B}
-.card.lime{background:linear-gradient(135deg,#1F5E3B,#2F7D4F);color:#fff}
-.card.lime .lbl{color:#CFE8D7}
-.card.lime .tag{background:rgba(255,255,255,.18)!important;color:#fff}
-.card.lime .ev{border-color:rgba(255,255,255,.15)}
-.card.lime .pill{background:#fff;color:#1F5E3B}
-.digits b{background:rgba(255,255,255,.16);color:#fff}
-.pbar i{background:#2F7D4F}
-.seg button.on{background:#2F7D4F;color:#fff}
-.nav button.on{background:#2F7D4F;color:#fff}
-.ck.y{background:#2F7D4F;border-color:#2F7D4F;color:#fff}
-.btn.lm{background:#2F7D4F;color:#fff}
-.pill.lm{background:#fff;color:#1F5E3B}
-.cal .c.sel .n{background:#2F7D4F;color:#fff}
-.cal .c.band .n{background:#E6F2E9}
-.login{background:linear-gradient(160deg,#1F5E3B,#2F7D4F)}
-.login h1 span{color:#B9E4C6}
-.g{color:#2F7D4F}
+.it.y .t{color:#9CA3AF;text-decoration:line-through}
+.it .s{display:block;font-size:13px;color:var(--mut)}
+.now{background:var(--gl);border-radius:18px;padding:18px;margin-top:10px}
+.now .t{font-size:24px;font-weight:800;line-height:1.2}
+.dots{display:flex;gap:5px;margin-top:10px}.dots i{flex:1;height:6px;border-radius:4px;background:#DCE3DA}.dots i.y{background:var(--g)}
+.dt{position:relative;display:inline-flex;align-items:center;gap:4px;background:#F1F3F0;border-radius:10px;padding:6px 10px;font-size:14px;font-weight:700}
+.dt input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
+.kr{padding:10px 0;border-top:1px solid var(--line)}.kr:first-child{border-top:0}
+.wr{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.wr:first-child{border-top:0}
+.wd{width:58px;flex:none;font-weight:700;font-size:14px;color:var(--mut);text-align:left}
+.pill{font-size:14px;font-weight:700;padding:5px 10px;border-radius:10px;box-shadow:inset 0 0 0 1.5px var(--g);color:var(--g)}
+.pill.done{background:var(--g);color:#fff;box-shadow:none}.pill.ev{box-shadow:none;background:#FDECEC;color:var(--r)}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:9}
+.nav button{flex:1;padding:10px 4px;font-size:15px;font-weight:700;color:var(--mut);border-radius:12px}
+.nav button.on{color:var(--g);background:var(--gl)}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:448px;margin:0 auto;background:var(--ink);color:#fff;border-radius:16px;padding:14px 16px;font-weight:700;z-index:20}
+.tl{position:relative;padding-left:22px;margin-top:8px}
+.tl:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:#E2E6DF}
+.ms{position:relative;padding:6px 0 12px}
+.ms .nd{position:absolute;left:-22px;top:9px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid #C9CED8}
+.ms.goal .nd{border-color:var(--g);background:var(--g)}.ms.next .nd{border-color:var(--ink)}.ms.ok .nd{border-color:var(--g)}.ms.miss .nd{border-color:var(--r)}
+.kv{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.kv span{background:#F4F6F3;border-radius:9px;padding:5px 9px;font-size:13px}
+.ti{width:52px;padding:3px 4px;border:1.5px solid var(--line);border-radius:7px;font-size:14px;text-align:center}
+.inp{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px}
+.ib{width:36px;height:36px;border-radius:50%;background:#F1F3F0;display:inline-flex;align-items:center;justify-content:center;font-size:18px;color:var(--mut)}
+.del{padding:7px 11px;border-radius:10px;font-size:14px;font-weight:700;color:var(--r);background:#FDECEC}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{padding:10px 13px;border-radius:12px;background:#F1F3F0;font-size:15px;font-weight:700;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff}
+.snack{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:448px;margin:0 auto;background:var(--ink);color:#fff;border-radius:16px;padding:13px 16px;font-weight:700;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.snack button{color:#B9E4C6;font-weight:800;white-space:nowrap}
+.krr{padding:10px 0;border-top:1px solid var(--line)}.krr:first-child{border-top:0}
 </style>
 </head>
 <body>
-<div id="app"></div>
-<div id="sheet"><div class="in" id="sheetIn"></div></div>
+<div id="app" class="w"></div>
+<div id="toast"></div>
+<div class="nav" id="nav"></div>
 <script>
 'use strict';
-/* 화면(엔진)만. 대회·요소·드릴 내용은 저장소 데이터(훈련 프로그램)에서 온다. */
+/* 흐름: 고르기(상대에 따라) → 카메라 켜고 확인 → 하나씩 (물 마실 때 다음) → 끝 → 영상 분석·회고·다음 훈련 → 목표.
+   목표 KR 은 현장에서 셀 수 있는 '입력 지표'. 결과 지표(승·득실)는 따로. */
 const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c,12)};
 const ds=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ds(d)};
 const mon=s=>{const d=pd(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return ds(d)};
 const diffD=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
-const today=()=>ds(new Date());
-const md=s=>{const d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()};
 const DOW=['일','월','화','수','목','금','토'];
-const dw=s=>DOW[pd(s).getDay()];
+const md=s=>{const d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()+' '+DOW[d.getDay()]};
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-const $=id=>document.getElementById(id);
-const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-const wd=d=>Math.floor(d/7)+'주 '+(d%7)+'일';
-const I={home:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',cal:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',chart:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',note:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M9 12h6M9 16h6M9 8h3"/></svg>',plus:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',l:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>',r:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>',dots:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'};
-const WHO={solo:'혼자',one:'상대 1명과',partner:'복식 파트너와',four:'4명 (복식 상대 포함)'};
-const SRC={sv:'SwingVision 무료',svpro:'SwingVision Pro',other_app:'다른 앱',video:'영상 보고 셈',count:'직접 세기',timer:'스톱워치'};
-const KIND={drill:{n:'드릴',c:'#3BA55C',i:'드'},rally:{n:'랠리',c:'#2F5BFF',i:'랠'},game:{n:'게임',c:'#E39A1B',i:'게'},league:{n:'리그·대회',c:'#E5484D',i:'리'}};
-const ETYPE={league:'리그',tournament:'대회',event:'이벤트·클리닉',deadline:'마감'};
-const DISCN={S:'단식',D:'복식',SD:'단식·복식','':'해당 없음'};
-const PRIC={A:'#E5484D',B:'#E39A1B',C:'#9CA3AF'};
-const evColor=e=>e.type==='deadline'?'#111318':PRIC[e.pri||'C'];
-const evMark=e=>e.type==='deadline'?'!':(e.pri||'C');
-const DEF_SETTINGS={id:'main',planStart:'2026-11-23',level:{S:{cur:'NTRP 3.5 (자가)',goal:'4.0 상대와 대등'},D:{cur:'NTRP 3.5 (자가)',goal:'혼복 7.0~8.0 라인 50% 승'}}};
-let SEED={events:[],factors:[],templates:[],session:{}};
+const Q=new URLSearchParams(location.search);const TODAY=Q.get('d')||ds(new Date());
+const TYPES=[['S','game','단식 게임'],['S','rally','단식 랠리'],['S','drill','단식 드릴'],['D','game','복식 게임'],['D','partner','복식 파트너 연습']];
+const TN=(disc,kind)=>kind==='none'?'고르기 전':(TYPES.find(t=>t[0]===disc&&t[1]===kind)||[0,0,(disc==='D'?'복식 ':'단식 ')+kind])[2];
+const KRT={sessions:{n:'훈련',u:'회'},factor:{n:'드릴',u:'회'},analyzed:{n:'영상 분석',u:'회'},retro:{n:'회고',u:'회'},doubles:{n:'복식',u:'회'},games:{n:'게임',u:'회'}};
+const OKR_DEF=[
+ {id:'o-S',disc:'S',v:3,title:'TLA 봄 단식 플레이오프 진출',start:'2026-11-23',end:'2027-03-14',lstart:'2027-01-19',krs:[{id:'f1',type:'factor',fid:'f-serve',target:65,per:2},{id:'f2',type:'factor',fid:'f-ground',target:75,per:1},{id:'f3',type:'factor',fid:'f-depth',target:50,per:1},{id:'f4',type:'factor',fid:'f-return',target:3,per:1}],res:[{type:'wins',target:3},{type:'gamepct',target:55}],ms:{}},
+ {id:'o-D',disc:'D',v:3,title:'USTA 혼복 라인 승률 50%',start:'2026-11-23',end:'2027-04-04',lstart:'2027-01-09',krs:[{id:'f1',type:'factor',fid:'f-net',target:75,per:1},{id:'f2',type:'factor',fid:'f-return',target:3,per:1},{id:'f3',type:'factor',fid:'f-serve',target:65,per:1}],res:[{type:'winrate',target:50},{type:'gamepct',target:50}],ms:{}}];
+let db={logs:[],factors:[],events:[],settings:[],todos:[],notes:[]};
+let tab='today',day=TODAY,okEdit=false,toastT=null,gdisc='S',retroOpen=null;
 
-/* ===== 데이터·동기화 ===== */
-const COLS=['logs','factors','events','settings','todos','notes'];
-let db=loadCache(),outbox=JSON.parse(localStorage.getItem('ts4.outbox')||'[]'),net={state:'',authed:null,email:''};
-function loadCache(){try{const c=JSON.parse(localStorage.getItem('ts4.cache'));if(c&&c.logs){COLS.forEach(k=>c[k]=c[k]||[]);return c}}catch(e){}const o={};COLS.forEach(k=>o[k]=[]);return o}
-function saveCache(){localStorage.setItem('ts4.cache',JSON.stringify(db));localStorage.setItem('ts4.outbox',JSON.stringify(outbox))}
-const EV=()=>(db.events.length?db.events:SEED.events).filter(e=>e.type!=='off').slice().sort((a,b)=>a.start<b.start?-1:1);
-const FA=()=>(db.factors.length?db.factors:SEED.factors).slice().sort((a,b)=>(a.order||99)-(b.order||99));
-const AF=()=>FA().filter(f=>f.active!==false);
-function ST(){const s=db.settings.find(x=>x.id==='main')||{};const o=JSON.parse(JSON.stringify(DEF_SETTINGS));return {...o,...s,level:{...o.level,...(s.level||{})}}}
-const PROG=()=>db.settings.find(x=>x.id==='program')||SEED.session||{};
-function applyLocal(op){const arr=db[op.collection];for(const u of op.upserts||[]){const i=arr.findIndex(r=>r.id===u.id);if(i>=0)arr[i]={...arr[i],...u};else arr.push(u)}for(const id of op.deletes||[]){const i=arr.findIndex(r=>r.id===id);if(i>=0)arr.splice(i,1)}}
-function upsert(c,rec){rec._u=new Date().toISOString();const op={collection:c,upserts:[rec]};applyLocal(op);outbox.push(op);saveCache();_plan=null;render();flush()}
-function del(c,id){const op={collection:c,deletes:[id]};applyLocal(op);outbox.push(op);saveCache();_plan=null;render();flush()}
-let flushing=false;
-async function flush(){if(flushing)return;flushing=true;
- try{while(outbox.length){const r=await fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify(outbox[0])});
-  if(r.status===401){net.authed=false;break}if(!r.ok){net.state='err';break}outbox.shift();saveCache();net.state='ok'}}catch(e){net.state='offline'}
- flushing=false;syncLabel()}
-async function pull(){try{const me=await (await fetch('/api/auth?me=1',{credentials:'same-origin'})).json();net.authed=!!me.authed;net.email=me.email||'';
-  if(!me.authed){render();return}
-  const r=await fetch('/api/db',{credentials:'same-origin'});if(!r.ok)throw 0;const d=await r.json();
-  COLS.forEach(k=>db[k]=d[k]||[]);outbox.forEach(applyLocal);saveCache();net.state='ok';_plan=null;await flush()}catch(e){net.state='offline';if(net.authed===null)net.authed=!!localStorage.getItem('ts4.cache')}
- render()}
-function syncLabel(){const el=$('sync');if(!el)return;const n=outbox.length;el.textContent=net.state==='offline'?(n?`오프라인 · ${n}개 대기`:'오프라인'):net.state==='err'?'저장 재시도 중':n?`저장 중 ${n}`:net.state==='ok'?'저장됨':''}
-setInterval(()=>{if(outbox.length&&net.authed)flush()},15000);addEventListener('online',flush);
+async function load(){const me=await (await fetch('/api/auth?me=1')).json();if(!me.authed){document.getElementById('app').innerHTML=`<div style="padding-top:30vh"><div class="h1">테니스</div><button class="btn" onclick="location.href='/api/auth?start=1'">Google로 계속하기</button></div>`;return}
+ db={...db,...(await (await fetch('/api/db')).json())};render()}
+function save(c,rec){rec._u=new Date().toISOString();const arr=db[c];const i=arr.findIndex(r=>r.id===rec.id);if(i>=0)arr[i]=rec;else arr.push(rec);render();return fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({collection:c,upserts:[rec]})})}
+let UNDO=null;function snack(m,undo){clearTimeout(toastT);document.getElementById('toast').innerHTML=`<div class="snack"><span>${m}</span>${undo?'<button data-a="undo">실행 취소</button>':''}</div>`;toastT=setTimeout(()=>{document.getElementById('toast').innerHTML='';UNDO=null},5000)}
+function undoable(m,c,id,fn){UNDO={c,id,prev:JSON.parse(JSON.stringify(db[c].find(r=>r.id===id)||null))};fn();snack(m,true)}
+function toast(m){clearTimeout(toastT);document.getElementById('toast').innerHTML=`<div class="toast">${m}</div>`;toastT=setTimeout(()=>{document.getElementById('toast').innerHTML=''},2500)}
 
-/* ===== 계획 ===== */
-const w0=()=>mon(ST().planStart);
-const wkOf=d=>Math.floor(diffD(w0(),mon(d))/7)+1;
-const wkStart=n=>addD(w0(),(n-1)*7);
-const Aevents=()=>EV().filter(e=>e.pri==='A'&&(e.type==='league'||e.type==='tournament'));
-const PH={base:{n:'기준 측정',c:'#9CA3AF'},build:{n:'기초 쌓기',c:'#3BA55C'},retest:{n:'회복 · 재측정',c:'#8B5CF6'},sharp:{n:'시합형',c:'#E39A1B'},taper:{n:'개막 주',c:'#2F5BFF'},season:{n:'시즌',c:'#E5484D'},'season-rt':{n:'시즌 · 재측정',c:'#BE3A6E'},free:{n:'자유',c:'#9CA3AF'}};
-let _plan=null;
-function plan(){if(_plan)return _plan;
- const A=Aevents();const first=A.length?A.map(e=>e.start).sort()[0]:addD(ST().planStart,56),last=A.length?A.map(e=>e.end).sort().slice(-1)[0]:first;
- const fW=wkOf(first),lW=Math.max(wkOf(last),fW,4);const weeks=[];const W=weakName();
- for(let n=1;n<=lW&&n<120;n++){const i=n-1;let ph;if(!A.length)ph='free';else if(n===1)ph='base';else if(n>fW)ph='season';else if(n===fW)ph='taper';else if(n===fW-1)ph='sharp';else ph='build';
-  if(A.length&&i>0&&i%4===0&&ph!=='taper')ph=ph==='season'?'season-rt':'retest';
-  const start=wkStart(n),end=addD(start,6);const evs=EV().filter(e=>e.start<=end&&e.end>=start);
-  const S={base:['게임 + SV 촬영','게임','경기 + SV 촬영'],build:['게임 · 오늘의 한 가지','게임 또는 드릴','경기 + SV 촬영'],retest:['가볍게 랠리','게임 + SV (재측정)','자유'],sharp:['시합형 연습','복식 패턴','게임 + SV 촬영'],taper:['가볍게','서브 감각','개막 경기'],season:['게임 · 오늘의 한 가지','게임 또는 드릴','리그 경기 + SV'],'season-rt':['게임 · 오늘의 한 가지','게임 + SV (재측정)','리그 경기'],free:['게임','게임','게임']}[ph].slice();
-  const bc=evs.find(e=>(e.type==='tournament'||e.type==='event')&&e.pri!=='A');if(bc)S[2]=bc.name;
-  weeks.push({n,start,end,ph,todo:S,evs})}
- _plan=weeks;return weeks}
-const logsWeek=n=>db.logs.filter(l=>wkOf(l.date)===n).sort((a,b)=>a.date<b.date?-1:1);
-const hasVals=l=>l.vals&&Object.values(l.vals).some(v=>v!==''&&v!=null);
-const nextA=()=>Aevents().filter(e=>e.end>=today())[0];
-function discEvent(d){const A=Aevents().filter(e=>d==='SD'||e.disc===d||e.disc==='SD');return A[0]||Aevents()[0]}
-const SLOTD=[1,3,5];
-const KINDN={game:'게임',drill:'드릴',rally:'랠리',league:'리그 경기'};
-const kindOf=t=>/드릴|시합형|패턴|연습/.test(t)?'drill':/리그|개막/.test(t)?'league':/랠리|가볍게|감각/.test(t)?'rally':'game';
-function drillList(x){const d=x.disc||'S',n=wkOf(x.date||sel),w=plan()[n-1],ph=w?w.ph:'build',who=d==='D'?['partner','four']:['one','solo'];
- const fs=AF().filter(f=>discOk(f.disc,d));const wk=weakest();const order=[...fs.filter(f=>wk&&f.id===wk.id&&discOk(wk.disc,d)),...fs.filter(f=>!(wk&&f.id===wk.id)).map(f=>({f,s:fStatus(f)})).sort((a,b)=>(a.s.gap??0)-(b.s.gap??0)).map(o=>o.f)];
- const items=[{k:'wu',t:'워밍업 10분',sub:PROG().warmup||''}];const pick=(f,max)=>{let c=0;(f.drills||[]).forEach((dr,j)=>{if(c>=max)return;if(!who.includes(dr.who))return;const isGame=/^게임 중/.test(dr.name);if(ph==='sharp'||ph==='taper'?!/게임|타이브레이크|신호/.test(dr.name):isGame)return;items.push({k:f.id+':'+j,t:dr.name,sub:dr.pass?'통과: '+dr.pass:''});c++})};
- order.forEach((f,i)=>{if(items.length<4)pick(f,i===0?2:1)});
- if(items.length<3)order.forEach(f=>{(f.drills||[]).forEach((dr,j)=>{if(items.length<4&&!items.some(x=>x.k===f.id+':'+j)&&who.includes(dr.who))items.push({k:f.id+':'+j,t:dr.name,sub:dr.pass?'통과: '+dr.pass:''})})});
- return items}
-function weekTodos(n){const P=plan(),w=P[n-1];const out=[];if(!w)return out;const L=logsWeek(n);
- w.todo.forEach((t,k)=>out.push({id:`W${n}-s${k+1}`,title:t,type:'session',slot:k+1,auto:1,date:addD(w.start,SLOTD[k]??5),kind:kindOf(t),disc:/복식/.test(t)?'D':'S'}));
- out.push({id:`W${n}-retro`,title:'회고 노트',type:'retro',auto:1,date:w.end});
- EV().filter(e=>e.type==='deadline'&&e.start>=w.start&&e.start<=w.end).forEach(e=>out.push({id:`W${n}-dl-${e.id}`,title:e.name,type:'deadline',date:e.start,auto:1}));
- const res=out.map(a=>{const s=db.todos.find(t=>t.id===a.id)||{};const r={...a,...s};
-  if(r.done==null){if(a.type==='session')r.done=L.some(l=>l.todoId===a.id||(l.date===r.date&&!l.todoId));else if(a.type==='video')r.done=L.some(hasVals);else if(a.type==='retro'){const nt=db.notes.find(x=>x.id===`W${n}`);r.done=!!(nt&&(nt.good||nt.hard||nt.next))}else r.done=false}return r}).filter(t=>!t.hidden);
- db.todos.filter(t=>t.custom&&(t.week||(t.date?wkOf(t.date):0))===n).forEach(t=>res.push(t));
- const rk={deadline:0,session:1,video:2,retro:3};return res.map((x,i)=>({x,i})).sort((a,b)=>((a.x.date||'9')<(b.x.date||'9')?-1:(a.x.date||'9')>(b.x.date||'9')?1:((rk[a.x.type]??2)-(rk[b.x.type]??2))||a.i-b.i)).map(o=>o.x)}
-const dayTodos=d=>{const n=wkOf(d);return [n,n-1,n+1].flatMap(k=>weekTodos(k)).filter(x=>x.date===d)};
-/* ===== 목표·페이스 ===== */
-const allMetrics=()=>AF().flatMap(f=>(f.metrics||[]).map(m=>({...m,f})));
-function series(mid,kinds){const by={};for(const l of db.logs){if(kinds&&!kinds.includes(l.kind))continue;const v=l.vals&&l.vals[mid];if(v===''||v==null||isNaN(+v))continue;const w=wkOf(l.date);(by[w]=by[w]||[]).push(+v)}
- return Object.keys(by).map(Number).sort((a,b)=>a-b).map(w=>({w,v:Math.round(by[w].reduce((a,b)=>a+b,0)/by[w].length*10)/10}))}
-function tgt(m){const s=series(m.id);if(!s.length)return null;const b=s[0].v;let t1,t2;
- if(m.unit==='%'&&+m.dir>0){t1=Math.min(95,b+5);t2=Math.min(97,b+10)}else if(+m.dir<0){const k=m.unit==='초';t1=Math.max(0,+(b-(k?.8:1)).toFixed(1));t2=Math.max(0,+(b-(k?1.5:2)).toFixed(1))}else if(m.unit==='mph'){t1=b+2;t2=b+4}else{t1=+(b*1.1).toFixed(1);t2=+(b*1.2).toFixed(1)}
- return {b,bw:s[0].w,t1:m.t1!==''&&m.t1!=null?+m.t1:t1,t2:m.t2!==''&&m.t2!=null?+m.t2:t2,last:s[s.length-1].v,lw:s[s.length-1].w,s}}
-function expAt(m,x){const g=tgt(m);if(!g)return null;const ev=discEvent(m.f.disc);if(!ev)return g.b;const sW=wkOf(ev.start),eW=wkOf(ev.end);
- if(x<=g.bw)return g.b;if(x<=sW)return g.b+(g.t1-g.b)*(x-g.bw)/Math.max(1,sW-g.bw);if(x<=eW)return g.t1+(g.t2-g.t1)*(x-sW)/Math.max(1,eW-sW);return g.t2}
-function prog(m,v){const g=tgt(m);if(!g||v==null)return null;const span=+m.dir<0?(g.b-g.t2):(g.t2-g.b);if(span<=0)return 1;return clamp((+m.dir<0?(g.b-v):(v-g.b))/span,0,1.3)}
-const lab=g=>g>=.15?'앞섬':g>=0?'제 속도':g>=-.15?'조금 뒤':'뒤처짐',kl=g=>g>=0?'g':g>=-.15?'o':'r';
-function mStatus(m){const g=tgt(m);if(!g)return {k:'m',t:'기준 필요',p:null};if(g.s.length<2)return {k:'m',t:'기준 잡힘',p:0,pace:0,gap:0};const p=prog(m,g.last),pace=prog(m,expAt(m,Math.max(1,wkOf(today()),g.lw)));return {p,pace,gap:p-pace,k:kl(p-pace),t:lab(p-pace)}}
-function fStatus(f){const ss=(f.metrics||[]).map(m=>mStatus({...m,f})).filter(s=>s.p!=null);if(!ss.length)return {k:'m',t:'기준 필요',p:null};const p=ss.reduce((a,s)=>a+s.p,0)/ss.length,pace=ss.reduce((a,s)=>a+(s.pace||0),0)/ss.length;if(ss.every(s=>s.t==='기준 잡힘'))return {k:'m',t:'기준 잡힘',p:0,pace:0,gap:0};return {p,pace,gap:p-pace,k:kl(p-pace),t:lab(p-pace)}}
-function weakest(){const fs=AF();if(!fs.length)return null;const nd=fs.find(f=>fStatus(f).p==null);const L=fs.map(f=>({f,s:fStatus(f)})).filter(x=>x.s.p!=null).sort((a,b)=>a.s.gap-b.s.gap);if(L.length&&L[0].s.gap<0)return L[0].f;return nd||(L[0]&&L[0].f)}
-const weakName=()=>{const f=weakest();return f?f.name:'서브'};
-function focusDrill(){const f=weakest();if(!f)return null;const d=(f.drills||[]).find(x=>/^게임 중 한 가지/.test(x.name))||(f.drills||[])[0];return d?{f,d,t:d.name.replace(/^게임 중 한 가지:\s*/,'')}:null}
-function gameStats(d){return db.logs.filter(l=>(l.kind==='game'||l.kind==='league')&&l.disc===d&&l.gw!==''&&l.gw!=null&&(+l.gw+ +l.gl)>0).sort((a,b)=>a.date<b.date?-1:1).map(l=>({w:wkOf(l.date),gp:+l.gw/(+l.gw+ +l.gl),l}))}
+const ST=()=>db.settings.find(x=>x.id==='main')||{id:'main'};
+const DAYS=()=>ST().days||[2,4,6];
+const PS=()=>ST().planStart||'2026-11-23';
+const wkOf=d=>Math.floor(diffD(mon(PS()),mon(d))/7)+1;
+const wkStart=n=>addD(mon(PS()),(n-1)*7);
+const FA=()=>db.factors.filter(f=>f.active!==false).sort((a,b)=>(a.order||99)-(b.order||99));
+const EV=()=>db.events.filter(e=>e.type!=='off').sort((a,b)=>a.start<b.start?-1:1);
+const OKR=()=>{const o=ST().okr;return o&&o.length&&o[0].v===3?o:OKR_DEF};
+const lastW=()=>Math.max(...OKR().map(o=>wkOf(o.end)),8);
 
-/* ===== 그래프 ===== */
-function demoRoad(m){const ev=discEvent(m.f.disc),sW=ev?wkOf(ev.start):8,eW=ev?wkOf(ev.end):16,W=340,H=130,L=30,R=6,T=12,B=20,up=+m.dir>0;
- const b=up?(m.unit==='%'?52:40):4,t2=up?(m.unit==='%'?62:48):2,vals=up?[52,54,53,57,58,60]:[4,4,3,3,2.5,2.5];const pts=vals.map((v,i)=>[1+i*2,m.unit==='%'||!up?v:v]);
- const X=x=>L+(x-1)/Math.max(1,eW-1)*(W-L-R),y0=Math.min(b,t2)-2,y1=Math.max(b,t2)+2,Y=y=>T+(1-(y-y0)/(y1-y0))*(H-T-B);
- const pace=`${X(1)},${Y(b)} ${X(eW)},${Y(t2)}`;let s=`<svg class="ch" viewBox="0 0 ${W} ${H}" style="opacity:.55"><polygon points="${X(1)},${up?T:H-B} ${pace} ${X(eW)},${up?T:H-B}" fill="#E6F2E9"/><polyline points="${pace}" fill="none" stroke="#2F7D4F" stroke-width="2" stroke-dasharray="6 4"/><line x1="${X(sW)}" x2="${X(sW)}" y1="${T-4}" y2="${H-B}" stroke="#E5484D" stroke-dasharray="3 3"/><polyline fill="none" stroke="#111318" stroke-width="2.2" points="${pts.map(p=>X(p[0])+','+Y(p[1])).join(' ')}"/>${pts.map((p,i)=>`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="5" fill="${i===2?'#E39A1B':'#3BA55C'}"/>`).join('')}<text x="${W-R}" y="${H-5}" font-size="10" text-anchor="end" fill="#9CA3AF">W${eW}</text><text x="${L}" y="${H-5}" font-size="10" fill="#9CA3AF">W1</text></svg>`;
- return `<div style="position:relative">${s}<span class="tag" style="position:absolute;left:34px;top:4px;background:#111318;color:#fff">예시</span></div><div class="sub small">${esc(m.how||'')}</div>`}
-function road(m){const g=tgt(m),ev=discEvent(m.f.disc),cw=Math.max(1,wkOf(today()));if(!g)return demoRoad(m);
- const eW=ev?Math.max(wkOf(ev.end),g.lw+1):g.lw+4,sW=ev?wkOf(ev.start):null;const W=340,H=130,L=30,R=6,T=12,B=20,x0=g.bw,x1=eW;
- const pace=[];for(let x=x0;x<=x1;x++)pace.push([x,expAt(m,x)]);const prac=series(m.id,['drill','rally']),game=series(m.id,['game','league']);
- const ys=[...pace.map(p=>p[1]),...g.s.map(p=>p.v)];let y0=Math.min(...ys),y1=Math.max(...ys);if(y1-y0<1){y0-=1;y1+=1}const pad=(y1-y0)*.15;y0-=pad;y1+=pad;
- const X=x=>L+(x-x0)/Math.max(1,x1-x0)*(W-L-R),Y=y=>T+(1-(y-y0)/(y1-y0))*(H-T-B);
- let s=`<svg class="ch" viewBox="0 0 ${W} ${H}">`;const safe=pace.map(p=>`${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');const edge=+m.dir<0?H-B:T;
- s+=`<polygon points="${X(x0)},${edge} ${safe} ${X(x1)},${edge}" fill="#E6F2E9"/>`;
- for(let k=0;k<=2;k++){const y=y0+(y1-y0)*k/2;s+=`<text x="${L-4}" y="${Y(y)+4}" font-size="10" text-anchor="end" fill="#9CA3AF">${Math.round(y*10)/10}</text>`}
- const step=Math.max(1,Math.ceil((x1-x0)/5));for(let x=x0;x<=x1;x+=step)s+=`<text x="${X(x)}" y="${H-5}" font-size="10" text-anchor="middle" fill="#9CA3AF">W${x}</text>`;
- if(sW&&sW>=x0&&sW<=x1)s+=`<line x1="${X(sW)}" x2="${X(sW)}" y1="${T-4}" y2="${H-B}" stroke="#E5484D" stroke-dasharray="3 3"/><text x="${X(sW)+3}" y="${T+6}" font-size="10" fill="#E5484D">개막</text>`;
- if(cw>=x0&&cw<=x1)s+=`<rect x="${X(cw)-1}" y="${T-4}" width="2" height="${H-B-T+4}" fill="#2F5BFF" opacity=".35"/>`;
- s+=`<polyline fill="none" stroke="#2F7D4F" stroke-width="2" stroke-dasharray="6 4" points="${safe}"/>`;
- if(g.s.length>1)s+=`<polyline fill="none" stroke="#111318" stroke-width="2.2" points="${g.s.map(p=>`${X(p.w).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ')}"/>`;
- const col=(w,v)=>{const e=expAt(m,w),sp=Math.abs(g.t2-g.b)||1,gp=(+m.dir<0?e-v:v-e)/sp;return gp>=-1e-9?'#3BA55C':gp>=-.15?'#E39A1B':'#E5484D'};
- prac.forEach(p=>{s+=`<circle cx="${X(p.w)}" cy="${Y(p.v)}" r="4.5" fill="#fff" stroke="${col(p.w,p.v)}" stroke-width="2.5"/>`});game.forEach(p=>{s+=`<circle cx="${X(p.w)}" cy="${Y(p.v)}" r="5" fill="${col(p.w,p.v)}"/>`});return s+'</svg>'}
-function simpleChart(pts,goal){const W=340,H=110,L=30,R=6,T=10,B=18,xs=pts.map(p=>p[0]),x0=Math.min(...xs),x1=Math.max(...xs,x0+1),X=x=>L+(x-x0)/(x1-x0)*(W-L-R),Y=y=>T+(1-y/100)*(H-T-B);
- let s=`<svg class="ch" viewBox="0 0 ${W} ${H}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${Y(goal)-T}" fill="#E6F2E9"/>`;[0,50,100].forEach(y=>{s+=`<text x="${L-4}" y="${Y(y)+4}" font-size="10" text-anchor="end" fill="#9CA3AF">${y}%</text>`});
- s+=`<line x1="${L}" x2="${W-R}" y1="${Y(goal)}" y2="${Y(goal)}" stroke="#2F7D4F" stroke-dasharray="6 4"/>`;pts.forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="5" fill="${p[1]>=goal?'#3BA55C':'#E39A1B'}"/>`});return s+'</svg>'}
-function gantt(){const P=plan(),n=P.length,W=340,L=4,R=4,cw=Math.max(1,wkOf(today()));const x=w=>L+(w-1)/n*(W-L-R),bw=(W-L-R)/n;const evs=EV().filter(e=>e.type!=='deadline'&&wkOf(e.end)>=1&&wkOf(e.start)<=n);const H=60+evs.length*20;let s=`<svg class="ch" viewBox="0 0 ${W} ${H}">`,lm='';
- P.forEach(w=>{const m=pd(w.start).getMonth()+1;if(m+''!==lm){s+=`<text x="${x(w.n)}" y="10" font-size="10" fill="#9CA3AF">${m}월</text>`;lm=m+''}s+=`<rect x="${x(w.n)+.5}" y="15" width="${bw-1}" height="12" rx="3" fill="${PH[w.ph].c}"/>`;const c=Math.min(logsWeek(w.n).length,3);s+=`<rect x="${x(w.n)+.5}" y="31" width="${bw-1}" height="10" rx="3" fill="#2F7D4F" opacity="${w.n>cw?0.15:0.2+0.8*c/3}"/>`});
- evs.forEach((e,i)=>{const a=Math.max(1,wkOf(e.start)),b=Math.min(n,wkOf(e.end)),y=50+i*20;s+=`<rect x="${x(a)+.5}" y="${y}" width="${Math.max(bw*(b-a+1)-1,4)}" height="14" rx="7" fill="${evColor(e)}"/><text x="${Math.min(x(a)+6,W-160)}" y="${y+10.5}" font-size="9.5" fill="#fff" font-weight="700">${esc((e.pri+' '+e.name).slice(0,30))}</text>`});
- return s+`<rect x="${x(cw)+bw/2-1}" y="12" width="2" height="${H-12}" fill="#2F5BFF"/></svg><div class="leg">${Object.entries(PH).filter(([k])=>k!=='free').map(([k,v])=>`<span><i style="background:${v.c}"></i>${v.n}</span>`).join('')}</div><div class="leg"><span><i style="background:#2F7D4F"></i>그 주 회차 (진할수록 많이)</span><span><i style="background:#2F5BFF"></i>오늘</span></div>`}
+/* 회차 */
+function weekSlots(n){if(n<1||n>lastW())return [];const ws=wkStart(n),we=addD(ws,6);
+ const S=DAYS().map((dw,k)=>{const id=`W${n}-s${k+1}`,t=db.todos.find(x=>x.id===id)||{};return {...t,id,date:t.date||addD(ws,(dw+6)%7),disc:t.disc||'S',kind:t.kind||'game'}}).filter(s=>!s.hidden);
+ db.todos.filter(t=>t.custom&&!t.hidden&&t.kind&&t.date>=ws&&t.date<=we).forEach(t=>S.push({...t,disc:t.disc||'S'}));
+ S.forEach(s=>{if(!s.done&&db.logs.some(l=>l.todoId===s.id||(l.date===s.date&&l.src!=='quick')))s.done=true});return S}
+function sessOn(d){const n=wkOf(d);const A=[n-1,n,n+1].flatMap(weekSlots).filter(s=>s.date===d);db.todos.filter(t=>t.custom&&!t.hidden&&t.kind&&t.date===d&&!A.some(x=>x.id===t.id)).forEach(t=>{const s={...t,disc:t.disc||'S'};if(!s.done&&db.logs.some(l=>l.todoId===s.id))s.done=true;A.push(s)});return A}
+const allDone=(from,to)=>{const out=[];for(let n=Math.max(1,wkOf(from));n<=Math.min(lastW(),wkOf(to));n++)weekSlots(n).forEach(s=>{if(s.done&&s.date>=from&&s.date<=to)out.push(s)});return out};
+const short=t=>{t=String(t||'');const c=t.split(/(?<=[.。])\s/)[0];return c.length>40?c.slice(0,39)+'…':c};
+/* 할 것: Aside 가 넣은 items 우선, 없으면 기본 */
+function itemsOf(s){if(s.kind==='none')return [];if(s.items&&s.items.length)return s.items;
+ if(s.kind==='game')return [{k:'g',t:s.disc==='D'?'복식 게임':'단식 게임'}];
+ if(s.kind==='rally')return [{k:'r1',t:'포핸드 크로스 랠리',fid:'f-ground'},{k:'r2',t:'백핸드 크로스 랠리',fid:'f-ground'},{k:'r3',t:'깊게 (서비스 라인 넘기기)',fid:'f-depth'},{k:'r4',t:'서브 · 리턴',fid:'f-serve'}];
+ if(s.disc==='D'){const P=[];FA().filter(f=>f.disc!=='S').forEach(f=>(f.drills||[]).forEach(d=>{if(d.who==='partner')P.push({d,f})}));P.sort((a,b)=>(a.d.po||99)-(b.d.po||99));return P.slice(0,5).map((x,i)=>({k:'p'+i,t:x.d.name,s:x.d.how,fid:x.f.id}))}
+ const who=['one','solo'];const fs=FA().filter(f=>f.disc!=='D');const out=[];
+ for(const f of fs){for(const d of f.drills||[]){if(out.length<4&&!/^게임 중/.test(d.name)&&who.includes(d.who))out.push({k:'d'+out.length,t:d.name,s:short(d.desc||d.how),fid:f.id})}if(out.length>=4)break}
+ return out}
 
-/* ===== 화면 ===== */
-let tab='home',sel=today(),disc='S',calMonth=today().slice(0,7),calMode='month';
-function render(){const a=$('app');
- if(net.authed===null){a.innerHTML='<div class="login"><h1>Tennis<br><span>Season</span></h1></div>';return}
- if(net.authed===false){const err=new URLSearchParams(location.search).get('login');a.innerHTML=`<div class="login"><div class="sub" style="color:rgba(255,255,255,.75);font-weight:700">2027 시즌</div><h1>Tennis<br><span>Season</span></h1><div style="margin-top:14px;color:rgba(255,255,255,.85)">단식·혼복 리그까지, 주 단위로.</div>${err?`<div style="margin-top:14px;background:rgba(0,0,0,.2);border-radius:12px;padding:10px">${err==='notallowed'?'이 구글 계정은 등록된 계정이 아니에요. shinki95@gmail.com 으로 로그인해 주세요.':'로그인을 다시 해 주세요.'}</div>`:''}<button class="gbtn" data-a="login"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Google로 계속하기</button></div>`;return}
- a.innerHTML=({home:vHome,cal:vCal,prog:vProg,note:vNote})[tab]()+nav();syncLabel()}
-function nav(){const b=(t,i,n)=>`<button class="${tab===t?'on':''}" data-a="tab" data-t="${t}">${i}${tab===t?n:''}</button>`;return `<div class="nav">${b('home',I.home,'홈')}${b('cal',I.cal,'캘린더')}<button class="plus" data-a="rec">${I.plus}</button>${b('prog',I.chart,'진행')}${b('note',I.note,'노트')}</div>`}
-function topHdr(t){const init=(net.email||'?')[0].toUpperCase();return `<div class="hdr"><button class="av" data-a="acct">${esc(init)}</button><div style="flex:1"><div class="title">${t}</div><div class="sync" id="sync"></div></div><button class="ib" data-a="tab" data-t="cal">${I.cal}</button></div>`}
-function strip(){const ws=mon(sel),n=wkOf(ws),P=plan(),w=P[n-1];let h=`<div class="wkhd"><div><div style="font-size:19px;font-weight:800">${n>=1?'W'+n:'시작 전'} <span style="font-size:14px;font-weight:600;opacity:.8">${w?PH[w.ph].n:''}</span></div><div class="sub">${md(ws)} ~ ${md(addD(ws,6))}</div></div><div><button class="arw" data-a="wkNav" data-v="-7">${I.l}</button><button class="arw" data-a="wkNav" data-v="7">${I.r}</button></div></div><div class="strip">`;
- for(let k=0;k<7;k++){const d=addD(ws,k),evs=EV().filter(e=>e.start<=d&&e.end>=d),L=db.logs.filter(l=>l.date===d),T=dayTodos(d).filter(x=>!x.done).length;const dots=[...(L.length?['l']:[]),...(evs.length?['e']:[]),...(T?['t']:[])].slice(0,3);
-  h+=`<button class="day ${d===sel?'sel':''} ${d===today()?'tod':''}" data-a="sel" data-d="${d}"><div class="dn">${DOW[(k+1)%7]}</div><div class="dd num">${pd(d).getDate()}</div><div class="ds">${dots.map(()=>'<i></i>').join('')}</div></button>`}
+/* 목표: 입력 지표 (셀 수 있는 것) */
+function krCount(o,k,from,to){
+ if(k.type==='sessions')return allDone(from,to).length+db.logs.filter(l=>!l.todoId&&l.date>=from&&l.date<=to&&!allDone(l.date,l.date).length).length;
+ if(k.type==='doubles')return allDone(from,to).filter(s=>s.disc==='D').length;
+ if(k.type==='games')return allDone(from,to).filter(s=>s.kind==='game').length;
+ if(k.type==='factor')return allDone(from,to).filter(s=>itemsOf(s).some(x=>x.fid===k.fid&&(s.checks||{})[x.k])).length;
+ if(k.type==='analyzed')return db.logs.filter(l=>l.date>=from&&l.date<=to&&((l.vals&&Object.keys(l.vals).length)||(l.drills&&l.drills.length))).length;
+ if(k.type==='retro')return db.notes.filter(x=>x.type==='retro'&&x.date>=from&&x.date<=to).length;return 0}
+const COL={'f-serve':'#2F6BFF','f-ground':'#2F7D4F','f-depth':'#8B5CF6','f-return':'#E39A1B','f-net':'#E5484D'};
+const fName=fid=>((FA().find(f=>f.id===fid)||{}).name||'요소').replace(/ 안정| \(복식\)/,'');
+const krName=k=>fName(k.fid);
+function svSeries(fid){const f=FA().find(x=>x.id===fid);if(!f)return {name:'',pts:[]};const m=(f.metrics||[]).find(m=>m.src==='sv'&&m.unit==='%')||(f.metrics||[])[0];if(!m)return {name:'',pts:[]};const by={};db.logs.forEach(l=>{const v=(l.vals||{})[m.id];if(v!=null&&v!==''){const w=wkOf(l.date);(by[w]=by[w]||[]).push(+v)}});return {name:m.name,unit:m.unit,sv:m.src==='sv',pts:Object.keys(by).map(Number).sort((a,b)=>a-b).map(w=>[w,Math.round(by[w].reduce((a,b)=>a+b,0)/by[w].length)])}}
+function spark(fid){const S=svSeries(fid),P=S.pts;if(!S.name)return '';const pre=S.sv?'SV ':'';if(P.length<1)return `<span class="mut sm">${pre}${esc(S.name)} 기록 없음</span>`;const last=P[P.length-1][1],first=P[0][1],dlt=last-first;
+ let svg='';if(P.length>1){const xs=P.map(p=>p[0]),ys=P.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys)-2,y1=Math.max(...ys)+2;svg=`<svg width="70" height="22" viewBox="0 0 70 22" style="display:inline-block;vertical-align:middle;width:70px"><polyline fill="none" stroke="${COL[fid]||'#2F7D4F'}" stroke-width="2" points="${P.map(p=>((p[0]-x0)/Math.max(1,x1-x0)*66+2)+','+(20-(p[1]-y0)/Math.max(1,y1-y0)*18)).join(' ')}"/></svg>`}
+ return `<span class="mut sm">${pre}${esc(S.name)} <b style="color:var(--ink)">${last}${esc(S.unit||'')}</b>${P.length>1?` <span style="color:${dlt>=0?'var(--g)':'var(--r)'}">${dlt>=0?'▲':'▼'}${Math.abs(dlt)}</span>`:''}</span> ${svg}`}
+const weeksBetween=(a,b)=>Math.max(0,(diffD(a,b)+1)/7);
+function msDates(o){if(o.msd&&o.msd.length)return [...o.msd].sort().reverse();const out=[o.end];let d=addD(o.end,-28);while(d>addD(o.start,13)){out.push(d);d=addD(d,-28)}return out}
+function msTarget(o,k,d){const ov=((o.ms||{})[d]||{})[k.id];if(ov!=null&&ov!=='')return +ov;const b=kBase(k)??(kDir(k)<0?k.target+2:k.target-10);const fr=clamp(diffD(o.start,d)/Math.max(1,diffD(o.start,o.end)),0,1);return Math.round((b+(k.target-b)*fr)*10)/10}
+function msLabel(o,d){if(d===o.end)return '목표';if(d<o.lstart&&addD(d,28)>=o.lstart)return '개막 전';return `W${wkOf(d)} 점검`}
+const nextMs=o=>msDates(o).filter(d=>d>=TODAY).sort()[0];
+/* 결과 (참고, 영상 분석 뒤 Aside 가 넣는 기록에서) */
+function resNow(o,r){const G=db.logs.filter(l=>l.disc===o.disc&&l.gw!=null&&l.gw!=='');const L=G.filter(l=>l.league&&l.date>=o.lstart);
+ if(r.type==='wins')return {v:L.filter(l=>l.res==='W').length,u:'승',n:'리그 승'};if(r.type==='winrate')return {v:L.length?Math.round(L.filter(l=>l.res==='W').length/L.length*100):null,u:'%',n:'리그 승률'};
+ const g=G.slice(-5),t=g.reduce((a,l)=>a+ +l.gw+ +l.gl,0);return {v:t?Math.round(g.reduce((a,l)=>a+ +l.gw,0)/t*100):null,u:'%',n:'게임 득실률'}}
+
+/* 화면 */
+function render(){document.getElementById('nav').innerHTML=[['today','오늘'],['plan','일정'],['goal','목표']].map(([k,n])=>`<button class="${tab===k?'on':''}" data-a="tab" data-t="${k}">${n}</button>`).join('');document.getElementById('app').innerHTML=({today:vToday,plan:vPlan,goal:vGoal})[tab]()}
+function dateBtn(id,date,kind){return `<label class="dt">${md(date)} ✎<input type="date" value="${date}" data-${kind}="${id}"></label>`}
+function mOf(fid){const f=FA().find(x=>x.id===fid);if(!f)return null;return (f.metrics||[]).find(m=>m.src==='sv'&&m.unit==='%')||(f.metrics||[])[0]||null}
+function kSeries(k){const m=mOf(k.fid);if(!m)return [];const by={};db.logs.forEach(l=>{const v=(l.vals||{})[m.id];if(v!=null&&v!==''){(by[l.date]=by[l.date]||[]).push(+v)}});return Object.keys(by).sort().map(d=>[d,Math.round(by[d].reduce((a,b)=>a+b,0)/by[d].length*10)/10])}
+const kDir=k=>{const m=mOf(k.fid);return m&&+m.dir<0?-1:1};
+const kUnit=k=>{const m=mOf(k.fid);return m?m.unit:''};
+const kMetric=k=>{const m=mOf(k.fid);return m?m.name:''};
+function kNow(k){const S=kSeries(k);return S.length?S[S.length-1][1]:null}
+function kBase(k){const S=kSeries(k);return S.length?S[0][1]:null}
+function kProg(k){const b=kBase(k),c=kNow(k),t=k.target;if(b==null||c==null)return null;if(t===b)return c*kDir(k)>=t*kDir(k)?1:0;return clamp((c-b)/(t-b),0,1)}
+function trend(pts,target,color,dir,W,H){W=W||110;H=H||34;if(!pts.length)return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:${W}px;opacity:.35"><line x1="2" x2="${W-2}" y1="${H/2}" y2="${H/2}" stroke="#C9CED8" stroke-dasharray="3 3"/></svg>`;
+ const ys=[...pts.map(p=>p[1]),target],y0=Math.min(...ys)-2,y1=Math.max(...ys)+2,n=pts.length,X=i=>n<2?W/2:4+i/(n-1)*(W-8),Y=v=>H-3-(v-y0)/Math.max(1,y1-y0)*(H-6);
+ return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:${W}px;display:inline-block;vertical-align:middle"><line x1="2" x2="${W-2}" y1="${Y(target)}" y2="${Y(target)}" stroke="${color}" stroke-dasharray="4 3" opacity=".6"/>${n>1?`<polyline fill="none" stroke="${color}" stroke-width="2.4" points="${pts.map((p,i)=>X(i)+','+Y(p[1])).join(' ')}"/>`:''}<circle cx="${X(n-1)}" cy="${Y(pts[n-1][1])}" r="3.5" fill="${color}"/></svg>`}
+function gameSeries(o){return db.logs.filter(l=>l.disc===o.disc&&l.gw!=null&&l.gw!==''&&(+l.gw+ +l.gl)>0).sort((a,b)=>a.date<b.date?-1:1).map(l=>[l.date,Math.round(+l.gw/(+l.gw+ +l.gl)*100)])}
+function krRow(o,k,big){const c=COL[k.fid]||'#2F7D4F',now=kNow(k),base=kBase(k),u=kUnit(k),ws=mon(day),we=addD(ws,6),tr=krCount(o,k,ws,we);
+ if(!big)return `<div class="row" style="padding:8px 0;border-top:1px solid var(--line);gap:8px"><i style="width:9px;height:9px;border-radius:50%;background:${c};flex:none"></i><b style="width:58px;flex:none">${esc(krName(k))}</b><span style="flex:1;font-size:14px">${now==null?'<span class="mut">–</span>':`<b>${now}</b>`}<span class="mut">/${kDir(k)<0?'≤':''}${k.target}${esc(u)}</span></span>${trend(kSeries(k),k.target,c,kDir(k),64,24)}<span class="mut sm" style="width:46px;text-align:right">훈련 <b style="color:${tr>=k.per?'var(--g)':'var(--ink)'}">${tr}/${k.per}</b></span></div>`;
+ return `<div class="krr"><div class="row sb"><span class="row" style="gap:6px"><i style="width:9px;height:9px;border-radius:50%;background:${c};display:inline-block"></i><b>${esc(krName(k))}</b><span class="mut sm">${esc(kMetric(k))}</span></span><span class="mut sm">이번 주 훈련 <b style="color:${tr>=k.per?'var(--g)':'var(--ink)'}">${tr}/${k.per}</b></span></div><div style="font-size:15px;margin-top:2px">${now==null?'<span class="mut">기록 전</span>':`<b>${base!=null&&base!==now?base+' → ':''}${now}</b>`} <span class="mut">/ 목표 ${kDir(k)<0?'≤ ':''}${k.target}${esc(u)}</span></div><div style="margin-top:6px">${trend(kSeries(k),k.target,c,kDir(k),330,80)}</div></div>`}
+function resRow(o,r){const x=resNow(o,r),pts=r.type==='gamepct'?gameSeries(o):[];return `<div class="krr"><div class="row sb"><b>${x.n}</b>${pts.length?trend(pts,r.target,'#111318',1):''}</div><div style="font-size:15px;margin-top:2px">${x.v==null?'<span class="mut">기록 전</span>':`<b>${x.v}${x.u}</b>`} <span class="mut">/ 목표 ${r.target}${x.u}</span></div></div>`}
+function goalCard(){return `<div class="card">${OKR().map((o,i)=>{const nx=nextMs(o);return `<div style="${i?'margin-top:16px':''}"><button class="row sb" style="width:100%;text-align:left" data-a="tab" data-t="goal" data-d="${o.disc}"><b style="font-size:17px">${esc(o.title)}</b><span class="mut sm">${o.disc==='D'?'복식':'단식'} ›</span></button>${nx?`<div class="mut sm">다음 단계 ${md(nx)} · ${msLabel(o,nx)}</div>`:''}<div style="margin-top:4px">${o.krs.map(k=>krRow(o,k)).join('')}<div class="mut sm" style="padding-top:8px;border-top:1px solid var(--line)">결과 · ${(o.res||[]).map(r=>{const x=resNow(o,r);return `${x.n} <b style="color:var(--ink)">${x.v==null?'–':x.v}</b>/${r.target}${x.u}`}).join(' · ')}</div></div></div>`}).join('')}</div>`}
+function typeChips(id,s){return `<div class="chips">${TYPES.map(([d,k,n])=>`<button class="chip ${s&&s.disc===d&&s.kind===k?'on':''}" data-a="${id?'sType':'sNew'}" data-id="${id||''}" data-d="${d}" data-k="${k}">${n}</button>`).join('')}</div>`}
+function sessCard(s){const it=itemsOf(s),ck=s.checks||{},step=s.done?'done':s.step||'ready',cur=it.findIndex(x=>!ck[x.k]);
+ const del=`<button class="del" data-a="sDel" data-id="${s.id}">지우기</button>`;let h=`<div class="card" data-sid="${s.id}">`;
+ if(step==='ready'){h+=`<div class="row sb"><span class="lbl">시작 전</span><span class="row" style="gap:6px">${dateBtn(s.id,s.date,'mv')}${del}</span></div>${typeChips(s.id,s)}
+  <div style="margin-top:12px">${it.map(x=>`<div class="it"><span class="ck" style="width:22px;height:22px;border-style:dashed"></span><span><span class="t">${esc(x.t)}</span>${x.s?`<span class="s">${esc(x.s)}</span>`:''}</span></div>`).join('')}</div><button class="btn" data-a="sStart" data-id="${s.id}">카메라 켜고 시작</button>`}
+ else if(step==='go'){const x=it[cur];h+=`<div class="row sb"><span class="lbl">하는 중 · ● 촬영</span><span class="row" style="gap:6px"><button class="btn2" data-a="sCancel" data-id="${s.id}">처음부터</button>${del}</span></div><b style="font-size:20px">${TN(s.disc,s.kind)}</b><div class="dots">${it.map(y=>`<i class="${ck[y.k]?'y':''}"></i>`).join('')}</div>
+  ${x?`<div class="now"><div class="mut sm">${cur+1} / ${it.length}</div><div class="t">${esc(x.t)}</div>${x.s?`<div class="mut" style="margin-top:4px">${esc(x.s)}</div>`:''}</div><button class="btn" data-a="iNext" data-id="${s.id}" data-k="${x.k}">${cur===it.length-1?'완료':'다음 →'}</button>`:`<button class="btn" data-a="sEnd" data-id="${s.id}">완료</button>`}
+  <div style="margin-top:10px">${it.map((y,i)=>`<button class="it ${ck[y.k]?'y':''}" data-a="iCk" data-id="${s.id}" data-k="${y.k}"><span class="ck ${ck[y.k]?'y':''}" style="width:22px;height:22px;font-size:12px">${ck[y.k]?'✓':''}</span><span class="t" style="${i===cur?'font-weight:800':''}">${esc(y.t)}</span></button>`).join('')}</div>${x?`<button class="mut" style="width:100%;margin-top:10px;font-weight:700" data-a="sEnd" data-id="${s.id}">여기까지 하고 끝내기</button>`:''}`}
+ else{const lg=db.logs.find(l=>l.date===s.date&&l.src!=='quick'),nt=db.notes.find(n=>n.id==='R-'+s.id),nx=(()=>{for(let i=1;i<15;i++){const x=addD(s.date,i);const S=sessOn(x).filter(z=>!z.done);if(S.length)return S[0]}return null})();
+  const P=[['up','SwingVision 캡처 Slack에',!!(s.post||{}).up||!!lg],['ana','SV 숫자 반영 (Aside)',!!(lg&&lg.vals&&Object.keys(lg.vals).length)],['retro','회고',!!nt],['next','다음 훈련 받기',!!(nx&&nx.items&&nx.items.length)]];
+  h+=`<div class="row"><button class="ck y" aria-label="완료 해제" data-a="sReopen" data-id="${s.id}">✓</button><b style="font-size:20px">${TN(s.disc,s.kind)}</b><span class="lbl" style="margin-left:auto">끝남</span>${del}</div><div style="margin-top:10px">${P.map(([k,t,on])=>`<button class="it ${on?'y':''}" data-a="${k==='retro'?'retroT':k==='up'?'postT':'noop'}" data-id="${s.id}" data-k="${k}"><span class="ck ${on?'y':''}" style="width:22px;height:22px;font-size:12px">${on?'✓':''}</span><span class="t">${t}</span></button>`).join('')}</div>
+  ${retroOpen===s.id?`<textarea class="inp" id="rt" rows="3" placeholder="잘된 것 / 다음엔">${esc(nt?nt.text:'')}</textarea><button class="btn2" style="margin-top:8px" data-a="retroSave" data-id="${s.id}">저장</button>`:''}`}
  return h+'</div>'}
-function vHome(){const d=sel,t=today(),n=wkOf(d);let h=`<div class="top wrap">${topHdr('테니스 시즌')}${strip()}</div><main class="wrap">`+goalCard();
- const L=dayTodos(d),dn=L.filter(x=>x.done).length,W=weekTodos(n),wdn=W.filter(x=>x.done).length,dL=db.logs.filter(l=>l.date===d);
- h+=`<div class="card"><div class="row sb"><h2>${d===t?'오늘':md(d)+' '+dw(d)}</h2>${L.length?`<span class="num">${dn}/${L.length}</span>`:''}</div>${L.map(x=>todoRow(x,true)).join('')||'<div class="sub" style="margin-top:8px">쉬는 날</div>'}${ADD?`<div style="margin-top:10px">${[['S','game'],['S','drill'],['D','game'],['D','drill'],['S','rally']].map(([dd,k])=>`<button class="tog" data-a="quickAdd" data-dd="${dd}" data-k="${k}">+ ${DISCN[dd]} ${KINDN[k]}</button>`).join('')}<div class="row" style="margin-top:6px"><input type="text" id="qa-text" placeholder="직접 쓰기" style="flex:1"><button class="btn s" data-a="quickAdd" data-k="text">추가</button></div></div>`:''}${dL.map(logRow).join('')}<div class="row" style="margin-top:12px"><button class="btn s" data-a="addTog">${ADD?'닫기':'+ 추가'}</button>${W.length?`<button class="btn s" data-a="weekList">이번 주 ${wdn}/${W.length}</button>`:''}</div></div>`;
- h+=anaCard();
- return h+'</main>'}
-function goalCard(){const st=ST();let h=`<div class="card"><h2>목표</h2>`;
- for(const d of ['S','D']){const ss=AF().filter(f=>f.disc===d||f.disc==='SD').map(fStatus).filter(x=>x.p!=null&&x.t!=='기준 잡힘');const p=ss.length?ss.reduce((a,x)=>a+x.p,0)/ss.length:null,pace=ss.length?ss.reduce((a,x)=>a+(x.pace||0),0)/ss.length:0;
-  h+=`<div class="pace" data-a="tab" data-t="prog" data-d="${d}"><div class="row sb"><b>${DISCN[d]}</b><span class="st ${p==null?'m':kl(p-pace)}">${p==null?'기준 필요':lab(p-pace)}</span></div><div class="sub">${esc(st.level[d].goal)}</div>${p!=null?`<div class="pbar"><i class="${kl(p-pace)==='g'?'':kl(p-pace)}" style="width:${clamp(p,0,1)*100}%"></i><em style="left:${clamp(pace,0,1)*100}%"></em></div>`:`<div class="row" style="flex-wrap:nowrap;gap:8px"><div class="pbar" style="flex:1;opacity:.45"><i style="width:${d==='S'?42:30}%"></i><em style="left:38%"></em></div><span class="tag" style="margin-top:6px">예시</span></div>`}</div>`}
- return h+'</div>'}
-let EXP={},EDIT=null,ADD=false,EXPA=null;
-function ensureLog(x,extra){if(!x||!x.kind)return;const ex=x.logId&&db.logs.find(l=>l.id===x.logId);const filmed=!!((x.checks||{}).sv);
- const l={...(ex||{id:uid('l'),date:x.date||sel,kind:x.kind==='league'?'league':x.kind,disc:x.disc||'S',vals:{},src:'sv',todoId:x.id}),...extra};
- if(filmed)l.filmed=true;if(l.filmed&&!hasVals(l)&&l.analysis!=='skip')l.analysis='pending';if(l.gw!=null&&l.gl!=null&&l.gw!=='')l.res=+l.gw>+l.gl?'W':'L';
- upsert('logs',l);return l.id}
-const pendingAna=()=>db.logs.filter(l=>l.filmed&&l.analysis==='pending').sort((a,b)=>a.date<b.date?-1:1);
-function anaCard(){const P=pendingAna();if(!P.length)return db.logs.some(l=>l.filmed)?'':`<div class="card" style="opacity:.6"><div class="row sb"><h2>분석 대기</h2><span class="tag">예시</span></div><div class="td"><span class="ck" style="border-style:dashed"></span><div class="tt"><b style="font-weight:600">11/24 화 · 단식 게임</b><div class="sub small">2일 전 · 6-4</div></div></div><div class="sub small">촬영하고 친 날은 여기 쌓여요. 나중에 숫자를 넣으면 친 날짜로 그래프에 들어가요.</div></div>`;const t=today();
- return `<div class="card"><div class="row sb"><h2>분석 대기</h2><span class="num">${P.length}</span></div>${P.map(l=>{const open=EXPA===l.id;const ms=allMetrics().filter(m=>discOk(m.f.disc,l.disc)&&(l.kind==='game'||l.kind==='league'||!m.gameOnly));
-  return `<div class="td" data-a="anaExp" data-id="${l.id}" style="cursor:pointer"><span class="ck" style="border-style:dashed"></span><div class="tt"><b style="font-weight:600">${md(l.date)} ${dw(l.date)} · ${DISCN[l.disc||'S']} ${KIND[l.kind].n}</b><div class="sub small">${[diffD(l.date,t)>0?diffD(l.date,t)+'일 전':'',l.gw!=null&&l.gw!==''?l.gw+'-'+l.gl:''].filter(Boolean).join(' · ')}</div></div></div>${open?`<div style="margin:0 0 10px 37px">${ms.map(m=>`<div class="row sb" style="padding:4px 0;flex-wrap:nowrap"><span style="font-size:14px">${esc(m.name)}</span><span class="row" style="flex-wrap:nowrap"><input type="number" inputmode="decimal" step="any" data-av="${l.id}" data-m="${m.id}" value="${(l.vals||{})[m.id]??''}" style="width:76px;padding:7px"><span class="sub">${esc(m.unit||'')}</span></span></div>`).join('')}<div class="row" style="margin-top:6px"><button class="btn s lm" data-a="anaSave" data-id="${l.id}">저장</button><button class="btn s" data-a="anaSkip" data-id="${l.id}">분석 안 함</button></div><div class="sub small" style="margin-top:6px">캡처를 Slack 테니스 기록함에 올리면 Aside가 넣어요</div></div>`:''}`}).join('')}</div>`}
-function itemsFor(x){if(x.kind==='drill')return drillList(x);const pg=PROG(),fd=focusDrill(),it=[{k:'wu',t:'워밍업 10분',sub:pg.warmup||''}];
- if(x.kind==='rally')it.push({k:'cross',t:'크로스 랠리 포·백'});else if(fd)it.push({k:'focus',t:'오늘의 한 가지: '+fd.t,sub:fd.d.how||''});
- it.push({k:'sv',t:'SV 켜고 촬영'});return it}
-function todoRow(x,full){const tag=x.kind?`<span class="tag" style="margin-left:6px">${DISCN[x.disc||'S']} · ${KINDN[x.kind]}</span>`:'';
- const open=full&&(EXP[x.id]!=null?EXP[x.id]:(!x.done&&!!x.kind));const tap=x.type==='retro'?'tab':full?'exp':'swap';
- let h=`<div class="td"><button class="ck ${x.done?'y':''}" data-a="todoTog" data-id="${x.id}">${x.done?'✓':''}</button><div class="tt ${x.done?'done':''}" data-a="${tap}" data-t="note" data-id="${x.id}" style="cursor:pointer"><b style="font-weight:600">${esc(x.title)}</b>${tag}</div><button class="btn s" data-a="${full?'edit':'swap'}" data-id="${x.id}">${full&&EDIT===x.id?'닫기':'바꾸기'}</button></div>`;
- if(full&&EDIT===x.id){const t=today();h+=`<div style="margin:0 0 10px 37px"><div>${Object.entries(KINDN).map(([k,v])=>`<button class="tog ${x.kind===k?'y':''}" data-a="setK" data-id="${x.id}" data-k="kind" data-v="${k}">${v}</button>`).join('')}</div><div>${['S','D'].map(k=>`<button class="tog ${(x.disc||'S')===k?'y':''}" data-a="setK" data-id="${x.id}" data-k="disc" data-v="${k}">${DISCN[k]}</button>`).join('')}<button class="tog" data-a="setK" data-id="${x.id}" data-k="date" data-v="${addD(x.date||t,1)}">하루 뒤로</button><button class="tog" data-a="setK" data-id="${x.id}" data-k="date" data-v="${t}">오늘로</button></div><div class="row" style="margin-top:4px"><input type="date" data-edate="${x.id}" value="${x.date||''}"><button class="btn s d" data-a="todoDel2" data-id="${x.id}">빼기</button></div></div>`}
- else if(open){const ck=x.checks||{};h+=`<div style="margin:0 0 8px 37px">${itemsFor(x).map(it=>`<div class="row" style="padding:6px 0;flex-wrap:nowrap;cursor:pointer" data-a="drCk" data-id="${x.id}" data-k="${it.k}"><span class="ck ${ck[it.k]?'y':''}" style="width:20px;height:20px;font-size:11px">${ck[it.k]?'✓':''}</span><div style="flex:1;min-width:0"><div style="font-size:14px;${ck[it.k]?'color:#9CA3AF;text-decoration:line-through':''}">${esc(it.t)}</div>${it.sub&&!ck[it.k]?`<div class="sub small">${esc(it.sub)}</div>`:''}</div></div>`).join('')}`;
-  if(x.kind==='game'||x.kind==='league')h+=`<div class="row" style="padding:6px 0;flex-wrap:nowrap"><span class="sub">스코어</span><input type="number" inputmode="numeric" id="gw-${x.id}" placeholder="나" style="width:62px;padding:7px"><span>:</span><input type="number" inputmode="numeric" id="gl-${x.id}" placeholder="상대" style="width:62px;padding:7px"><button class="btn s lm" data-a="score" data-id="${x.id}">저장</button></div>`;
-  h+=`</div>`}
+function vToday(){const isT=day===TODAY;let h=`<div class="top"><button class="ib" aria-label="전날" data-a="dNav" data-v="-1">‹</button><div style="text-align:center"><label style="position:relative;display:inline-block"><div class="h1">${isT?'오늘':md(day)} <span style="font-size:16px;color:var(--mut)">▾</span></div><input type="date" value="${day}" data-day="1" style="position:absolute;inset:0;opacity:0;width:100%"></label>${isT?`<div class="mut sm">${md(day)}</div>`:`<button class="sm" data-a="dToday" style="color:var(--g);font-weight:700">오늘로</button>`}</div><button class="ib" aria-label="다음날" data-a="dNav" data-v="1">›</button></div>`+goalCard();
+ const S=sessOn(day),evs=EV().filter(e=>e.start<=day&&e.end>=day);evs.forEach(e=>{h+=`<div class="card" style="background:#FDECEC;color:var(--r);font-weight:800">${esc(e.name)}</div>`});
+ S.forEach(s=>{h+=sessCard(s)});
+ h+=`<div class="card"><div class="lbl">${S.length?'하나 더 추가':'훈련 추가'}</div>${typeChips(null,null)}</div>`;return h}
+function vPlan(){const cw=Math.max(1,wkOf(TODAY));let h=`<div class="top"><div class="h1">일정</div></div><div class="card"><div class="lbl">대회</div>${EV().filter(e=>e.end>=addD(TODAY,-30)).map(e=>`<div class="row sb" style="padding:8px 0;border-top:1px solid var(--line)"><span style="min-width:0">${esc(e.name)}<div class="mut sm">D-${Math.max(0,diffD(TODAY,e.start))}</div></span>${dateBtn(e.id,e.start,'ev')}</div>`).join('')}</div>`;
+ for(let n=Math.max(1,cw-2);n<=Math.min(lastW(),cw+6);n++){const ws=wkStart(n);h+=`<div class="card" ${n===cw?'id="cur"':''}><div class="row sb"><div class="lbl">${n===cw?'이번 주 · ':''}W${n}</div><span class="mut sm">${md(ws)}~</span></div>`;
+  for(let k=0;k<7;k++){const d=addD(ws,k),S=sessOn(d),E=EV().filter(e=>e.start===d);if(!S.length&&!E.length)continue;h+=`<div class="wr"><button class="wd" data-a="go" data-d="${d}">${DOW[pd(d).getDay()]} ${pd(d).getDate()}</button><div class="row" style="flex-wrap:wrap;gap:6px;flex:1">${E.map(e=>`<span class="pill ev">${esc(e.name)}</span>`).join('')}${S.map(s=>`<span class="pill ${s.done?'done':''}">${TN(s.disc,s.kind)}</span>`).join('')}</div>${S[0]?dateBtn(S[0].id,S[0].date,'mv'):''}</div>`}
+  h+=`</div>`}return h}
+function wkVal(k,n){const m=mOf(k.fid);if(!m)return null;const ws=wkStart(n),we=addD(ws,6);const v=db.logs.filter(l=>l.date>=ws&&l.date<=we).map(l=>(l.vals||{})[m.id]).filter(v=>v!=null&&v!=='').map(Number);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length*10)/10:null}
+function weekTable(o){const cw=Math.max(1,wkOf(TODAY)),last=Math.min(wkOf(o.end),cw+2),ks=o.krs;let h=`<div class="card"><div class="lbl">주차별 · 실제 / 그 주 목표</div><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:13px"><tr><th style="text-align:left;padding:6px 4px;color:var(--mut)">주</th>${ks.map(k=>`<th style="padding:6px 4px;color:${COL[k.fid]};text-align:center">${esc(krName(k))}</th>`).join('')}</tr>`;
+ for(let n=last;n>=1;n--){const we=addD(wkStart(n),6);h+=`<tr style="border-top:1px solid var(--line);${n===cw?'background:#F4F6F3':''}"><td style="padding:7px 4px;white-space:nowrap"><b>W${n}</b><div class="mut" style="font-size:11px">${md(wkStart(n)).replace(/ .+/,'')}~</div></td>${ks.map(k=>{const v=wkVal(k,n),t=msTarget(o,k,we),tr=krCount(o,k,wkStart(n),we);const ok=v==null?null:(kDir(k)<0?v<=t:v>=t);
+   return `<td style="text-align:center;padding:7px 4px"><b style="color:${ok==null?'#C4C9D2':ok?'var(--g)':'var(--r)'}">${v==null?'–':v}</b><span class="mut" style="font-size:11px">/${t}</span><div class="mut" style="font-size:11px">훈련 ${tr}</div></td>`}).join('')}</tr>`}
+ return h+`</table></div><div class="mut sm" style="margin-top:6px">초록 = 그 주 목표 넘음 · 빨강 = 못 미침 · 숫자는 SwingVision</div></div>`}
+function vGoal(){const o=OKR().find(x=>x.disc===gdisc),E=okEdit,ws=mon(TODAY),we=addD(ws,6),nx=nextMs(o);
+ let h=`<div class="top"><div class="h1">목표</div><button class="btn2" data-a="okEdit">${E?'완료':'조정'}</button></div><div class="seg">${['S','D'].map(k=>`<button class="${gdisc===k?'on':''}" data-a="gDisc" data-v="${k}">${k==='S'?'단식':'복식'}</button>`).join('')}</div>`;
+ h+=`<div class="card">${E?`<input class="inp" style="font-weight:800;font-size:18px" data-ot="${o.id}" value="${esc(o.title)}"><div class="row mut sm" style="margin-top:8px">${dateBtn(o.id,o.start,'os')} ~ ${dateBtn(o.id,o.end,'oe')}</div>`:`<div style="font-size:20px;font-weight:800">${esc(o.title)}</div><div class="mut sm">${md(o.start)} ~ ${md(o.end)}</div>`}
+  <div class="lbl" style="margin-top:14px">KR · 요소별 목표값과 추이</div>${o.krs.map(k=>E?`<div class="krr"><div class="row sb"><b>${esc(krName(k))}</b><span class="mut sm">${esc(kMetric(k))}</span></div><div class="row sm" style="margin-top:6px;gap:8px">목표 <input class="ti" data-kt="${o.id}:${k.id}" value="${k.target}">${esc(kUnit(k))} · 주 훈련 <input class="ti" data-kp="${o.id}:${k.id}" value="${k.per}">회</div></div>`:krRow(o,k,true)).join('')}${(o.res||[]).map(r=>resRow(o,r)).join('')}</div>`;
+ h+=weekTable(o);
+ const D=msDates(o);h+=`<div class="card"><div class="lbl">단계 (목표에서 거꾸로)</div><div class="tl">${D.map(d=>{const past=d<TODAY;const ok=past?o.krs.every(k=>{const S=kSeries(k).filter(p=>p[0]<=d);if(!S.length)return true;const v=S[S.length-1][1];return kDir(k)<0?v<=msTarget(o,k,d):v>=msTarget(o,k,d)}):null;
+  return `<div class="ms ${d===o.end?'goal':d===nx?'next':past?(ok?'ok':'miss'):''}"><span class="nd"></span><div class="row sb"><b>${msLabel(o,d)}</b>${E&&d!==o.end?dateBtn(o.id+'|'+d,d,'md'):`<span class="mut">${md(d)}${d===nx?' · 다음':''}</span>`}</div><div class="kv">${o.krs.map(k=>`<span>${esc(krName(k))} ${E?`<input class="ti" data-mv="${o.id}|${d}|${k.id}" value="${msTarget(o,k,d)}">`:`<b>${msTarget(o,k,d)}</b>`}${esc(kUnit(k))}</span>`).join('')}</div></div>`}).join('')}</div></div>`;
+ h+=``;
  return h}
-function evRow(e){const t=today();return `<div class="it" data-a="evEdit" data-id="${e.id}"><div class="ico" style="background:${evColor(e)};color:#fff">${evMark(e)}</div><div style="flex:1"><b>${esc(e.name)}</b><div class="sub">${ETYPE[e.type]} · ${DISCN[e.disc||'']} · ${md(e.start)}${e.end!==e.start?'~'+md(e.end):''}${e.end>=t?' · D-'+Math.max(0,diffD(t,e.start)):''}</div>${e.note?`<div class="sub small">${esc(e.note)}</div>`:''}</div></div>`}
-function logRow(l){const vals=Object.entries(l.vals||{}).filter(([k,v])=>v!==''&&v!=null).map(([k,v])=>{const m=allMetrics().find(x=>x.id===k);return `<span class="tag">${esc(m?m.name:k)} ${v}${m?esc(m.unit||''):''}</span>`}).join(' ');
- return `<div class="it" data-a="logOpen" data-id="${l.id}"><div class="ico" style="background:${KIND[l.kind].c};color:#fff">${KIND[l.kind].i}</div><div style="flex:1;min-width:0"><div class="row sb"><b>${KIND[l.kind].n}${l.disc?' · '+DISCN[l.disc]:''}${l.partner?' · '+esc(l.partner):''}</b><span class="sub">${md(l.date)}(${dw(l.date)})</span></div><div class="sub">${[l.gw!==''&&l.gw!=null?`<b class="${l.res==='W'?'g':'r'}">${l.res==='W'?'승':'패'}</b> ${l.gw}-${l.gl}${l.score?' ('+esc(l.score)+')':''}`:'',l.min?l.min+'분':'',l.analysis==='pending'?'분석 대기':'',l.note?esc(l.note):''].filter(Boolean).join(' · ')}</div>${vals?`<div style="margin-top:4px">${vals}</div>`:''}</div></div>`}
-function vCal(){const [y,mo]=calMonth.split('-').map(Number),start=mon(`${calMonth}-01`),t=today(),last=ds(new Date(y,mo,0,12));
- let h=`<div class="top wrap">${topHdr('캘린더')}<div class="wkhd"><div style="font-size:22px;font-weight:800">${calMode==='month'?y+'. '+mo+'월':'시즌'}</div><div><button class="arw" data-a="calNav" data-v="-1">${I.l}</button><button class="arw" data-a="calNav" data-v="1">${I.r}</button></div></div><div class="chips" style="padding-top:0">${Aevents().filter(e=>e.end>=t).map(e=>`<button class="pill s" style="background:rgba(255,255,255,.16);color:#fff" data-a="evEdit" data-id="${e.id}">${DISCN[e.disc]} <b class="num" style="font-size:15px">D-${Math.max(0,diffD(t,e.start))}</b></button>`).join('')}<button class="pill s" style="background:rgba(255,255,255,.16);color:#fff" data-a="calMode" data-v="${calMode==='month'?'season':'month'}">${calMode==='month'?'시즌':'월'}</button></div></div><main class="wrap">`;
- if(calMode==='season')return h+`<div class="card"><h2 style="margin-bottom:8px">시즌 한눈에</h2>${gantt()}</div>${evListCard()}</main>`;
- h+=`<div class="card"><div class="cal"><div class="h"></div>${['월','화','수','목','금','토','일'].map(d=>`<div class="h">${d}</div>`).join('')}`;
- for(let ws=start;ws<=last;ws=addD(ws,7)){const n=wkOf(ws);h+=`<div class="wn">${n>=1&&n<=plan().length?'W'+n:''}</div>`;
-  for(let k=0;k<7;k++){const d=addD(ws,k),inM=d.slice(0,7)===calMonth,evs=EV().filter(e=>e.start<=d&&e.end>=d),L=db.logs.filter(l=>l.date===d),T=dayTodos(d).filter(x=>!x.done);
-   const dots=[...evs.slice(0,2).map(e=>evColor(e)),...L.slice(0,2).map(l=>KIND[l.kind].c),...(T.length?['#2F5BFF']:[])].slice(0,4);const band=evs.some(e=>e.pri==='A'&&e.type!=='deadline');
-   h+=`<button class="c ${inM?'':'x'} ${d===t?'tod':''} ${d===sel?'sel':''} ${band?'band':''}" data-a="sel" data-d="${d}"><div class="n num">${pd(d).getDate()}</div><div class="ds">${dots.map(c=>`<i style="background:${c}"></i>`).join('')}</div></button>`}}
- h+=`</div><div class="leg"><span><i style="background:#E5484D"></i>대회</span><span><i style="background:#111318"></i>마감</span><span><i style="background:#3BA55C"></i>기록</span><span><i style="background:#2F5BFF"></i>할 일</span></div></div>`;
- const dEv=EV().filter(e=>e.start<=sel&&e.end>=sel),dL=db.logs.filter(l=>l.date===sel),dT=weekTodos(wkOf(sel)).filter(x=>x.date===sel);
- h+=`<div class="card"><div class="row sb"><h2>${md(sel)}(${dw(sel)})</h2><span class="sub">W${wkOf(sel)}</span></div>${dEv.map(evRow).join('')}${dT.map(todoRow).join('')}${dL.map(logRow).join('')}<div class="row" style="margin-top:12px"><button class="btn s" data-a="todoNew" data-d="${sel}">+ 할 일</button><button class="btn s" data-a="evNew" data-d="${sel}">+ 대회</button></div></div>`;
- return h+evListCard(calMonth)+'</main>'}
-function evListCard(month){const L=EV().filter(e=>!month||(e.start.slice(0,7)<=month&&e.end.slice(0,7)>=month));return `<div class="card"><div class="row sb"><h2>${month?'이달 대회·일정':'전체 대회·일정'}</h2><button class="btn s p" data-a="evNew">+ 추가</button></div>${L.map(evRow).join('')||'<div class="sub" style="margin-top:6px">없음</div>'}</div>`}
-function vProg(){const st=ST();let h=`<div class="top wrap">${topHdr('진행')}<div class="seg" style="background:rgba(255,255,255,.14)">${['S','D'].map(d=>`<button class="${disc===d?'on':''}" style="${disc===d?'':'color:#fff'}" data-a="disc" data-d="${d}">${DISCN[d]}</button>`).join('')}</div><div class="row sb" style="margin-top:12px"><div><div class="sub">현재</div><b>${esc(st.level[disc].cur)}</b></div><div style="text-align:right"><div class="sub">목표</div><b style="color:var(--lime)">${esc(st.level[disc].goal)}</b></div></div></div><main class="wrap">`;
- for(const f of FA().filter(f=>f.disc===disc||f.disc==='SD')){const s=fStatus(f);
-  h+=`<div class="card" id="fac-${f.id}" style="${f.active===false?'opacity:.5':''}"><div class="row sb"><h2>${esc(f.name)}</h2><button class="btn s" data-a="facEdit" data-id="${f.id}">편집</button></div><span class="st ${s.k}">${s.t}${s.p!=null&&s.t!=='기준 잡힘'?' · 진행 '+Math.round(s.p*100)+'%':''}</span>`;
-  for(const m0 of f.metrics||[]){const m={...m0,f},g=tgt(m),ms=mStatus(m);h+=`<h3>${esc(m.name)} <span class="tag">${esc(SRC[m.src]||'')}</span></h3>${g?`<div class="row sb small"><span>기준 <b class="num">${g.b}</b> → 지금 <b class="num">${g.last}</b>${esc(m.unit||'')}</span><span>개막 <b class="num">${g.t1}</b> · 끝 <b class="num">${g.t2}</b> <span class="st ${ms.k}">${ms.t}</span></span></div>`:''}${road(m)}`}
-  const by={};(f.drills||[]).forEach(d=>{(by[d.who]=by[d.who]||[]).push(d)});h+=`<details><summary>드릴 ${(f.drills||[]).length}개</summary>${Object.keys(WHO).filter(k=>by[k]).map(k=>`<h3>${WHO[k]}</h3>${by[k].map(d=>dr(d)).join('')}`).join('')}</details></div>`}
- const gs=gameStats(disc),ev=discEvent(disc),lg=ev?db.logs.filter(l=>l.kind==='league'&&l.disc===disc&&l.date>=ev.start&&l.date<=ev.end):[],wn=lg.filter(l=>l.res==='W').length;
- h+=`<div class="card"><div class="row sb"><h2>게임 득실률</h2><span class="sub">${ev?'리그 '+wn+'승 '+(lg.length-wn)+'패':''}</span></div>${gs.length?simpleChart(gs.map(x=>[x.w,x.gp*100]),disc==='S'?55:50):`<div style="position:relative;opacity:.55">${simpleChart([[1,42],[2,50],[3,47],[5,58],[6,55],[8,62]],disc==='S'?55:50)}<span class="tag" style="position:absolute;left:34px;top:4px;background:#111318;color:#fff;opacity:1">예시</span></div>`}</div>`;
- return h+`<div class="card"><div class="row"><button class="btn s" data-a="facNew">+ 요소 추가</button><button class="btn s" data-a="lvEdit">수준 바꾸기</button></div></div></main>`}
-function dr(d,j,fid,pm){const p=pm?pm[j]:undefined;return `<div class="drill"><div class="row sb"><b>${esc(d.name)}</b><span class="tag">${WHO[d.who]||''}</span></div><div style="margin-top:3px">${esc(d.how||'')}</div>${d.pass?`<div class="ps">통과: ${esc(d.pass)}</div>`:''}${d.cue?`<div class="cu">${esc(d.cue)}</div>`:''}${pm?`<div style="margin-top:8px"><button class="tog ${p===true?'y':''}" data-a="rpass" data-f="${fid}" data-j="${j}">${p===true?'통과 ✓':p===false?'아직':'통과?'}</button></div>`:''}</div>`}
-function vNote(){const n=Math.max(1,wkOf(sel)),nt=db.notes.find(x=>x.id===`W${n}`)||{},L=logsWeek(n);
- const ch=allMetrics().map(m=>{const s=series(m.id);const cur=s.find(p=>p.w===n),prev=s.filter(p=>p.w<n).slice(-1)[0];if(!cur)return null;const up=prev?(+m.dir<0?cur.v<prev.v:cur.v>prev.v):null;return `<span>${esc(m.name)} <b class="num">${cur.v}</b>${prev?` <span class="${up?'g':'r'}">${up?'▲':'▼'} ${prev.v}</span>`:''}</span>`}).filter(Boolean);
- const games=L.filter(l=>l.res).map(l=>`${l.res==='W'?'승':'패'} ${l.gw}-${l.gl}`);
- let h=`<div class="top wrap">${topHdr('회고 노트')}<div class="wkhd"><div style="font-size:22px;font-weight:800">W${n} 회고</div><div><button class="arw" data-a="wkNav" data-v="-7">${I.l}</button><button class="arw" data-a="wkNav" data-v="7">${I.r}</button></div></div><div class="sub">${md(wkStart(n))} ~ ${md(addD(wkStart(n),6))}</div></div><main class="wrap">`;
- h+=`<div class="card"><span class="lbl">이번 주</span><div class="kv"><span>회차 <b class="num">${Math.min(L.length,3)}/3</b></span>${games.length?`<span>경기 ${games.join(', ')}</span>`:''}${ch.join('')||'<span style="opacity:.55">예시: 서브 in % <b class="num">58</b> <span class="g">▲ 52</span></span><span style="opacity:.55">깊이 <b class="num">41</b> <span class="r">▼ 44</span></span>'}</div></div>`;
- h+=`<div class="card note"><label class="f">잘된 것<textarea data-n="good" rows="2">${esc(nt.good||'')}</textarea></label><label class="f">막힌 것<textarea data-n="hard" rows="2">${esc(nt.hard||'')}</textarea></label><label class="f">다음 주 한 가지<textarea data-n="next" rows="2">${esc(nt.next||'')}</textarea></label><button class="btn p w" style="margin-top:12px" data-a="noteSave" data-n="${n}">저장</button></div>`;
- const past=db.notes.filter(x=>x.id!==`W${n}`&&(x.good||x.hard||x.next)).sort((a,b)=>b.week-a.week);
- if(past.length)h+=`<div class="card"><h2>지난 회고</h2>${past.map(x=>`<div class="it" data-a="noteGo" data-n="${x.week}"><div class="ico" style="background:var(--lime)">W${x.week}</div><div style="flex:1;min-width:0"><div class="sub">${esc(x.next?'다음: '+x.next:'')}</div><div class="small">${esc(x.good||'')}</div></div></div>`).join('')}</div>`;
- const byW={};db.logs.forEach(l=>{const w=wkOf(l.date);(byW[w]=byW[w]||[]).push(l)});const ws=Object.keys(byW).map(Number).sort((a,b)=>b-a);
- h+=`<div class="card"><h2>기록</h2>${ws.length?ws.map(w=>`<div class="lbl" style="margin-top:12px">W${w}</div>${byW[w].sort((a,b)=>a.date<b.date?1:-1).map(logRow).join('')}`).join(''):'<div class="sub" style="margin-top:6px">없음</div>'}</div>`;
- return h+`</main>`}
 
-/* ===== 시트 ===== */
-let F=null,SK=null;
-function openSheet(k){SK=k;drawSheet();$('sheet').classList.add('on')}
-function hideSheet(){$('sheet').classList.remove('on');F=null;SK=null}
-function drawSheet(){$('sheetIn').innerHTML=`<div class="grab"></div>`+({rec:sRec,ev:sEv,fac:sFac,lv:sLv,todo:sTodo,acct:sAcct,swap:sSwap,week:sWeek})[SK]()}
-function setPath(o,p,v){const k=p.split('.');let x=o;for(let i=0;i<k.length-1;i++){if(x[k[i]]==null)x[k[i]]={};x=x[k[i]]}x[k[k.length-1]]=v}
-function grab(){if(!F)return;document.querySelectorAll('#sheetIn [data-f]').forEach(el=>{let v=el.type==='checkbox'?el.checked:el.value;if(el.type==='number')v=v===''?'':+v;setPath(F,el.dataset.f,v)})}
-const discOk=(fd,d)=>d==='D'?fd!=='S':fd!=='D';
-const shd=(t)=>`<div class="row sb"><h2>${t}</h2><button class="btn s" data-a="close">닫기</button></div>`;
-function sRec(){const isG=F.kind==='game'||F.kind==='league',wk=weakest();let h=shd(F._edit?'기록 고치기':'기록하기')+(F.hint?`<div class="kv"><span>${esc(F.hint)}</span></div>`:'');
- h+=`<div class="seg lt">${Object.entries(KIND).map(([k,v])=>`<button class="${F.kind===k?'on':''}" data-a="rf" data-k="kind" data-v="${k}">${v.n}</button>`).join('')}</div>`;
- h+=`<div class="row" style="margin-top:12px"><input type="date" data-f="date" value="${F.date}"><button class="tog ${F.disc==='S'?'y':''}" data-a="rf" data-k="disc" data-v="S">단식</button><button class="tog ${F.disc==='D'?'y':''}" data-a="rf" data-k="disc" data-v="D">복식</button></div><div class="row" style="margin-top:8px"><input type="text" data-f="partner" placeholder="누구랑" value="${esc(F.partner||'')}" style="flex:1;min-width:120px"><input type="number" data-f="min" placeholder="분" value="${F.min!=null?F.min:''}" style="width:76px"><span class="sub">분</span></div>`;
- if(F.kind==='drill'){h+=`<h3>지금 누구랑?</h3><div>${Object.entries(WHO).map(([k,v])=>`<button class="tog ${F.who===k?'y':''}" data-a="rf" data-k="who" data-v="${k}">${v}</button>`).join('')}</div><h3>어떤 요소?</h3><div>${AF().filter(f=>discOk(f.disc,F.disc)).map(f=>`<button class="tog ${(F.focus||[]).includes(f.id)?'y':''}" data-a="rfocus" data-id="${f.id}">${esc(f.name)}${wk&&wk.id===f.id?' · 추천':''}</button>`).join('')}</div>`;
-  for(const fid of F.focus||[]){const f=FA().find(x=>x.id===fid);if(!f)continue;const L=(f.drills||[]).map((d,j)=>({d,j})).filter(o=>!F.who||o.d.who===F.who);
-   if(L.length)h+=`<h3>${esc(f.name)}</h3>${L.map(o=>dr(o.d,o.j,f.id,(F.pass||{})[f.id]||{})).join('')}`;else{const alt=AF().filter(x=>!(F.focus||[]).includes(x.id)&&discOk(x.disc,F.disc)&&(x.drills||[]).some(d=>d.who===F.who));h+=`<div class="sub small" style="margin-top:8px">${esc(f.name)}엔 ${WHO[F.who]} 드릴이 없어요.${alt.length?' 대신:':''}</div>${alt.map(x=>`<button class="tog" data-a="rfocus" data-id="${x.id}">+ ${esc(x.name)}</button>`).join('')}`}}}
- if(isG){h+=`<h3>스코어</h3><div class="row"><span>내 게임</span><input type="number" inputmode="numeric" data-f="gw" value="${F.gw!=null?F.gw:''}" style="width:70px"><span>상대</span><input type="number" inputmode="numeric" data-f="gl" value="${F.gl!=null?F.gl:''}" style="width:70px"></div><input type="text" data-f="score" placeholder="세트 스코어 (예: 6-4 3-6 10-8)" value="${esc(F.score||'')}" style="width:100%;margin-top:8px">`;
-  if(F.kind==='league')h+=`<label class="f">어느 대회<select data-f="evId"><option value="">-</option>${EV().filter(e=>e.type==='league'||e.type==='tournament').map(e=>`<option value="${e.id}" ${F.evId===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select></label>`}
- h+=`<h3>숫자</h3><div class="row"><span class="sub">출처</span><select data-f="src">${Object.entries(SRC).map(([k,v])=>`<option value="${k}" ${(F.src||'sv')===k?'selected':''}>${v}</option>`).join('')}</select></div>`;
- for(const m of allMetrics().filter(m=>discOk(m.f.disc,F.disc)&&(isG||!m.gameOnly)))h+=`<div class="mrow row sb"><div style="flex:1;min-width:140px"><b>${esc(m.name)}</b></div><div class="row" style="flex-wrap:nowrap"><input type="number" inputmode="decimal" step="any" data-f="vals.${m.id}" value="${(F.vals||{})[m.id]!=null?F.vals[m.id]:''}"><span class="sub">${esc(m.unit||'')}</span></div></div>`;
- return h+`<div style="margin-top:12px"><label><input type="checkbox" data-f="filmed" ${F.filmed?'checked':''}> 촬영함 (숫자는 나중에 분석)</label></div><input type="text" data-f="note" placeholder="한 줄 메모" value="${esc(F.note||'')}" style="width:100%;margin-top:12px"><div class="row" style="margin-top:14px"><button class="btn lm" style="flex:1" data-a="recSave">저장</button>${F._edit?'<button class="btn d" data-a="recDel">삭제</button>':''}</div>`}
-const shift=(k,n)=>`<button class="btn s" data-a="shift" data-k="${k}" data-v="${n}">${n>0?'+':''}${Math.abs(n)%7===0?(n/7)+'주':n+'일'}</button>`;
-function sEv(){let h=shd(F._edit?'대회·일정 고치기':'대회·일정 추가')+`<label class="f">이름<input type="text" data-f="name" value="${esc(F.name||'')}" placeholder="예: UTR Flex 단식"></label><h3>종류</h3><div>${Object.entries(ETYPE).map(([k,v])=>`<button class="tog ${F.type===k?'y':''}" data-a="ef" data-k="type" data-v="${k}">${v}</button>`).join('')}</div><h3>종목</h3><div>${['S','D','SD',''].map(k=>`<button class="tog ${F.disc===k?'y':''}" data-a="ef" data-k="disc" data-v="${k}">${DISCN[k]}</button>`).join('')}</div>`;
- h+=`<div class="row" style="margin-top:4px"><label class="f" style="flex:1">시작<input type="date" data-f="start" value="${F.start||''}"></label><label class="f" style="flex:1">끝<input type="date" data-f="end" value="${F.end||''}"></label></div><div class="row" style="margin-top:8px"><span class="sub">통째로 옮기기</span>${shift('ev',-7)}${shift('ev',-1)}${shift('ev',1)}${shift('ev',7)}</div>`;
- if(F.type!=='deadline')h+=`<h3>우선순위</h3><div>${[['A','A · 여기에 맞춰 계획'],['B','B · 계획 유지하며 참가'],['C','C · 그냥 참가']].map(([k,v])=>`<button class="tog ${F.pri===k?'y':''}" data-a="ef" data-k="pri" data-v="${k}">${v}</button>`).join('')}</div><label class="f">목표 한 줄<input type="text" data-f="goal" value="${esc(F.goal||'')}"></label>`;
- return h+`<label class="f">메모 (접수일·장소·비용)<input type="text" data-f="note" value="${esc(F.note||'')}"></label><div class="row" style="margin-top:14px"><button class="btn lm" style="flex:1" data-a="evSave">저장</button>${F._edit?'<button class="btn d" data-a="evDel">삭제</button>':''}</div>`}
-function sTodo(){const t=today();return shd(F._new?'할 일 추가':'할 일')+`<label class="f">내용<input type="text" data-f="title" value="${esc(F.title||'')}" placeholder="예: Ten-Fifty5에 경기 영상 올리기"></label><label class="f">날짜<input type="date" data-f="date" value="${F.date||''}"></label><div class="row" style="margin-top:8px"><button class="btn s" data-a="tdate" data-v="${t}">오늘</button><button class="btn s" data-a="tdate" data-v="${addD(t,1)}">내일</button>${shift('todo',1)}${shift('todo',7)}<button class="btn s" data-a="tdate" data-v="">날짜 없음</button></div><div class="row" style="margin-top:16px"><button class="btn lm" style="flex:1" data-a="todoSave">저장</button>${F._new?'':`<button class="btn d" data-a="todoDel">${F.auto?'이번 주에서 빼기':'삭제'}</button>`}</div>`}
-function sFac(){let h=shd(F._edit?'요소 편집':'요소 추가');
- if(!F._edit&&!F._picked)return h+`<div class="sub" style="margin-top:6px">템플릿에서 시작하거나 직접 만들어요.</div>${(SEED.templates||[]).map((t,i)=>`<button class="btn w" style="margin-top:8px;text-align:left" data-a="facTpl" data-i="${i}"><b>${esc(t.name)}</b><br><span class="sub">${esc(t.metrics.map(m=>m.name).join(' / '))}</span></button>`).join('')}`;
- h+=`<label class="f">이름<input type="text" data-f="name" value="${esc(F.name||'')}"></label><h3>종목</h3><div>${['S','D','SD'].map(k=>`<button class="tog ${F.disc===k?'y':''}" data-a="ff" data-k="disc" data-v="${k}">${DISCN[k]}</button>`).join('')}</div><label class="f">왜 중요한가<textarea data-f="why" rows="2">${esc(F.why||'')}</textarea></label><div style="margin-top:10px"><label><input type="checkbox" data-f="active" ${F.active!==false?'checked':''}> 사용</label></div><h3>측정</h3>`;
- (F.metrics||[]).forEach((m,i)=>{h+=`<div class="mrow"><div class="row"><input type="text" data-f="metrics.${i}.name" value="${esc(m.name||'')}" style="flex:1;min-width:140px"><button class="btn s d" data-a="fdel" data-k="metrics" data-i="${i}">빼기</button></div><div class="row" style="margin-top:6px"><select data-f="metrics.${i}.unit">${['%','개','회','초','mph','점'].map(u=>`<option ${m.unit===u?'selected':''}>${u}</option>`).join('')}</select><select data-f="metrics.${i}.dir"><option value="1" ${+m.dir!==-1?'selected':''}>높을수록 좋음</option><option value="-1" ${+m.dir===-1?'selected':''}>낮을수록 좋음</option></select><select data-f="metrics.${i}.src">${Object.entries(SRC).map(([k,v])=>`<option value="${k}" ${m.src===k?'selected':''}>${v}</option>`).join('')}</select></div><input type="text" data-f="metrics.${i}.how" placeholder="어디서 읽나" value="${esc(m.how||'')}" style="width:100%;margin-top:6px"><div class="row" style="margin-top:6px"><span class="sub">목표 개막</span><input type="number" step="any" data-f="metrics.${i}.t1" value="${m.t1!=null?m.t1:''}" placeholder="자동" style="width:76px"><span class="sub">끝</span><input type="number" step="any" data-f="metrics.${i}.t2" value="${m.t2!=null?m.t2:''}" placeholder="자동" style="width:76px"><label class="sub"><input type="checkbox" data-f="metrics.${i}.gameOnly" ${m.gameOnly?'checked':''}> 게임만</label></div></div>`});
- h+=`<button class="btn s" style="margin-top:8px" data-a="fadd" data-k="metrics">+ 측정</button><h3>드릴</h3>`;
- (F.drills||[]).forEach((d,i)=>{h+=`<div class="mrow"><div class="row"><input type="text" data-f="drills.${i}.name" value="${esc(d.name||'')}" style="flex:1;min-width:140px"><select data-f="drills.${i}.who">${Object.entries(WHO).map(([k,v])=>`<option value="${k}" ${d.who===k?'selected':''}>${v}</option>`).join('')}</select><button class="btn s d" data-a="fdel" data-k="drills" data-i="${i}">빼기</button></div><input type="text" data-f="drills.${i}.how" placeholder="어떻게" value="${esc(d.how||'')}" style="width:100%;margin-top:6px"><input type="text" data-f="drills.${i}.pass" placeholder="통과 기준" value="${esc(d.pass||'')}" style="width:100%;margin-top:6px"></div>`});
- return h+`<button class="btn s" style="margin-top:8px" data-a="fadd" data-k="drills">+ 드릴</button><div class="row" style="margin-top:16px"><button class="btn lm" style="flex:1" data-a="facSave">저장</button>${F._edit?'<button class="btn d" data-a="facDel">요소 삭제</button>':''}</div>`}
-function sSwap(){const t=today(),typed=!F.type||F.type==='session'||F.kind;
- return shd(F._new?'할 일 추가':'바꾸기')+(typed?`<h3>종류</h3><div>${Object.entries(KINDN).map(([k,v])=>`<button class="tog ${F.kind===k?'y':''}" data-a="swSet" data-k="kind" data-v="${k}">${v}</button>`).join('')}</div><h3>종목</h3><div>${['S','D'].map(k=>`<button class="tog ${(F.disc||'S')===k?'y':''}" data-a="swSet" data-k="disc" data-v="${k}">${DISCN[k]}</button>`).join('')}</div><label class="f">메모<input type="text" data-f="memo" value="${esc(F.memo||'')}" placeholder="선택"></label>`:`<label class="f">내용<input type="text" data-f="title" value="${esc(F.title||'')}"></label>`)+`<h3>언제</h3><div class="row"><button class="tog ${F.date===t?'y':''}" data-a="tdate" data-v="${t}">오늘</button><button class="tog ${F.date===addD(t,1)?'y':''}" data-a="tdate" data-v="${addD(t,1)}">내일</button><input type="date" data-f="date" value="${F.date||''}"></div><div class="row" style="margin-top:16px"><button class="btn lm" style="flex:1" data-a="todoSave">저장</button>${F._new?'':'<button class="btn d" data-a="todoDel">빼기</button>'}</div>`}
-function sWeek(){const n=wkOf(sel);return shd(`W${n} 할 일`)+weekTodos(n).map(x=>todoRow(x).replace('<div class="td">',`<div class="td"><span class="dt">${x.date?dw(x.date):'-'}</span>`)).join('')}
-function sLv(){const st=ST();return shd('수준')+['S','D'].map(d=>`<h3>${DISCN[d]}</h3><label class="f">현재<input type="text" data-f="level.${d}.cur" value="${esc(st.level[d].cur)}"></label><label class="f">목표<input type="text" data-f="level.${d}.goal" value="${esc(st.level[d].goal)}"></label>`).join('')+`<button class="btn lm w" style="margin-top:14px" data-a="lvSave">저장</button>`}
-function sAcct(){return shd('계정')+`<div class="sub" style="margin-top:8px">${esc(net.email||'')}</div><label class="f">계획 시작 주<input type="date" data-f="planStart" value="${ST().planStart}"></label><div class="row" style="margin-top:14px"><button class="btn lm" style="flex:1" data-a="acctSave">저장</button><button class="btn d" data-a="logout">로그아웃</button></div>`}
-function newRec(x){const wk=weakest();F={kind:'game',date:sel||today(),disc:'S',who:'one',focus:wk?[wk.id]:[],vals:{},pass:{},src:'sv',min:60,...x};openSheet('rec')}
-
-/* ===== 동작 ===== */
+/* 동작 */
+function todoPut(id,extra){const s=findS(id)||{};const t=db.todos.find(x=>x.id===id)||{id};return save('todos',{...t,id,date:s.date||t.date,disc:s.disc||t.disc,kind:s.kind||t.kind,...extra})}
+function okrSave(fn){const L=JSON.parse(JSON.stringify(OKR()));fn(L);save('settings',{...ST(),id:'main',okr:L})}
+const findS=id=>{for(let n=1;n<=lastW();n++){const s=weekSlots(n).find(x=>x.id===id);if(s)return s}const t=db.todos.find(x=>x.id===id);return t?{...t,disc:t.disc||'S'}:null};
 const act={
- login:()=>{location.href='/api/auth?start=1'},
- logout:()=>{localStorage.removeItem('ts4.cache');localStorage.removeItem('ts4.outbox');location.href='/api/auth?logout=1'},
- acct:()=>{F={};openSheet('acct')},
- acctSave:()=>{grab();const st=ST();if(F.planStart)st.planStart=F.planStart;hideSheet();upsert('settings',st)},
- tab:d=>{hideSheet();tab=d.t;if(d.d)disc=d.d;render();scrollTo(0,0)},
- sel:d=>{sel=d.d;render()},
- wkNav:d=>{sel=addD(sel,+d.v);render()},
- disc:d=>{disc=d.d;render()},
- rec:d=>{const td=d&&d.id?(dayTodos(sel).find(t=>t.id===d.id)||weekTodos(wkOf(sel)).find(t=>t.id===d.id)):null;if(td&&td.kind){newRec({hint:td.title,kind:td.kind,disc:td.disc||'S',who:td.disc==='D'?'partner':'one'});return}const h=d&&d.hint||'';let kind=d&&d.k||'game',dsc='S';if(h){if(/드릴|시합형|패턴/.test(h))kind='drill';else if(/리그|개막|대회/.test(h))kind='league';else if(/랠리|가볍게|감각/.test(h))kind='rally';if(/복식/.test(h))dsc='D'}newRec({hint:h,kind,disc:dsc})},
- recDay:()=>newRec({}),
- logOpen:d=>{const l=db.logs.find(x=>x.id===d.id);if(!l)return;F={...JSON.parse(JSON.stringify(l)),_edit:true,who:'one'};openSheet('rec')},
- rf:d=>{grab();F[d.k]=d.v;drawSheet()},
- rfocus:d=>{grab();const a=F.focus=F.focus||[];const i=a.indexOf(d.id);if(i>=0)a.splice(i,1);else a.push(d.id);drawSheet()},
- rpass:d=>{grab();F.pass=F.pass||{};const p=F.pass[d.f]=F.pass[d.f]||{};const c=p[d.j];if(c===undefined)p[d.j]=true;else if(c===true)p[d.j]=false;else delete p[d.j];drawSheet()},
- recSave:()=>{grab();const r={...F};['_edit','hint','who'].forEach(k=>delete r[k]);if(!r.id)r.id=uid('l');if(r.kind==='game'||r.kind==='league'){if(r.gw!==''&&r.gw!=null&&r.gl!==''&&r.gl!=null)r.res=+r.gw>+r.gl?'W':'L'}else['gw','gl','res','score','evId'].forEach(k=>delete r[k]);if(r.kind!=='drill'){r.focus=[];r.pass={}}for(const k in r.vals||{})if(r.vals[k]==='')delete r.vals[k];if(r.filmed)r.analysis=hasVals(r)?'done':(r.analysis==='skip'?'skip':'pending');hideSheet();upsert('logs',r)},
- recDel:()=>{if(!confirm('이 기록 지울까요?'))return;const id=F.id;hideSheet();del('logs',id)},
- evNew:d=>{const s=d&&d.d||sel||today();F={type:'tournament',disc:'S',pri:'B',start:s,end:s};openSheet('ev')},
- evEdit:d=>{const e=EV().find(x=>x.id===d.id);if(!e)return;F={...e,_edit:true};openSheet('ev')},
- ef:d=>{grab();F[d.k]=d.v;drawSheet()},
- shift:d=>{grab();const n=+d.v;if(d.k==='ev'){if(F.start)F.start=addD(F.start,n);if(F.end)F.end=addD(F.end,n)}else{F.date=addD(F.date||today(),n)}drawSheet()},
- evSave:()=>{grab();if(!F.name||!F.start){alert('이름과 시작일을 넣어 주세요');return}const r={...F};delete r._edit;if(!r.end||r.end<r.start)r.end=r.start;if(!r.id)r.id=uid('e');if(r.type==='deadline')r.pri='C';hideSheet();upsert('events',r)},
- evDel:()=>{if(!confirm('지울까요?'))return;const id=F.id;hideSheet();del('events',id)},
- todoNew:d=>{F={_new:true,kind:'game',disc:'S',date:d&&d.d||sel};openSheet('swap')},
- swap:d=>{const x=weekTodos(wkOf(sel)).find(t=>t.id===d.id)||db.todos.find(t=>t.id===d.id);if(!x)return;F={...x};openSheet('swap')},
- exp:d=>{const x=dayTodos(sel).find(t=>t.id===d.id);const cur=EXP[d.id]!=null?EXP[d.id]:(x&&!x.done&&!!x.kind);EXP[d.id]=!cur;EDIT=null;render()},
- edit:d=>{EDIT=EDIT===d.id?null:d.id;render()},
- addTog:()=>{ADD=!ADD;render()},
- setK:d=>{const x=dayTodos(sel).find(t=>t.id===d.id);if(!x)return;const r={...(db.todos.find(t=>t.id===d.id)||{}),id:d.id,[d.k]:d.v};if(d.k!=='date'){const k=d.k==='kind'?d.v:x.kind||'game',ds_=d.k==='disc'?d.v:x.disc||'S';r.kind=k;r.disc=ds_;r.title=k==='league'?'리그 경기':`${DISCN[ds_]} ${KINDN[k]}`;r.checks={}}else EDIT=null;if(x.custom)Object.assign(r,{custom:true,week:wkOf(r.date||x.date)});if(x.custom&&d.k==='date')r.week=wkOf(d.v);upsert('todos',{...(x.custom?x:{}),...r})},
- todoDel2:d=>{const x=dayTodos(sel).find(t=>t.id===d.id);EDIT=null;if(!x)return;if(x.auto)upsert('todos',{...(db.todos.find(t=>t.id===d.id)||{}),id:d.id,hidden:true});else del('todos',d.id)},
- quickAdd:d=>{let title,kind,disc;if(d.k==='text'){title=($('qa-text')||{}).value||'';if(!title.trim())return}else{kind=d.k;disc=d.dd;title=`${DISCN[disc]} ${KINDN[kind]}`}ADD=false;upsert('todos',{id:uid('t'),custom:true,title:title.trim(),kind,disc,date:sel,week:wkOf(sel)})},
- score:d=>{const x=dayTodos(sel).find(t=>t.id===d.id);const gw=$('gw-'+d.id).value,gl=$('gl-'+d.id).value;if(gw===''||gl===''||!x)return;const lid=ensureLog(x,{gw:+gw,gl:+gl});upsert('todos',{...(db.todos.find(t=>t.id===d.id)||{}),id:d.id,done:true,logId:lid,...(x.custom?{custom:true,title:x.title,date:x.date,week:x.week,kind:x.kind,disc:x.disc}:{})})},
- anaExp:d=>{EXPA=EXPA===d.id?null:d.id;render()},
- anaSave:d=>{const l=db.logs.find(x=>x.id===d.id);if(!l)return;const v={...(l.vals||{})};document.querySelectorAll(`[data-av="${d.id}"]`).forEach(el=>{if(el.value!=='')v[el.dataset.m]=+el.value;else delete v[el.dataset.m]});EXPA=null;upsert('logs',{...l,vals:v,analysis:Object.keys(v).length?'done':'pending',analyzedAt:today()})},
- anaSkip:d=>{const l=db.logs.find(x=>x.id===d.id);if(!l)return;EXPA=null;upsert('logs',{...l,analysis:'skip'})},
- swSet:d=>{grab();F[d.k]=d.v;if(!F.kind)F.kind='game';drawSheet()},
- drCk:d=>{const x=dayTodos(sel).find(t=>t.id===d.id);if(!x)return;const ck={...(x.checks||{}),[d.k]:!(x.checks||{})[d.k]};const all=itemsFor(x).every(it=>ck[it.k]);upsert('todos',{...(db.todos.find(t=>t.id===d.id)||{}),id:d.id,checks:ck,...(all?{done:true,logId:x.done?x.logId:ensureLog({...x,checks:ck},{})}:{}),...(x.custom?{custom:true,title:x.title,date:x.date,week:x.week,kind:x.kind,disc:x.disc}:{})})},
- weekList:()=>{F={};openSheet('week')},
- todoEdit:d=>{const x=weekTodos(wkOf(sel)).find(t=>t.id===d.id)||db.todos.find(t=>t.id===d.id);if(!x)return;F={...x};openSheet('todo')},
- tdate:d=>{grab();F.date=d.v;drawSheet()},
- todoSave:()=>{grab();const typed=F.kind&&(F._new||F.type==='session'||F.custom||F.kind);if(typed)F.title=(F.kind==='league'?'리그 경기':`${DISCN[F.disc||'S']} ${KINDN[F.kind]}`)+(F.memo?` · ${F.memo}`:'');if(!F.title){alert('내용을 넣어 주세요');return}const r={id:F.id||uid('t'),title:F.title,date:F.date||'',kind:F.kind,disc:F.disc,memo:F.memo||''};if(F._new||F.custom){r.custom=true;r.week=r.date?wkOf(r.date):wkOf(sel)}const ex=db.todos.find(t=>t.id===r.id);hideSheet();upsert('todos',{...(ex||{}),...r})},
- todoDel:()=>{const id=F.id,auto=F.auto;hideSheet();if(auto)upsert('todos',{...(db.todos.find(t=>t.id===id)||{}),id,hidden:true});else del('todos',id)},
- todoTog:d=>{const inSheet=SK==='week';const x0=dayTodos(sel).find(t=>t.id===d.id)||weekTodos(wkOf(sel)).find(t=>t.id===d.id);let lid=x0&&x0.logId;if(x0&&!x0.done&&x0.kind&&x0.type!=='retro')lid=ensureLog(x0,{});const x=x0||db.todos.find(t=>t.id===d.id);if(!x)return;upsert('todos',{...(db.todos.find(t=>t.id===d.id)||{}),id:d.id,done:!x.done,...(lid?{logId:lid}:{}),...(x.custom?{custom:true,title:x.title,date:x.date,week:x.week}:{})});if(inSheet)drawSheet()},
- noteSave:d=>{const o={id:`W${d.n}`,week:+d.n};document.querySelectorAll('[data-n]').forEach(el=>{if(el.tagName==='TEXTAREA')o[el.dataset.n]=el.value.trim()});upsert('notes',{...(db.notes.find(x=>x.id===o.id)||{}),...o})},
- noteGo:d=>{sel=wkStart(+d.n);render();scrollTo(0,0)},
- facGo:d=>{tab='prog';render();const el=$('fac-'+d.id);if(el)el.scrollIntoView({block:'start'})},
- facNew:()=>{F={};openSheet('fac')},
- facTpl:d=>{const t=JSON.parse(JSON.stringify(SEED.templates[+d.i]));F={name:t.name,disc:t.disc,why:'',active:true,metrics:t.metrics.map(m=>({...m,id:uid('m')})),drills:[],order:FA().length+1,_picked:true};drawSheet()},
- facEdit:d=>{const f=FA().find(x=>x.id===d.id);if(!f)return;F={...JSON.parse(JSON.stringify(f)),_edit:true};openSheet('fac')},
- ff:d=>{grab();F[d.k]=d.v;drawSheet()},
- fadd:d=>{grab();F[d.k]=F[d.k]||[];F[d.k].push(d.k==='metrics'?{id:uid('m'),name:'',unit:'%',dir:1,src:'sv',how:''}:{who:'one',name:'',how:'',pass:''});drawSheet()},
- fdel:d=>{grab();F[d.k].splice(+d.i,1);drawSheet()},
- facSave:()=>{grab();if(!F.name){alert('이름을 넣어 주세요');return}const r={...F};delete r._edit;delete r._picked;if(!r.id)r.id=uid('f');(r.metrics||[]).forEach(m=>{m.dir=+m.dir===-1?-1:1;if(!m.id)m.id=uid('m');['t1','t2'].forEach(k=>{if(m[k]==='')delete m[k]})});r.metrics=(r.metrics||[]).filter(m=>m.name);r.drills=(r.drills||[]).filter(x=>x.name);hideSheet();upsert('factors',r)},
- facDel:()=>{if(!confirm('이 요소를 지울까요? (기록 숫자는 남아요)'))return;const id=F.id;hideSheet();del('factors',id)},
- lvEdit:()=>{F={};openSheet('lv')},
- lvSave:()=>{grab();const st=ST();const s={...st,level:{S:{...st.level.S,...((F.level||{}).S||{})},D:{...st.level.D,...((F.level||{}).D||{})}}};hideSheet();upsert('settings',s)},
- calMode:d=>{calMode=d.v;render()},
- calNav:d=>{const[y,m]=calMonth.split('-').map(Number);calMonth=ds(new Date(y,m-1+ +d.v,1,12)).slice(0,7);render()},
- close:()=>hideSheet()
+ tab:d=>{tab=d.t;if(d.d)gdisc=d.d;render();scrollTo(0,0);if(d.t==='plan'){const c=document.getElementById('cur');if(c)c.scrollIntoView({block:'start'})}},
+ dNav:d=>{day=addD(day,+d.v);render()},dToday:()=>{day=TODAY;render()},go:d=>{day=d.d;tab='today';render();scrollTo(0,0)},
+ sType:d=>{const s=findS(d.id)||{};if(s.disc===d.d&&s.kind===d.k)return;undoable(`${TN(d.d,d.k)}로 바꿨어요`,'todos',d.id,()=>todoPut(d.id,{disc:d.d,kind:d.k,items:null,checks:{}}))},
+ sNew:d=>{const id='t'+Date.now().toString(36);undoable(`${md(day)} ${TN(d.d,d.k)} 추가`,'todos',id,()=>save('todos',{id,custom:true,kind:d.k,disc:d.d,date:day,week:wkOf(day)}))},
+ sDel:d=>{const t=db.todos.find(x=>x.id===d.id);const s=findS(d.id);const m=`${s?md(s.date)+' '+TN(s.disc,s.kind):'훈련'} 지웠어요`;
+  if(t&&t.custom){UNDO={c:'todos',id:d.id,prev:JSON.parse(JSON.stringify(t))};db.todos=db.todos.filter(x=>x.id!==d.id);render();fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({collection:'todos',deletes:[d.id]})});snack(m,true)}
+  else undoable(m,'todos',d.id,()=>todoPut(d.id,{hidden:true}))},
+ sStart:d=>todoPut(d.id,{step:'go'}),
+ iNext:d=>{const s=findS(d.id);const c={...(s.checks||{}),[d.k]:true};const all=itemsOf(s).every(x=>c[x.k]);todoPut(d.id,{checks:c,...(all?{done:true,step:'done'}:{})});if(all)snack('끝! SV 캡처는 Slack 기록함에')},
+ iCk:d=>{const s=findS(d.id);const c={...(s.checks||{})};c[d.k]=!c[d.k];todoPut(d.id,{checks:c})},
+ sCancel:d=>undoable('처음부터 다시','todos',d.id,()=>todoPut(d.id,{step:'ready',checks:{}})),
+ sEnd:d=>undoable('끝냈어요 · SV 캡처는 Slack 기록함에','todos',d.id,()=>todoPut(d.id,{done:true,step:'done'})),
+ sReopen:d=>undoable('완료를 풀었어요','todos',d.id,()=>todoPut(d.id,{done:false,step:'ready'})),
+ undo:()=>{if(!UNDO)return;const {c,id,prev}=UNDO;UNDO=null;document.getElementById('toast').innerHTML='';if(prev)save(c,prev);else{db[c]=db[c].filter(r=>r.id!==id);render();fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({collection:c,deletes:[id]})})}},
+ postT:d=>{const s=findS(d.id);todoPut(d.id,{post:{...(s.post||{}),up:!(s.post||{}).up}})},
+ retroT:d=>{retroOpen=retroOpen===d.id?null:d.id;render()},
+ retroSave:d=>{const t=document.getElementById('rt').value.trim();const s=findS(d.id);retroOpen=null;if(t)save('notes',{id:'R-'+d.id,type:'retro',date:s.date,text:t});toast('회고 저장')},
+ noop:()=>{},
+ okEdit:()=>{okEdit=!okEdit;render()},gDisc:d=>{gdisc=d.v;render()}
 };
-document.addEventListener('click',e=>{if(e.target.id==='sheet'){hideSheet();return}const b=e.target.closest('[data-a]');if(!b||b.tagName==='INPUT'||b.tagName==='SELECT'||b.tagName==='TEXTAREA')return;const f=act[b.dataset.a];if(f){e.preventDefault();e.stopPropagation();f(b.dataset,b)}},true);
-document.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.edate;if(id&&e.target.value){act.setK({id,k:'date',v:e.target.value})}});
-fetch('/seed.json').then(r=>r.ok?r.json():null).then(s=>{if(s){SEED=s;_plan=null;render()}}).catch(()=>{});
-if(localStorage.getItem('ts4.cache'))net.authed=true;
-render();pull();
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||['INPUT','TEXTAREA'].includes(b.tagName))return;const f=act[b.dataset.a];if(f){e.preventDefault();f(b.dataset)}});
+document.addEventListener('change',e=>{const el=e.target,x=el.dataset,v=el.value;if(x.day){if(v){day=v;render()}return}
+ if(x.mv){if(el.type==='date'){if(!v)return;undoable(`${md(v)}로 옮겼어요`,'todos',x.mv,()=>todoPut(x.mv,{date:v}))}else{const[oid,d,kid]=x.mv.split('|');okrSave(L=>{const o=L.find(o=>o.id===oid);o.ms=o.ms||{};o.ms[d]={...(o.ms[d]||{}),[kid]:v===''?null:+v}})}}
+ else if(x.ev&&v){const e0=db.events.find(e=>e.id===x.ev);if(e0){save('events',{...e0,start:v,end:addD(v,diffD(e0.start,e0.end))});toast('대회 날짜를 바꿨어요')}}
+ else if(x.ot)okrSave(L=>{L.find(o=>o.id===x.ot).title=v});
+ else if(x.os&&v)okrSave(L=>{L.find(o=>o.id===x.os).start=v});
+ else if(x.oe&&v)okrSave(L=>{L.find(o=>o.id===x.oe).end=v});
+ else if(x.kt){const[oid,kid]=x.kt.split(':');okrSave(L=>{L.find(o=>o.id===oid).krs.find(k=>k.id===kid).target=+v})}
+ else if(x.kp){const[oid,kid]=x.kp.split(':');okrSave(L=>{L.find(o=>o.id===oid).krs.find(k=>k.id===kid).per=+v})}
+ else if(x.md&&v){const[oid,d]=x.md.split('|');okrSave(L=>{const o=L.find(o=>o.id===oid);o.msd=[...msDates(o).filter(z=>z!==d),v];if(o.ms&&o.ms[d]){o.ms[v]=o.ms[d];delete o.ms[d]}})}});
+load();
 </script>
 </body>
 </html>
