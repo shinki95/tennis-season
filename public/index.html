@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="테니스 시즌">
-<meta name="theme-color" content="#2F5BFF">
+<meta name="theme-color" content="#2F7D4F">
 <title>테니스 시즌</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&display=swap">
@@ -116,6 +116,29 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px;margin-top:8px;fo
 .sync{font-size:11px;color:rgba(255,255,255,.7)}
 .note textarea{width:100%;min-height:62px;margin-top:5px}
 .kv{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.kv span{background:#F1F3F7;border-radius:10px;padding:6px 10px;font-size:13px}
+
+/* 원래 초록 색 (사장님 2026-11-22 "색깔 원래버전이 나은 거 같아") */
+:root{--blue:#2F7D4F;--blue2:#1F5E3B;--lime:#E6F2E9}
+.top{background:linear-gradient(135deg,#1F5E3B,#2F7D4F)}
+.av{background:#fff;color:#1F5E3B}
+.day.sel{background:#fff;color:#1F5E3B}
+.card.lime{background:linear-gradient(135deg,#1F5E3B,#2F7D4F);color:#fff}
+.card.lime .lbl{color:#CFE8D7}
+.card.lime .tag{background:rgba(255,255,255,.18)!important;color:#fff}
+.card.lime .ev{border-color:rgba(255,255,255,.15)}
+.card.lime .pill{background:#fff;color:#1F5E3B}
+.digits b{background:rgba(255,255,255,.16);color:#fff}
+.pbar i{background:#2F7D4F}
+.seg button.on{background:#2F7D4F;color:#fff}
+.nav button.on{background:#2F7D4F;color:#fff}
+.ck.y{background:#2F7D4F;border-color:#2F7D4F;color:#fff}
+.btn.lm{background:#2F7D4F;color:#fff}
+.pill.lm{background:#fff;color:#1F5E3B}
+.cal .c.sel .n{background:#2F7D4F;color:#fff}
+.cal .c.band .n{background:#E6F2E9}
+.login{background:linear-gradient(160deg,#1F5E3B,#2F7D4F)}
+.login h1 span{color:#B9E4C6}
+.g{color:#2F7D4F}
 </style>
 </head>
 <body>
@@ -232,22 +255,22 @@ function road(m){const g=tgt(m),ev=discEvent(m.f.disc),cw=Math.max(1,wkOf(today(
  const ys=[...pace.map(p=>p[1]),...g.s.map(p=>p.v)];let y0=Math.min(...ys),y1=Math.max(...ys);if(y1-y0<1){y0-=1;y1+=1}const pad=(y1-y0)*.15;y0-=pad;y1+=pad;
  const X=x=>L+(x-x0)/Math.max(1,x1-x0)*(W-L-R),Y=y=>T+(1-(y-y0)/(y1-y0))*(H-T-B);
  let s=`<svg class="ch" viewBox="0 0 ${W} ${H}">`;const safe=pace.map(p=>`${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');const edge=+m.dir<0?H-B:T;
- s+=`<polygon points="${X(x0)},${edge} ${safe} ${X(x1)},${edge}" fill="#F0FAD0"/>`;
+ s+=`<polygon points="${X(x0)},${edge} ${safe} ${X(x1)},${edge}" fill="#E6F2E9"/>`;
  for(let k=0;k<=2;k++){const y=y0+(y1-y0)*k/2;s+=`<text x="${L-4}" y="${Y(y)+4}" font-size="10" text-anchor="end" fill="#9CA3AF">${Math.round(y*10)/10}</text>`}
  const step=Math.max(1,Math.ceil((x1-x0)/5));for(let x=x0;x<=x1;x+=step)s+=`<text x="${X(x)}" y="${H-5}" font-size="10" text-anchor="middle" fill="#9CA3AF">W${x}</text>`;
  if(sW&&sW>=x0&&sW<=x1)s+=`<line x1="${X(sW)}" x2="${X(sW)}" y1="${T-4}" y2="${H-B}" stroke="#E5484D" stroke-dasharray="3 3"/><text x="${X(sW)+3}" y="${T+6}" font-size="10" fill="#E5484D">개막</text>`;
  if(cw>=x0&&cw<=x1)s+=`<rect x="${X(cw)-1}" y="${T-4}" width="2" height="${H-B-T+4}" fill="#2F5BFF" opacity=".35"/>`;
- s+=`<polyline fill="none" stroke="#2F5BFF" stroke-width="2" stroke-dasharray="6 4" points="${safe}"/>`;
+ s+=`<polyline fill="none" stroke="#2F7D4F" stroke-width="2" stroke-dasharray="6 4" points="${safe}"/>`;
  if(g.s.length>1)s+=`<polyline fill="none" stroke="#111318" stroke-width="2.2" points="${g.s.map(p=>`${X(p.w).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ')}"/>`;
  const col=(w,v)=>{const e=expAt(m,w),sp=Math.abs(g.t2-g.b)||1,gp=(+m.dir<0?e-v:v-e)/sp;return gp>=-1e-9?'#3BA55C':gp>=-.15?'#E39A1B':'#E5484D'};
  prac.forEach(p=>{s+=`<circle cx="${X(p.w)}" cy="${Y(p.v)}" r="4.5" fill="#fff" stroke="${col(p.w,p.v)}" stroke-width="2.5"/>`});game.forEach(p=>{s+=`<circle cx="${X(p.w)}" cy="${Y(p.v)}" r="5" fill="${col(p.w,p.v)}"/>`});return s+'</svg>'}
 function simpleChart(pts,goal){const W=340,H=110,L=30,R=6,T=10,B=18,xs=pts.map(p=>p[0]),x0=Math.min(...xs),x1=Math.max(...xs,x0+1),X=x=>L+(x-x0)/(x1-x0)*(W-L-R),Y=y=>T+(1-y/100)*(H-T-B);
- let s=`<svg class="ch" viewBox="0 0 ${W} ${H}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${Y(goal)-T}" fill="#F0FAD0"/>`;[0,50,100].forEach(y=>{s+=`<text x="${L-4}" y="${Y(y)+4}" font-size="10" text-anchor="end" fill="#9CA3AF">${y}%</text>`});
- s+=`<line x1="${L}" x2="${W-R}" y1="${Y(goal)}" y2="${Y(goal)}" stroke="#2F5BFF" stroke-dasharray="6 4"/>`;pts.forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="5" fill="${p[1]>=goal?'#3BA55C':'#E39A1B'}"/>`});return s+'</svg>'}
+ let s=`<svg class="ch" viewBox="0 0 ${W} ${H}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${Y(goal)-T}" fill="#E6F2E9"/>`;[0,50,100].forEach(y=>{s+=`<text x="${L-4}" y="${Y(y)+4}" font-size="10" text-anchor="end" fill="#9CA3AF">${y}%</text>`});
+ s+=`<line x1="${L}" x2="${W-R}" y1="${Y(goal)}" y2="${Y(goal)}" stroke="#2F7D4F" stroke-dasharray="6 4"/>`;pts.forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="5" fill="${p[1]>=goal?'#3BA55C':'#E39A1B'}"/>`});return s+'</svg>'}
 function gantt(){const P=plan(),n=P.length,W=340,L=4,R=4,cw=Math.max(1,wkOf(today()));const x=w=>L+(w-1)/n*(W-L-R),bw=(W-L-R)/n;const evs=EV().filter(e=>e.type!=='deadline'&&wkOf(e.end)>=1&&wkOf(e.start)<=n);const H=60+evs.length*20;let s=`<svg class="ch" viewBox="0 0 ${W} ${H}">`,lm='';
- P.forEach(w=>{const m=pd(w.start).getMonth()+1;if(m+''!==lm){s+=`<text x="${x(w.n)}" y="10" font-size="10" fill="#9CA3AF">${m}월</text>`;lm=m+''}s+=`<rect x="${x(w.n)+.5}" y="15" width="${bw-1}" height="12" rx="3" fill="${PH[w.ph].c}"/>`;const c=Math.min(logsWeek(w.n).length,3);s+=`<rect x="${x(w.n)+.5}" y="31" width="${bw-1}" height="10" rx="3" fill="#D4F25A" opacity="${w.n>cw?0.15:0.2+0.8*c/3}"/>`});
+ P.forEach(w=>{const m=pd(w.start).getMonth()+1;if(m+''!==lm){s+=`<text x="${x(w.n)}" y="10" font-size="10" fill="#9CA3AF">${m}월</text>`;lm=m+''}s+=`<rect x="${x(w.n)+.5}" y="15" width="${bw-1}" height="12" rx="3" fill="${PH[w.ph].c}"/>`;const c=Math.min(logsWeek(w.n).length,3);s+=`<rect x="${x(w.n)+.5}" y="31" width="${bw-1}" height="10" rx="3" fill="#2F7D4F" opacity="${w.n>cw?0.15:0.2+0.8*c/3}"/>`});
  evs.forEach((e,i)=>{const a=Math.max(1,wkOf(e.start)),b=Math.min(n,wkOf(e.end)),y=50+i*20;s+=`<rect x="${x(a)+.5}" y="${y}" width="${Math.max(bw*(b-a+1)-1,4)}" height="14" rx="7" fill="${evColor(e)}"/><text x="${Math.min(x(a)+6,W-160)}" y="${y+10.5}" font-size="9.5" fill="#fff" font-weight="700">${esc((e.pri+' '+e.name).slice(0,30))}</text>`});
- return s+`<rect x="${x(cw)+bw/2-1}" y="12" width="2" height="${H-12}" fill="#2F5BFF"/></svg><div class="leg">${Object.entries(PH).filter(([k])=>k!=='free').map(([k,v])=>`<span><i style="background:${v.c}"></i>${v.n}</span>`).join('')}</div><div class="leg"><span><i style="background:#D4F25A"></i>그 주 회차 (진할수록 많이)</span><span><i style="background:#2F5BFF"></i>오늘</span></div>`}
+ return s+`<rect x="${x(cw)+bw/2-1}" y="12" width="2" height="${H-12}" fill="#2F5BFF"/></svg><div class="leg">${Object.entries(PH).filter(([k])=>k!=='free').map(([k,v])=>`<span><i style="background:${v.c}"></i>${v.n}</span>`).join('')}</div><div class="leg"><span><i style="background:#2F7D4F"></i>그 주 회차 (진할수록 많이)</span><span><i style="background:#2F5BFF"></i>오늘</span></div>`}
 
 /* ===== 화면 ===== */
 let tab='home',sel=today(),disc='S',calMonth=today().slice(0,7),calMode='month';
@@ -263,7 +286,7 @@ function strip(){const ws=mon(sel),n=wkOf(ws),P=plan(),w=P[n-1];let h=`<div clas
  return h+'</div>'}
 function vHome(){const t=today(),A=nextA(),n=wkOf(sel),P=plan();let h=`<div class="top wrap">${topHdr('테니스 시즌')}${strip()}</div><main class="wrap">`;
  if(A){const d=diffD(t,A.start),inS=d<=0,left=Math.max(0,inS?diffD(t,A.end):d);const dg=String(left).padStart(2,'0').split('');
-  h+=`<div class="card lime"><div class="row sb"><span class="lbl">${inS?'진행 중 · 끝까지':'다음 A 대회 · '+DISCN[A.disc]}</span><span class="tag" style="background:rgba(255,255,255,.55)">${md(A.start)}~${md(A.end)}</span></div><div class="row sb" style="margin-top:8px;align-items:flex-end;flex-wrap:nowrap"><div style="min-width:0"><h2 style="font-size:19px">${esc(A.name)}</h2><div class="small" style="margin-top:4px;color:#3D4A0E">${wd(left)} 남음 · ${esc(A.goal||'')}</div></div><div class="digits num"><b style="width:auto;padding:0 8px;font-size:22px">D</b>${dg.map(x=>`<b>${x}</b>`).join('')}</div></div>`;
+  h+=`<div class="card lime"><div class="row sb"><span class="lbl">${inS?'진행 중 · 끝까지':'다음 A 대회 · '+DISCN[A.disc]}</span><span class="tag">${md(A.start)}~${md(A.end)}</span></div><div class="row sb" style="margin-top:8px;align-items:flex-end;flex-wrap:nowrap"><div style="min-width:0"><h2 style="font-size:19px">${esc(A.name)}</h2><div class="small" style="margin-top:4px;color:#D6EADC">${wd(left)} 남음 · ${esc(A.goal||'')}</div></div><div class="digits num"><b style="width:auto;padding:0 8px;font-size:22px">D</b>${dg.map(x=>`<b>${x}</b>`).join('')}</div></div>`;
   const up=EV().filter(e=>e.end>=t&&e.id!==A.id).slice(0,3);if(up.length)h+=`<div style="margin-top:10px">${up.map(e=>`<div class="ev" data-a="evEdit" data-id="${e.id}"><span class="pri" style="background:${evColor(e)}">${evMark(e)}</span><div style="flex:1;font-weight:600;font-size:14px">${esc(e.name)}</div><span class="num" style="font-size:14px">D-${Math.max(0,diffD(t,e.start))}</span></div>`).join('')}</div>`;
   h+=`<div class="row" style="margin-top:8px"><button class="pill s" data-a="evNew">+ 대회·일정</button><button class="pill s" data-a="tab" data-t="cal">전체 보기</button></div></div>`}
  else h+=`<div class="card lime"><h2>A 대회를 추가해요</h2><div class="small" style="margin-top:4px">우선순위 A 대회 날짜에서 계획을 거꾸로 짜요.</div><button class="pill s" style="margin-top:10px" data-a="evNew">+ 대회·일정</button></div>`;
@@ -281,7 +304,7 @@ function todoRow(x){const dt=x.date?`${dw(x.date)} ${md(x.date)}`:'날짜 없음
 function evRow(e){const t=today();return `<div class="it" data-a="evEdit" data-id="${e.id}"><div class="ico" style="background:${evColor(e)};color:#fff">${evMark(e)}</div><div style="flex:1"><b>${esc(e.name)}</b><div class="sub">${ETYPE[e.type]} · ${DISCN[e.disc||'']} · ${md(e.start)}${e.end!==e.start?'~'+md(e.end):''}${e.end>=t?' · D-'+Math.max(0,diffD(t,e.start)):''}</div>${e.note?`<div class="sub small">${esc(e.note)}</div>`:''}</div></div>`}
 function logRow(l){const vals=Object.entries(l.vals||{}).filter(([k,v])=>v!==''&&v!=null).map(([k,v])=>{const m=allMetrics().find(x=>x.id===k);return `<span class="tag">${esc(m?m.name:k)} ${v}${m?esc(m.unit||''):''}</span>`}).join(' ');
  return `<div class="it" data-a="logOpen" data-id="${l.id}"><div class="ico" style="background:${KIND[l.kind].c};color:#fff">${KIND[l.kind].i}</div><div style="flex:1;min-width:0"><div class="row sb"><b>${KIND[l.kind].n}${l.disc?' · '+DISCN[l.disc]:''}${l.partner?' · '+esc(l.partner):''}</b><span class="sub">${md(l.date)}(${dw(l.date)})</span></div><div class="sub">${l.gw!==''&&l.gw!=null?`<b class="${l.res==='W'?'g':'r'}">${l.res==='W'?'승':'패'}</b> ${l.gw}-${l.gl}${l.score?' ('+esc(l.score)+')':''} · `:''}${l.min?l.min+'분':''}${l.note?' · '+esc(l.note):''}</div>${vals?`<div style="margin-top:4px">${vals}</div>`:''}</div></div>`}
-function paceCard(){let h=`<div class="card dark"><div class="row sb"><h2>목표 페이스</h2><span class="sub small">흰 선 = 지금 있어야 할 곳</span></div><div class="seg">${['S','D'].map(d=>`<button class="${disc===d?'on':''}" data-a="disc" data-d="${d}">${DISCN[d]}</button>`).join('')}</div>`;
+function paceCard(){let h=`<div class="card"><div class="row sb"><h2>목표 페이스</h2><span class="sub small">검은 선 = 지금 있어야 할 곳</span></div><div class="seg lt">${['S','D'].map(d=>`<button class="${disc===d?'on':''}" data-a="disc" data-d="${d}">${DISCN[d]}</button>`).join('')}</div>`;
  for(const f of AF().filter(f=>f.disc===disc||f.disc==='SD')){const s=fStatus(f);h+=`<div class="pace" data-a="facGo" data-id="${f.id}"><div class="row sb"><b>${esc(f.name)}</b><span class="st ${s.k}">${s.t}${s.p!=null&&s.t!=='기준 잡힘'?' · '+Math.round(s.p*100)+'%':''}</span></div>${s.p!=null&&s.t!=='기준 잡힘'?`<div class="pbar"><i class="${s.k==='g'?'':s.k}" style="width:${clamp(s.p,0,1)*100}%"></i><em style="left:${clamp(s.pace,0,1)*100}%"></em></div>`:`<div class="sub small" style="margin-top:3px">${esc((f.metrics||[]).map(m=>m.name).join(' · '))}</div>`}</div>`}
  const gs=gameStats(disc).slice(-5),gp=gs.length?gs.reduce((a,x)=>a+x.gp,0)/gs.length:null,goal=disc==='S'?55:50;
  return h+`<div class="pace"><div class="row sb"><b>게임 득실률</b><span class="st ${gp==null?'m':gp*100>=goal?'g':'o'}">${gp==null?'경기 기록 없음':Math.round(gp*100)+'%'} · 목표 ${goal}%</span></div>${gp!=null?`<div class="pbar"><i class="${gp*100>=goal?'':'o'}" style="width:${gp*100}%"></i><em style="left:${goal}%"></em></div>`:''}</div></div>`}
