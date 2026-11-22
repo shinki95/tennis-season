@@ -3,7 +3,7 @@
 import crypto from 'node:crypto';
 import { put, get } from '@vercel/blob';
 
-export const COLLECTIONS = ['sessions', 'measures', 'matches', 'settings'];
+export const COLLECTIONS = ['logs', 'factors', 'events', 'settings'];
 const COOKIE = 'ts_s';
 const DAYS = 400;
 
