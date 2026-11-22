@@ -60,7 +60,7 @@ input,textarea{font-family:inherit;font-size:16px}
 .ib{width:36px;height:36px;border-radius:50%;background:#F1F3F0;display:inline-flex;align-items:center;justify-content:center;font-size:18px;color:var(--mut)}
 .del{padding:7px 11px;border-radius:10px;font-size:14px;font-weight:700;color:var(--r);background:#FDECEC}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:8px}.cdw{text-align:center;font-size:12px;font-weight:700;color:var(--mut);padding:4px 0}
-.cd{min-height:58px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 1px;border-radius:10px}.cd.past{opacity:.45}.cd.td{background:var(--gl)}
+.cd{min-height:58px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 1px;border-radius:10px}.cd.om{opacity:.3}.cd.td{background:var(--gl)}
 .cn{font-size:14px;font-weight:700;min-width:26px;height:26px;line-height:26px;border-radius:13px;text-align:center}.cd.td .cn{background:var(--ink);color:#fff}.cn.ev{background:#FDECEC;color:var(--r)}
 .tg{font-style:normal;font-size:11px;font-weight:800;padding:1px 4px;border-radius:6px;box-shadow:inset 0 0 0 1.3px currentColor}.tg.S{color:var(--g)}.tg.D{color:#2F6BFF}.tg.dn{color:#fff}.tg.S.dn{background:var(--g)}.tg.D.dn{background:#2F6BFF}
 .lg{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px}
@@ -107,7 +107,7 @@ const THEME_DEF=[
  {id:'th-n1',fid:'f-net',t:'세트당 포치 3번',s:'상대가 칠 때 출발'},
  {id:'th-n2',fid:'f-net',t:'서브 후 첫 발리는 크로스 발밑',s:''}];
 let db={logs:[],factors:[],events:[],settings:[],todos:[],notes:[]};
-let addF=null,pickOpen=null,tab='today',day=TODAY,okEdit=false,toastT=null,gdisc='S',retroOpen=null;
+let calM=TODAY.slice(0,7),addF=null,pickOpen=null,tab='today',day=TODAY,okEdit=false,toastT=null,gdisc='S',retroOpen=null;
 
 async function load(){const me=await (await fetch('/api/auth?me=1')).json();if(!me.authed){document.getElementById('app').innerHTML=`<div style="padding-top:30vh"><div class="h1">테니스</div><button class="btn" onclick="location.href='/api/auth?start=1'">Google로 계속하기</button></div>`;return}
  db={...db,...(await (await fetch('/api/db')).json())};render()}
@@ -139,12 +139,10 @@ const themeStat=id=>{const D=db.todos.filter(x=>x.focus===id&&x.fres);return {n:
 const lastW=()=>Math.max(...OKR().map(o=>wkOf(o.end)),8);
 
 /* 회차 */
-function weekSlots(n){if(n<1||n>lastW())return [];const ws=wkStart(n),we=addD(ws,6);
- const S=DAYS().map((dw,k)=>{const id=`W${n}-s${k+1}`,t=db.todos.find(x=>x.id===id)||{};return {...t,id,date:t.date||addD(ws,(dw+6)%7),disc:t.disc||'S',kind:t.kind||'game'}}).filter(s=>!s.hidden);
- db.todos.filter(t=>t.custom&&!t.hidden&&t.kind&&t.date>=ws&&t.date<=we).forEach(t=>S.push({...t,disc:t.disc||'S'}));
- S.forEach(s=>{if(!s.done&&db.logs.some(l=>l.todoId===s.id||(l.date===s.date&&l.src!=='quick')))s.done=true});return S}
-function sessOn(d){const n=wkOf(d);const A=[n-1,n,n+1].flatMap(weekSlots).filter(s=>s.date===d);db.todos.filter(t=>t.custom&&!t.hidden&&t.kind&&t.date===d&&!A.some(x=>x.id===t.id)).forEach(t=>{const s={...t,disc:t.disc||'S'};if(!s.done&&db.logs.some(l=>l.todoId===s.id))s.done=true;A.push(s)});return A}
-const allDone=(from,to)=>{const out=[];for(let n=Math.max(1,wkOf(from));n<=Math.min(lastW(),wkOf(to));n++)weekSlots(n).forEach(s=>{if(s.done&&s.date>=from&&s.date<=to)out.push(s)});return out};
+const recOk=t=>!t.hidden&&t.kind&&t.date&&(t.custom||t.done);
+function weekSlots(n){const ws=wkStart(n),we=addD(ws,6);return db.todos.filter(t=>recOk(t)&&t.date>=ws&&t.date<=we).map(t=>({...t,disc:t.disc||'S',done:!!(t.done||db.logs.some(l=>l.todoId===t.id))}))}
+function sessOn(d){return db.todos.filter(t=>recOk(t)&&t.date===d).map(t=>({...t,disc:t.disc||'S',done:!!(t.done||db.logs.some(l=>l.todoId===t.id))}))}
+const allDone=(from,to)=>{const out=[];for(let n=wkOf(from);n<=wkOf(to);n++)weekSlots(n).forEach(s=>{if(s.done&&s.date>=from&&s.date<=to)out.push(s)});return out};
 const short=t=>{t=String(t||'');const c=t.split(/(?<=[.。])\s/)[0];return c.length>40?c.slice(0,39)+'…':c};
 /* 할 것: Aside 가 넣은 items 우선, 없으면 기본 */
 function itemsOf(s){if(s.kind==='none')return [];if(s.items&&s.items.length)return s.items;
@@ -181,7 +179,7 @@ function resNow(o,r){const G=db.logs.filter(l=>l.disc===o.disc&&l.gw!=null&&l.gw
  const g=G.slice(-5),t=g.reduce((a,l)=>a+ +l.gw+ +l.gl,0);return {v:t?Math.round(g.reduce((a,l)=>a+ +l.gw,0)/t*100):null,u:'%',n:'게임 득실률'}}
 
 /* 화면 */
-function render(){document.getElementById('nav').innerHTML=[['today','오늘'],['plan','일정'],['theme','주제'],['goal','목표']].map(([k,n])=>`<button class="${tab===k?'on':''}" data-a="tab" data-t="${k}">${n}</button>`).join('');document.getElementById('app').innerHTML=({today:vToday,plan:vPlan,theme:vTheme,goal:vGoal})[tab]()}
+function render(){document.getElementById('nav').innerHTML=[['today','오늘'],['plan','기록'],['theme','주제'],['goal','목표']].map(([k,n])=>`<button class="${tab===k?'on':''}" data-a="tab" data-t="${k}">${n}</button>`).join('');document.getElementById('app').innerHTML=({today:vToday,plan:vPlan,theme:vTheme,goal:vGoal})[tab]()}
 function dateBtn(id,date,kind){return `<label class="dt">${md(date)} ✎<input type="date" value="${date}" data-${kind}="${id}"></label>`}
 function mOf(fid){const f=FA().find(x=>x.id===fid);if(!f)return null;return (f.metrics||[]).find(m=>m.src==='sv'&&m.unit==='%')||(f.metrics||[])[0]||null}
 function kSeries(k){const m=mOf(k.fid);if(!m)return [];const by={};db.logs.forEach(l=>{const v=(l.vals||{})[m.id];if(v!=null&&v!==''){(by[l.date]=by[l.date]||[]).push(+v)}});return Object.keys(by).sort().map(d=>[d,Math.round(by[d].reduce((a,b)=>a+b,0)/by[d].length*10)/10])}
@@ -222,11 +220,18 @@ function vToday(){const isT=day===TODAY;let h=`<div class="top"><button class="i
  const S=sessOn(day),evs=EV().filter(e=>e.start<=day&&e.end>=day);evs.forEach(e=>{h+=`<div class="card" style="background:#FDECEC;color:var(--r);font-weight:800">${esc(e.name)}</div>`});
  S.forEach(s=>{h+=sessCard(s)});
  h+=`<div class="card"><div class="lbl">${S.length?'하나 더 추가':'훈련 추가'}</div>${typeChips(null,null)}</div>`;return h}
-function vPlan(){const cw=Math.max(1,wkOf(TODAY)),E=EV();let h=`<div class="top"><div class="h1">일정</div></div><div class="card"><div class="lbl">대회</div>${E.filter(e=>e.end>=addD(TODAY,-30)).map(e=>`<div class="row sb" style="padding:8px 0;border-top:1px solid var(--line)"><span style="min-width:0">${esc(e.name)}<div class="mut sm">D-${Math.max(0,diffD(TODAY,e.start))}</div></span>${dateBtn(e.id,e.start,'ev')}</div>`).join('')}</div>`;
- h+=`<div class="card"><div class="row sb"><span class="lbl">훈련</span><span class="sm"><i class="lg" style="background:var(--g)"></i>단식 <i class="lg" style="background:#2F6BFF;margin-left:8px"></i>복식</span></div><div class="cal">${['월','화','수','목','금','토','일'].map(d=>`<div class="cdw">${d}</div>`).join('')}`;
- let pm='';for(let n=Math.max(1,cw-1);n<=Math.min(lastW(),cw+8);n++){const ws=wkStart(n);for(let k=0;k<7;k++){const d=addD(ws,k),S=sessOn(d),ev=E.some(e=>e.start<=d&&e.end>=d),m=pd(d).getMonth()+1;const showM=m!==pm&&(k===0||pd(d).getDate()===1);if(k===0||pd(d).getDate()===1)pm=m;
-  h+=`<button class="cd ${d===TODAY?'td':''} ${d<TODAY?'past':''}" data-a="go" data-d="${d}"><span class="cn ${ev?'ev':''}">${pd(d).getDate()===1||(n===Math.max(1,cw-1)&&k===0)?m+'/':''}${pd(d).getDate()}</span>${S.map(s=>`<i class="tg ${s.disc==='D'?'D':'S'} ${s.done?'dn':''}">${({game:'게임',rally:'랠리',drill:'드릴',partner:'파트너',none:'?'})[s.kind]||s.kind}</i>`).join('')}</button>`}}
- h+=`</div><div class="mut sm" style="margin-top:8px">날짜를 누르면 그날로 가요</div></div>`;return h}
+const FR={good:'잘됨',mid:'반반',bad:'안됨'};
+const svLog=d=>db.logs.find(l=>l.date===d&&l.vals&&Object.keys(l.vals).length);
+function svText(lg){return Object.entries(lg.vals).slice(0,4).map(([m,v])=>{const mm=FA().flatMap(f=>f.metrics||[]).find(z=>z.id===m);return `${esc(mm?mm.name.replace(/ in %| \(.+\)/g,''):m)} ${v}${mm&&mm.unit==='%'?'%':''}`}).join(' · ')}
+function vPlan(){const [y,m]=calM.split('-').map(Number),first=calM+'-01',last=ds(new Date(y,m,0,12)),st=mon(first),en=addD(mon(last),6),E=EV();
+ let h=`<div class="top"><button class="ib" aria-label="이전 달" data-a="mNav" data-v="-1">‹</button><div class="h1">${y}년 ${m}월</div><button class="ib" aria-label="다음 달" data-a="mNav" data-v="1">›</button></div>`;
+ h+=`<div class="card"><div class="row sb"><span class="sm"><i class="lg" style="background:var(--g)"></i>단식 <i class="lg" style="background:#2F6BFF;margin-left:8px"></i>복식</span>${calM!==TODAY.slice(0,7)?`<button class="sm" style="font-weight:800;color:var(--g)" data-a="mToday">이번 달</button>`:''}</div><div class="cal">${['월','화','수','목','금','토','일'].map(d=>`<div class="cdw">${d}</div>`).join('')}`;
+ for(let d=st;d<=en;d=addD(d,1)){const S=sessOn(d),lg=svLog(d),ev=E.some(e=>e.start<=d&&e.end>=d);
+  h+=`<button class="cd ${d===TODAY?'td':''} ${d.slice(0,7)!==calM?'om':''}" data-a="go" data-d="${d}"><span class="cn ${ev?'ev':''}">${pd(d).getDate()}</span>${S.map(s=>`<i class="tg ${s.disc==='D'?'D':'S'} ${s.done?'dn':''}">${({game:'게임',rally:'랠리',drill:'드릴',partner:'파트너',none:'?'})[s.kind]||s.kind}</i>`).join('')}${lg&&!S.length?'<i class="tg S">SV</i>':''}</button>`}
+ h+=`</div></div>`;
+ const R=[];for(let d=last;d>=first;d=addD(d,-1)){sessOn(d).forEach(s=>R.push({d,s}));if(!sessOn(d).length&&svLog(d))R.push({d,s:null})}
+ h+=`<div class="card"><div class="lbl">기록 ${R.length}</div>${R.length?R.map(({d,s})=>{const f=s&&focusOf(s),lg=svLog(d);return `<button class="it" data-a="go" data-d="${d}"><b style="width:56px;flex:none;font-size:14px">${md(d)}</b><span style="flex:1;min-width:0"><span class="t">${s?TN(s.disc,s.kind):'SV 기록'}${s&&!s.done?' <span class="mut sm">(안 끝남)</span>':''}${s&&s.fres?` · <b style="color:${s.fres==='good'?'var(--g)':s.fres==='bad'?'var(--r)':'var(--o)'}">${FR[s.fres]}</b>`:''}</span><span class="s">${f&&s.done?esc(f.t):''}${lg?(f&&s.done?' · ':'')+'SV '+svText(lg):''}</span></span></button>`}).join(''):'<div class="mut" style="margin-top:6px">이 달 기록 없음</div>'}</div>`;
+ h+=`<div class="card"><div class="lbl">대회</div>${E.filter(e=>e.end>=addD(TODAY,-30)).map(e=>`<div class="row sb" style="padding:8px 0;border-top:1px solid var(--line)"><span style="min-width:0">${esc(e.name)}<div class="mut sm">D-${Math.max(0,diffD(TODAY,e.start))}</div></span>${dateBtn(e.id,e.start,'ev')}</div>`).join('')}</div>`;return h}
 function vTheme(){const o=OKR().find(x=>x.disc===gdisc);let h=`<div class="top"><div class="h1">주제</div></div><div class="seg">${['S','D'].map(k=>`<button class="${gdisc===k?'on':''}" data-a="gDisc" data-v="${k}">${k==='S'?'단식':'복식'}</button>`).join('')}</div>`;
  o.krs.forEach(k=>{const L=THEMES().filter(t=>!t.off&&t.fid===k.fid);h+=`<div class="card"><div class="row sb"><b style="color:${COL[k.fid]}">${esc(krName(k))}</b><span class="sm">${kNow(k)==null?'<span class="mut">기록 전</span>':`<b>${kNow(k)}</b><span class="mut">/${k.target}${esc(kUnit(k))}</span> ${dlt(k)}`}</span></div>
   ${L.map(t=>{const st=themeStat(t.id);return `<div class="it"><span style="flex:1"><span class="t">${esc(t.t)}</span>${t.s?`<span class="s">${esc(t.s)}</span>`:''}</span><span class="mut sm" style="white-space:nowrap">${st.n?`${st.n}번 · 잘됨 ${st.g}`:'아직'}</span><button class="del" data-a="tOff" data-t="${t.id}">빼기</button></div>`}).join('')}
@@ -250,7 +255,7 @@ function vGoal(){const o=OKR().find(x=>x.disc===gdisc),E=okEdit,ws=mon(TODAY),we
 /* 동작 */
 function todoPut(id,extra){const s=findS(id)||{};const t=db.todos.find(x=>x.id===id)||{id};return save('todos',{...t,id,date:s.date||t.date,disc:s.disc||t.disc,kind:s.kind||t.kind,...extra})}
 function okrSave(fn){const L=JSON.parse(JSON.stringify(OKR()));fn(L);save('settings',{...ST(),id:'main',okr:L})}
-const findS=id=>{for(let n=1;n<=lastW();n++){const s=weekSlots(n).find(x=>x.id===id);if(s)return s}const t=db.todos.find(x=>x.id===id);return t?{...t,disc:t.disc||'S'}:null};
+const findS=id=>{const t=db.todos.find(x=>x.id===id);return t?{...t,disc:t.disc||'S'}:null};
 const act={
  tab:d=>{tab=d.t;if(d.d)gdisc=d.d;render();scrollTo(0,0);if(d.t==='plan'){const c=document.getElementById('cur');if(c)c.scrollIntoView({block:'start'})}},
  dNav:d=>{day=addD(day,+d.v);render()},dToday:()=>{day=TODAY;render()},go:d=>{day=d.d;tab='today';render();scrollTo(0,0)},
@@ -270,6 +275,7 @@ const act={
  retroT:d=>{retroOpen=retroOpen===d.id?null:d.id;render()},
  retroSave:d=>{const t=document.getElementById('rt').value.trim();const s=findS(d.id);retroOpen=null;if(t)save('notes',{id:'R-'+d.id,type:'retro',date:s.date,text:t});toast('회고 저장')},
  noop:()=>{},
+ mNav:d=>{const [y,m]=calM.split('-').map(Number);const x=new Date(y,m-1+ +d.v,1,12);calM=ds(x).slice(0,7);render()},mToday:()=>{calM=TODAY.slice(0,7);render()},
  pickT:d=>{pickOpen=pickOpen===d.id?null:d.id;render()},
  setT:d=>{pickOpen=null;todoPut(d.id,{focus:d.t})},
  fRes:d=>{const s=findS(d.id);todoPut(d.id,{fres:s.fres===d.v?null:d.v})},
