@@ -29,7 +29,10 @@ export function isAuthed(req) {
   if (parts.length !== 3) return null;
   const [exp, dev, sig] = parts;
   if (Number(exp) < Date.now()) return null;
-  return safeEq(sig, sign(`${exp}.${dev}`)) ? 'owner' : null;
+  if (!safeEq(sig, sign(`${exp}.${dev}`))) return null;
+  // 구글 로그인 쿠키만 인정 (예전 기기 등록 쿠키는 이메일이 없어서 거절)
+  let email = ''; try { email = Buffer.from(dev, 'base64url').toString(); } catch {}
+  return /^[^@\s]+@[^@\s]+$/.test(email) ? 'owner' : null;
 }
 
 export function sessionEmail(req) {
