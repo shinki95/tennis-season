@@ -3,11 +3,11 @@
 import crypto from 'node:crypto';
 import { put, get } from '@vercel/blob';
 
-export const COLLECTIONS = ['logs', 'factors', 'events', 'settings'];
+export const COLLECTIONS = ['logs', 'factors', 'events', 'settings', 'todos', 'notes'];
 const COOKIE = 'ts_s';
 const DAYS = 400;
 
-const sign = (v) => crypto.createHmac('sha256', process.env.SESSION_SECRET || 'dev').update(v).digest('hex');
+export const sign = (v) => crypto.createHmac('sha256', process.env.SESSION_SECRET || 'dev').update(v).digest('hex');
 
 export function makeSessionCookie(dev) {
   const exp = Date.now() + DAYS * 864e5;
@@ -31,6 +31,13 @@ export function isAuthed(req) {
   if (Number(exp) < Date.now()) return null;
   return safeEq(sig, sign(`${exp}.${dev}`)) ? 'owner' : null;
 }
+
+export function sessionEmail(req) {
+  if (isAuthed(req) !== 'owner') return null;
+  const raw = (req.headers.cookie || '').split(';').map((s) => s.trim()).find((s) => s.startsWith(COOKIE + '='));
+  try { return Buffer.from(raw.slice(COOKIE.length + 1).split('.')[1], 'base64url').toString(); } catch { return null; }
+}
+export const clearSessionCookie = () => `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
 
 export async function readJson(path, fallback) {
   try {
