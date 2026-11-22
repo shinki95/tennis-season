@@ -205,7 +205,7 @@ function weekTodos(n){const P=plan(),w=P[n-1];const out=[];if(!w)return out;cons
  const res=out.map(a=>{const s=db.todos.find(t=>t.id===a.id)||{};const r={...a,...s};
   if(r.done==null){if(a.type==='session')r.done=L.length>=a.slot;else if(a.type==='video')r.done=L.some(hasVals);else if(a.type==='retro'){const nt=db.notes.find(x=>x.id===`W${n}`);r.done=!!(nt&&(nt.good||nt.hard||nt.next))}else r.done=false}return r}).filter(t=>!t.hidden);
  db.todos.filter(t=>t.custom&&(t.week||(t.date?wkOf(t.date):0))===n).forEach(t=>res.push(t));
- return res.sort((a,b)=>(a.date||'9')<(b.date||'9')?-1:(a.date||'9')>(b.date||'9')?1:0)}
+ const rk={session:0,deadline:1,video:2,retro:4};return res.map((x,i)=>({x,i})).sort((a,b)=>((rk[a.x.type]??3)-(rk[b.x.type]??3))||((a.x.date||'9')<(b.x.date||'9')?-1:(a.x.date||'9')>(b.x.date||'9')?1:a.i-b.i)).map(o=>o.x)}
 
 /* ===== 목표·페이스 ===== */
 const allMetrics=()=>AF().flatMap(f=>(f.metrics||[]).map(m=>({...m,f})));
