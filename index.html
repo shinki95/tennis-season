@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="테니스 시즌">
+<title>테니스 시즌</title>
+<style>
+:root{--bg:#f5f6f3;--card:#fff;--ink:#1c221f;--mut:#69716c;--line:#e2e5df;--acc:#2f7d4f;--acc2:#e7f2ea;--warn:#b5651d;--warn2:#fbf0e4;--bad:#b33a3a;--bad2:#f8e8e8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+header{padding:calc(12px + env(safe-area-inset-top)) 16px 2px;display:flex;justify-content:space-between;align-items:baseline}
+h1{font-size:19px;margin:0}
+h2{font-size:16px;margin:0 0 6px}
+h3{font-size:14px;margin:10px 0 4px}
+.sub{color:var(--mut);font-size:13px}
+main{padding:0 12px;max-width:720px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin:10px 0}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;border:0;background:none;padding:11px 0 12px;font-size:14px;color:var(--mut);font-family:inherit}
+nav button.on{color:var(--acc);font-weight:700}
+button{font-family:inherit}
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 12px;font-size:14px;color:var(--ink)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.btn.s{padding:5px 9px;font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:13px;background:#fff;margin:3px 4px 3px 0}
+.pill.done{background:var(--acc2);border-color:#bcdcc6}
+.pill.skip{background:#f0f0f0;color:#999;text-decoration:line-through}
+.pill.today{border-color:var(--acc);border-width:2px}
+.pill.off{background:#f6f6f6;color:#aaa}
+.big{font-size:26px;font-weight:700;line-height:1.1}
+.dd{display:flex;gap:10px}
+.dd>div{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.blk{border-top:1px solid var(--line);padding:9px 0}
+.blk:first-of-type{border-top:0}
+.blk .t{font-weight:600}
+.blk .how{margin-top:2px}
+.blk .pass{color:var(--acc);font-size:13px;margin-top:3px}
+.blk .cue{color:var(--warn);font-size:13px;margin-top:3px}
+.blk input[type=number]{width:82px;font-size:17px;padding:6px;border:1px solid var(--line);border-radius:8px}
+.tog{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;font-size:13px}
+.tog.y{background:var(--acc2);border-color:#9fcfb0;color:var(--acc);font-weight:600}
+.tog.n{background:var(--bad2);border-color:#e2b3b3;color:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}
+.ok{color:var(--acc);font-weight:600}.late{color:var(--warn);font-weight:600}.badc{color:var(--bad);font-weight:600}
+.bar{height:6px;background:#eceeea;border-radius:9px;overflow:hidden;margin-top:4px}.bar>i{display:block;height:100%;background:var(--acc)}
+.banner{background:var(--warn2);border:1px solid #efd3b4;border-radius:10px;padding:9px 12px;margin:10px 0;font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cnt{border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px 8px;text-align:center;font-size:14px;user-select:none}
+.cnt b{display:block;font-size:24px}
+.cnt:active{background:var(--acc2)}
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:9;align-items:flex-end;justify-content:center}
+#sheet.on{display:flex}
+#sheet .in{background:var(--bg);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px 13px calc(20px + env(safe-area-inset-bottom))}
+input,select{font-family:inherit;font-size:15px}
+input[type=date],input[type=text],select{padding:6px 7px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.mut{color:var(--mut)}
+.small{font-size:12px}
+details summary{cursor:pointer;color:var(--mut);font-size:13px;margin-top:6px}
+svg.sp{vertical-align:middle}
+</style>
+</head>
+<body>
+<header><h1>테니스 시즌</h1><span class="sub" id="hdr"></span></header>
+<main id="main"></main>
+<nav id="nav">
+<button data-a="tab" data-t="today">오늘</button>
+<button data-a="tab" data-t="plan">계획</button>
+<button data-a="tab" data-t="factors">요소</button>
+<button data-a="tab" data-t="match">경기</button>
+<button data-a="tab" data-t="tests">측정</button>
+</nav>
+<div id="sheet"><div class="in" id="sheetIn"></div></div>
+<input type="file" id="imp" accept="application/json,.json" style="display:none">
+<script>
+'use strict';
+const KEY='tennisSeason.v1';
+const DEF={
+ v:1,
+ settings:{
+  planStart:'2026-11-23',
+  days:[2,4,6],
+  mixedOn:true,
+  leagues:[
+   {id:'mixed',name:'USTA 혼복 18+ (LA 겨울)',start:'2027-01-09',end:'2027-04-04',goal:'라인 승률 50% 이상'},
+   {id:'singles',name:'TennisLosAngeles 봄 단식 시즌 1',start:'2027-01-19',end:'2027-03-14',goal:'시즌 3승 이상 (3~5승이면 플레이오프)'}
+  ],
+  deadlines:[
+   {date:'2026-11-30',text:'TLA 봄 시즌 1 조기 등록 마감 ($36.95, 11월까지)'},
+   {date:'2026-12-06',text:'혼복 파트너 정하기 (로스터 마감 1주 전으로 잡은 날)'},
+   {date:'2026-12-13',text:'USTA 혼복 로스터 마감 (재확인 필요) · 멤버십 $44 · NTRP 셀프 평가'}
+  ],
+  blackout:{'2026-11-24':'팔로알토 출장'}
+ },
+ sessions:{},moves:{},tests:[],targets:{},matches:[],live:null,lastExport:null
+};
+const DOW=['일','월','화','수','목','금','토'];
+
+/* ---------- 날짜 ---------- */
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c,12)};
+const ds=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ds(d)};
+const mon=s=>{const d=pd(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return ds(d)};
+const diffD=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const today=()=>ds(new Date());
+const md=s=>{const d=pd(s);return (d.getMonth()+1)+'/'+d.getDate()};
+const mdw=s=>md(s)+'('+DOW[pd(s).getDay()]+')';
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- 저장 ---------- */
+let st=load();
+function load(){
+ try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===1){const d=JSON.parse(JSON.stringify(DEF));for(const k in d)if(s[k]===undefined)s[k]=d[k];for(const k in d.settings)if(s.settings[k]===undefined)s.settings[k]=d.settings[k];return s}}catch(e){}
+ return JSON.parse(JSON.stringify(DEF));
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(st))}
+
+/* ---------- 요소 · 측정 ---------- */
+const TESTS={
+ T1:{n:'첫 서브 20개',f:'S',max:20,u:'/20',how:'듀스 10 → 애드 10, 시합 첫 서브 세기. 들어간 수.'},
+ T2:{n:'세컨 서브 20개',f:'S',max:20,u:'/20',how:'시합에서 쓰는 세컨 그대로. 들어간 수.'},
+ T3:{n:'리턴 20개',f:'R',max:20,u:'/20',how:'파트너가 세컨 속도로 서브, 크로스로 서비스 라인 넘으면 성공.'},
+ T4:{n:'포핸드 크로스 연속',f:'G',streak:1,u:'회',how:'둘 다 크로스, 서비스 라인 넘어 떨어진 내 공만 셈. 3번 중 최고.'},
+ T5:{n:'백핸드 크로스 연속',f:'G',streak:1,u:'회',how:'같은 방식, 백핸드 크로스.'},
+ T6:{n:'서브+1 10번',f:'P',max:10,u:'/10',how:'서브 → 리턴 가운데 → 포핸드로 상대 백 쪽 서비스 라인 넘어.'},
+ T7:{n:'발리 20개',f:'N',max:20,u:'/20',how:'서비스 라인 한 걸음 앞에서 크로스 발리, 상대 서비스 라인 넘으면 성공.'},
+ T8:{n:'오버헤드 10개',f:'N',max:10,u:'/10',how:'파트너 로브, 상대 코트 안에 들어간 수.'},
+ T9:{n:'스파이더 런',f:'F',low:1,u:'초',how:'베이스라인 가운데 → 5개 지점 찍고 매번 돌아오기. 2번 중 좋은 기록.'}
+};
+const FACTORS={
+ S:{n:'서브 안정',w:25,ev:'중',tests:['T1','T2'],
+  why:'프로 984경기(롤랑가로스·윔블던) 분석에서 "첫 서브 포인트 획득"이 승리와 가장 강하게 연결된 지표 중 하나. 동호인 3.5 평균은 첫 서브 53.5% in, 더블폴트 경기당 3.7개. 3.5→4.0 구간에서 처음으로 더블폴트가 줄어요.',
+  src:'Fitzpatrick 외 2019 · SwingVision 25만+ 세션(2026)'},
+ R:{n:'리턴',w:15,ev:'중',tests:['T3'],
+  why:'0~4구 짧은 포인트를 많이 딴 쪽이 이긴다는 게 프로 분석에서 가장 일관된 결과(잔디·클레이·하드). 리턴은 그 2구째. 3.5 상대의 세컨 서브는 70% 들어오니 받을 일이 많아요.',
+  src:'Fitzpatrick 2019·2021 · Venn-Moncur 외 2024'},
+ G:{n:'랠리 깊이·안정',w:25,ev:'중',tests:['T4','T5'],
+  why:'프로에선 "베이스라인 포인트 획득"이 승리와 강하게 연결. 동호인은 3.5와 4.0의 언포스드 에러가 경기당 12.4개로 같고 위너:에러도 0.70 vs 0.71. 에러를 없애기보다 같은 에러로 더 깊게 보내 상대를 몰아붙이는 쪽.',
+  src:'Venn-Moncur 2024 · SwingVision 2026'},
+ P:{n:'서브+1 · 리턴+1',w:10,ev:'약',tests:['T6'],
+  why:'짧은 포인트 자체는 중요하지만, 프로 하드코트 연구에서 "3구째" 지표는 승패와 연결이 없었어요. 그래서 시간은 10%만.',
+  src:'Venn-Moncur 2024'},
+ N:{n:'네트 (혼복)',w:15,ev:'약~중',tests:['T7','T8'],
+  why:'프로 여자 복식 그랜드슬램 21경기: 포인트 36%가 네트 구역에서 끝나고, 가장 많이 끝낸 샷이 포핸드 발리(18%). 동호인 복식 데이터는 못 찾았어요.',
+  src:'Borderias 외 2024 (PLOS ONE)'},
+ F:{n:'이동·체력',w:10,ev:'약',tests:['T9'],
+  why:'동호인 승패와 직접 연결한 연구는 못 찾았어요. 경기 후반에 게임을 더 잃는지(경기 기록 "체력" 표시)로 봐요.',
+  src:'근거 약함 · 코치 판단'}
+};
+const BENCH=[ // SwingVision 2026, 경기당 평균
+ {k:'fs',n:'첫 서브 in',v35:'53.5%',v40:'54.4%',goal:'60% 이상'},
+ {k:'df',n:'더블폴트',v35:'3.7',v40:'3.6',goal:'2.5 이하'},
+ {k:'wue',n:'위너:에러',v35:'0.70',v40:'0.71',goal:'0.80 이상'},
+ {k:'gw',n:'게임 득실',v35:'-',v40:'-',goal:'55% 이상'}
+];
+
+/* ---------- 세션 종류 ---------- */
+const B={
+ wu:{m:8,t:'워밍업',how:'미니 테니스 4분 → 베이스라인 랠리 4분.'},
+ rec:{m:2,t:'기록',how:'통과 여부 누르고 "완료". 숫자는 바로 저장돼요.'},
+ toss:{m:4,t:'토스만 10번',how:'치지 않고 토스만. 공이 떨어진 자리를 봐요.',pass:'8/10이 왼발 앞 한 뼘·오른쪽 한 뼘(약 20cm)',cue:'플랫 서브가 길면 토스가 머리 위·뒤로 간 경우가 많아요. 왼팔을 끝까지 뻗고 손이 눈높이를 지날 때 놓기.'},
+ ss:{m:12,t:'세컨 서브 3×10',how:'서비스 박스 뒤쪽 절반을 노림. 세기보다 회전.',pass:'세트마다 8/10 이상',cue:'공 뒤에서 위로 긁어 올려 네트 위 1m 이상 지나가게. 컨택 때까지 머리 들고 공 보기.'},
+ fs:{m:10,t:'첫 서브 20개 (T 10 · 와이드 10)',how:'목표 구역에 공 캔이나 콘. 들어간 수와 목표 구역 수.',pass:'12/20 in, 그중 목표 구역 5개',cue:'팔 다 편 최고점·몸 앞에서 컨택. 착지는 왼발로 코트 안쪽.'},
+ ret:{m:14,t:'리턴 크로스 20개',how:'파트너 세컨 속도 서브 → 크로스로 서비스 라인 넘어.',pass:'15/20',cue:'서버가 공 칠 때 스플릿 스텝 착지. 백스윙은 어깨 돌리기만, 앞으로 한 발 들어가며 치기.'},
+ s1:{m:10,t:'서브+1',how:'서브 → 리턴 가운데 → 포핸드로 상대 백 쪽 깊게.',pass:'6/10',cue:'서브 착지 뒤 바로 스플릿 스텝. 백 쪽 공이면 돌아서 포핸드.'},
+ fhx:{m:8,t:'포핸드 크로스 깊게',how:'서비스 라인 넘어 떨어진 공 연속 세기.',pass:'측정 최고 기록을 한 번 넘기기',cue:'네트 위 1m(라켓 하나 반) 높이로 넘기면 깊이가 나와요. 치고 바로 센터 쪽으로 2~3걸음 회복.'},
+ bhx:{m:8,t:'백핸드 크로스 깊게',how:'같은 방식, 백핸드.',pass:'측정 최고 기록을 한 번 넘기기',cue:'짧아지면 스윙을 줄이지 말고 높이를 올리기.'},
+ deep:{m:12,t:'깊이 게임 11점',how:'랠리 중 서비스 라인 안쪽에 떨어지면 그 사람이 1점 잃음. 공 띄워서 시작.',pass:'7점 이상',cue:'급하면 높이·회전부터, 속도는 나중.'},
+ short:{m:10,t:'짧은 공 들어가기',how:'짧은 공 → 다운더라인 어프로치 → 첫 발리 → 포인트.',pass:'10번 중 6 포인트',cue:'어프로치 치며 걷듯 이어 들어가고, 상대가 칠 때 스플릿 스텝.'},
+ move:{m:12,t:'이동',how:'스파이더 런 2번(기록 안 함) + 사이드 셔플 6×15초(쉬기 30초).',pass:'마지막 셔플까지 같은 속도',cue:'방향 바꿀 때 바깥발로 밀기, 무릎 굽혀 낮게.'},
+ dx:{m:10,t:'반코트 크로스 랠리 (앨리 포함)',how:'크로스만, 서비스 라인 넘어.',pass:'연속 10개 2번'},
+ fv:{m:12,t:'서브 & 첫 발리',how:'서브 넣고 들어가 서비스 라인 근처에서 첫 발리 → 크로스 깊게.',pass:'7/10',cue:'리턴 순간 스플릿 스텝, 무릎 굽혀 낮게 받고 라켓 면 열어 깊게.'},
+ poach:{m:12,t:'포치',how:'크로스 랠리 중 네트에서 가운데로 가로채기. 신호: 등 뒤 손 주먹 = 간다, 손바닥 = 안 감.',pass:'10번 중 6 득점',cue:'상대가 공 칠 때 출발(먼저 움직이면 다운더라인 당함). 대각선 앞으로, 상대 네트맨 발 쪽으로.'},
+ oh:{m:8,t:'오버헤드 + 스위치',how:'로브가 높으면 오버헤드, 넘어가면 "스위치" 콜 후 자리 바꾸기.',pass:'오버헤드 7/10 in'},
+ dgame:{m:8,t:'복식 타이브레이크',how:'4명이면 복식 타이브레이크, 2명이면 반코트 포인트. 경기 탭 "연습 복식".'},
+ g1:{m:12,t:'첫 서브 한 번 게임',how:'세컨 없이 첫 서브만, 폴트면 실점. 4게임.',pass:'첫 서브 in 60% 이상',cue:'세기 70~80%로 깊이·방향 먼저.'},
+ r1:{m:12,t:'리턴+1 포인트',how:'리턴 크로스 깊게 → 다음 공 공격. 10포인트 × 2.',pass:'10점 중 5점 이상'},
+ sp1:{m:12,t:'서브+1 포인트',how:'서브 → 첫 공을 오픈 코트로. 10포인트 × 2.',pass:'10점 중 6점 이상',cue:'프로 하드코트 연구에선 3구째 지표와 승패 연결이 약했어요. 12분만.'},
+ tb:{m:14,t:'타이브레이크 2개',how:'7점 타이브레이크. 점수 소리 내 말하기.',pass:'1개 이상 이기기'},
+ hold:{m:12,t:'서브 게임 지키기',how:'파트너 서브 땐 네트에서 가운데 막기, 내 서브 땐 첫 서브 in 우선. 4게임.',pass:'서브 게임 2/4 이상'},
+ rxm:{m:12,t:'리턴 크로스, 네트맨 피하기',how:'리턴을 서버 발 앞으로 낮게 크로스. 네트맨 쪽이면 실패.',pass:'15/20'},
+ sig:{m:12,t:'포치 신호 포인트',how:'서브 전 신호(주먹 = 포치, 손바닥 = 그대로). 10포인트.',pass:'포치 4번 이상 시도, 그중 2 득점'},
+ lob:{m:8,t:'로브 · 스위치',how:'상대 네트맨 머리 위로 로브 + 받는 쪽은 스위치.',pass:'로브 6/10 넘기기'},
+ tb1:{m:6,t:'타이브레이크 1개',how:'7점.'},
+ pts:{m:10,t:'포인트 플레이',how:'방금 연습한 기술만 점수에 보너스 1점. 7점 게임.'}
+};
+const tb=k=>({...B[k]});
+const T=(k,m)=>({m,t:TESTS[k].n,how:TESTS[k].how,test:k});
+const SES={
+ TA:{n:'측정 A · 서브·리턴·네트',sh:'측정A',who:'파트너 1명, 공 넉넉히',blocks:()=>[{m:10,t:'워밍업',how:'미니 테니스 4분 → 베이스라인 6분, 연습 서브 6개.'},T('T1',8),T('T2',8),T('T3',10),T('T6',8),T('T7',8),T('T8',6),tb('rec')],solo:'혼자면 T1·T2만 (바구니).'},
+ TB:{n:'측정 B · 랠리·이동 + 연습 세트',sh:'측정B',who:'파트너 1명',blocks:()=>[{m:10,t:'워밍업',how:'미니 테니스 → 베이스라인.'},T('T4',8),T('T5',8),{...T('T9',6),how:'베이스라인 가운데 출발 → 오른쪽 베이스라인·단식 사이드라인 교차점 → 오른쪽 서비스 라인 교차점 → T → 왼쪽 서비스 라인 교차점 → 왼쪽 베이스라인 교차점. 매번 가운데로 돌아와 선 터치. 2번(사이 3분), 좋은 기록(초).'},{m:26,t:'연습 세트 + 경기 기록',how:'1세트(또는 8게임 프로세트). 경기 탭 → 새 경기 → 카운터. 이 경기가 경기 지표 기준값.'},tb('rec')]},
+ TQ:{n:'재측정 (압축)',sh:'재측정',who:'파트너 1명',blocks:()=>[tb('wu'),T('T1',6),T('T2',6),T('T3',8),T('T4',6),T('T5',6),T('T7',6),{...T('T9',6)},{m:8,t:'자유 랠리',how:'시간 남으면 T6·T8도.'},tb('rec')]},
+ A:{n:'서브 · 리턴',sh:'서브·리턴',who:'파트너 1명 (혼자면 바구니)',blocks:()=>[tb('wu'),tb('toss'),tb('ss'),tb('fs'),tb('ret'),tb('s1'),tb('rec')],solo:'혼자면: 토스 10 + 세컨 서브 30 + 첫 서브 30, 들어간 수만 세기.'},
+ B:{n:'랠리 · 이동',sh:'랠리·이동',who:'파트너 1명',blocks:()=>[tb('wu'),tb('fhx'),tb('bhx'),tb('deep'),tb('short'),tb('move'),tb('rec')],solo:'혼자면: 벽치기 포핸드 크로스 50 · 백핸드 50 + 스파이더 런 3번.'},
+ C:{n:'연습 경기 + 기록',sh:'연습경기',who:'상대 1명',blocks:()=>[{m:10,t:'워밍업 + 서브 8개',how:''},{m:45,t:'1세트 또는 8게임 프로세트',how:'경기 탭 카운터 켜기. 체인지오버 때 몰아서 눌러도 돼요.',pass:'게임 득실 50% 이상'},{m:5,t:'정리',how:'내 게임·상대 게임 + 가장 많이 잃은 이유 1개.'}]},
+ D:{n:'복식 기초',sh:'복식',who:'혼복 파트너 (2명이면 반코트)',blocks:()=>[tb('wu'),tb('dx'),tb('fv'),tb('poach'),tb('oh'),tb('dgame'),tb('rec')]},
+ E1:{n:'단식 시합형',sh:'단식패턴',who:'상대 1명',blocks:()=>[{m:8,t:'워밍업 + 서브',how:''},tb('g1'),tb('r1'),tb('sp1'),tb('tb'),tb('rec')]},
+ E1s:{n:'시합형 짧게 (40분)',sh:'짧게',who:'상대 1명',blocks:()=>[{m:8,t:'워밍업',how:''},{...tb('g1'),m:8,how:'세컨 없이 첫 서브만, 2게임.'},{...tb('r1'),m:10,how:'10포인트.'},{...tb('tb1'),m:10},tb('rec')]},
+ E2:{n:'혼복 시합형',sh:'혼복패턴',who:'혼복 파트너 (+상대 2명이면 최고)',blocks:()=>[tb('wu'),tb('hold'),tb('rxm'),tb('sig'),tb('lob'),tb('tb1'),tb('rec')]},
+ X:{n:'가볍게',sh:'가볍게',who:'아무나',blocks:()=>[{m:10,t:'미니 테니스',how:''},{m:20,t:'베이스라인 랠리 70% 세기',how:'깊이만 신경.'},{m:8,t:'서브 20개 감각',how:'세게 치지 않기.'},{m:2,t:'기록',how:'몸 상태 한 줄.'}]},
+ W:{n:'약점 집중',sh:'약점',who:'파트너 1명',blocks:()=>{const f=weakest();const L={S:['toss','ss','fs'],R:['ret','r1'],G:['fhx','bhx','deep'],P:['s1','sp1'],N:['fv','poach','oh'],F:['move','short']}[f];return [tb('wu'),...L.map(tb),tb('pts'),tb('rec')]},dyn:1},
+ L:{n:'리그 경기',sh:'리그',who:'',blocks:()=>[{m:15,t:'워밍업',how:'미니 테니스 → 랠리 → 발리 → 오버헤드 → 서브 각 4개.'},{m:90,t:'리그 경기',how:'경기 탭 → 리그 단식/혼복. 카운터는 체인지오버 때 몰아서.'},{m:5,t:'정리',how:'스코어 + 가장 많이 잃은 이유 1개 → 다음 약점 세션이 이걸로 정해져요.'}]}
+};
+const RAIN='비 오면: 섀도 서브 30번(토스만 10번) · 벽치기 15분 · 스플릿 스텝 + 사이드 셔플 6×20초.';
+
+/* ---------- 계획 (역산) ---------- */
+const PH={
+ base:{n:'기준 측정',c:'#7d838c',d:'지금 실력을 숫자로 재는 주. 목표는 이 숫자에서 자동으로 정해져요.'},
+ build:{n:'기초 쌓기',c:'#2f7d4f',d:'서브 안정 · 리턴 · 크로스 깊이. 혼복 파트너가 생기면 주말은 복식.'},
+ retest:{n:'회복 · 재측정',c:'#7a5bb5',d:'양을 줄이고 다시 재요. 목표 속도 확인.'},
+ sharp:{n:'시합형',c:'#c27c0e',d:'포인트 플레이와 패턴. 실전 점수 상황.'},
+ taper:{n:'개막 주',c:'#3a7bb3',d:'가볍게, 감각만. 주말에 개막 경기.'},
+ season:{n:'시즌',c:'#b33a3a',d:'경기 1 + 약점 1 + 패턴 1. 경기가 2개인 주는 약점 세션을 경기로 바꿔요.'},
+ 'season-rt':{n:'시즌 · 재측정',c:'#8e3a6e',d:'시즌 중 재측정. 경기 1 + 재측정 + 패턴.'}
+};
+const lg=id=>st.settings.leagues.find(l=>l.id===id);
+function activeLeagues(){return st.settings.leagues.filter(l=>l.id!=='mixed'||st.settings.mixedOn)}
+let _plan=null,_planKey='';
+function plan(){
+ const S=st.settings,key=JSON.stringify([S,st.moves]);
+ if(_plan&&key===_planKey)return _plan;
+ const L=activeLeagues();
+ const first=L.map(l=>l.start).sort()[0],last=L.map(l=>l.end).sort().slice(-1)[0];
+ const w0=mon(S.planStart),firstW=mon(first),lastW=mon(last);
+ const days=[...S.days].sort((a,b)=>((a+6)%7)-((b+6)%7));
+ const weeks=[];let i=0;
+ for(let w=w0;w<=lastW&&i<80;w=addD(w,7),i++){
+  let ph;
+  if(i===0)ph='base';else if(w>firstW)ph='season';else if(w===firstW)ph='taper';else if(w===addD(firstW,-7))ph='sharp';else ph='build';
+  if(i>0&&i%4===0&&ph!=='taper')ph=(ph==='season'?'season-rt':'retest');
+  const slots=days.map(d=>addD(w,(d+6)%7));
+  const sg=L.find(l=>l.id==='singles'),mx=L.find(l=>l.id==='mixed');
+  const sOn=sg&&w<=sg.end&&addD(w,6)>=addD(sg.start,-7),mOn=mx&&w<=mx.end&&addD(w,6)>=addD(mx.start,-7);
+  const E=(sOn&&(!mOn||i%2===0))?'E1':(mOn?'E2':'E1');
+  let types;
+  if(ph==='base')types=['TA','TB','C'];
+  else if(ph==='build')types=['A','B',(S.mixedOn&&i>=2)?'D':'C'];
+  else if(ph==='retest')types=['TA','TB','X'];
+  else if(ph==='sharp')types=['E1',S.mixedOn?'E2':'C','C'];
+  else if(ph==='season')types=['W',E,'L'];
+  else if(ph==='season-rt')types=['TQ',E,'L'];
+  const prio={base:['TA','TB','C'],build:['A','C','D','B'],retest:['TA','TB','X'],sharp:['E1','C','E2'],season:['L','W','E1','E2'],'season-rt':['L','TQ','E1','E2']};
+  let s=[];
+  if(ph==='taper'){
+   let sl=slots.slice();
+   if(!sl.includes(first)){sl[sl.length-1]=first;sl.sort()}
+   const before=['E1s','X'];let bi=0;
+   s=sl.map(d=>({date:d,type:d===first?'L':(d<first?(before[bi++]||'X'):'X'),open:d===first}));
+  }else{
+   const avail=slots.map((d,k)=>({d,k})).filter(o=>!S.blackout[o.d]&&o.d>=S.planStart);
+   const keep=new Set(prio[ph].filter(t=>types.includes(t)).slice(0,avail.length));
+   const kept=types.filter(t=>keep.has(t));
+   s=avail.map((o,j)=>({date:o.d,type:kept[j]})).filter(x=>x.type);
+  }
+  s.forEach(x=>{x.id=x.date;if(st.moves[x.id])x.date=st.moves[x.id];x.wk=i;x.ph=ph});
+  s.sort((a,b)=>a.date<b.date?-1:1);
+  const off=slots.filter(d=>S.blackout[d]).map(d=>({date:d,off:S.blackout[d]}));
+  weeks.push({i,start:w,end:addD(w,6),ph,s,off,sOn,mOn});
+ }
+ _plan=weeks;_planKey=key;return weeks;
+}
+const allSess=()=>plan().flatMap(w=>w.s);
+const sessBy=id=>allSess().find(s=>s.id===id);
+const sst=s=>(st.sessions[s.id]||{}).st;
+
+/* ---------- 측정 계산 ---------- */
+function series(k){return st.tests.filter(x=>x.t===k).sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0)}
+function targetDates(){const L=activeLeagues();return [L.map(l=>l.start).sort()[0],L.map(l=>l.end).sort().slice(-1)[0]]}
+function targets(k){
+ const s=series(k);if(!s.length)return null;
+ const b=s[0].v,D=TESTS[k];let t1,t2;
+ if(D.max){t1=Math.min(Math.round(D.max*.9),b+Math.ceil(D.max*.15));t2=Math.min(Math.round(D.max*.95),b+Math.ceil(D.max*.25));t1=Math.max(t1,b);t2=Math.max(t2,t1)}
+ else if(D.streak){t1=b+Math.max(3,Math.round(b*.3));t2=b+Math.max(5,Math.round(b*.6))}
+ else{t1=+(b-.8).toFixed(1);t2=+(b-1.5).toFixed(1)}
+ const o=st.targets[k]||{};
+ return {b,bd:s[0].d,t1:o.t1!=null?o.t1:t1,t2:o.t2!=null?o.t2:t2,last:s[s.length-1].v,ld:s[s.length-1].d,n:s.length};
+}
+function expected(k,day){
+ const g=targets(k);if(!g)return null;const[d1,d2]=targetDates();
+ if(day<=g.bd)return g.b;
+ if(day<=d1)return g.b+(g.t1-g.b)*diffD(g.bd,day)/Math.max(1,diffD(g.bd,d1));
+ if(day<=d2)return g.t1+(g.t2-g.t1)*diffD(d1,day)/Math.max(1,diffD(d1,d2));
+ return g.t2;
+}
+function pace(k){
+ const g=targets(k);if(!g)return {txt:'기준 측정 전',cls:'mut',gap:.5};
+ if(g.n<2)return {txt:'기준 잡힘',cls:'mut',gap:0};
+ const e=expected(k,g.ld),low=TESTS[k].low;
+ const diff=low?(e-g.last):(g.last-e);
+ const span=Math.abs(g.t2-g.b)||1;
+ if(diff>=-0.001)return {txt:'제 속도',cls:'ok',gap:-diff/span};
+ return {txt:'뒤처짐 '+(low?'+':'-')+Math.abs(diff).toFixed(TESTS[k].low?1:0),cls:'late',gap:-diff/span};
+}
+/* 경기 계산 */
+function mstat(m){const c=m.c||{};const fsT=(c.fi||0)+(c.fo||0);return {fs:fsT?c.fi/fsT:null,df:c.df||0,wue:(c.ue||0)?(c.w||0)/c.ue:null,gw:(m.gw+m.gl)?m.gw/(m.gw+m.gl):null,re:c.re||0,poach:c.po||0}}
+function recentAvg(n=3,filter){
+ const ms=st.matches.filter(filter||(()=>true)).sort((a,b)=>a.date<b.date?1:-1).slice(0,n);if(!ms.length)return null;
+ const avg=k=>{const v=ms.map(m=>mstat(m)[k]).filter(x=>x!=null);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null};
+ return {n:ms.length,fs:avg('fs'),df:avg('df'),wue:avg('wue'),gw:avg('gw'),re:avg('re'),poach:avg('poach'),reasons:ms.flatMap(m=>m.why||[])};
+}
+function weakest(){
+ const sc={};
+ for(const f in FACTORS){if(f==='N'&&!st.settings.mixedOn)continue;const g=FACTORS[f].tests.map(k=>pace(k).gap);sc[f]=g.reduce((a,b)=>a+b,0)/g.length}
+ const r=recentAvg(3);
+ if(r){if(r.df!=null&&r.df>2.5)sc.S+=.2;if(r.fs!=null&&r.fs<.6)sc.S+=.1;if(r.wue!=null&&r.wue<.8)sc.G+=.15;if(r.re>4)sc.R+=.15;
+  const map={serve:'S',ret:'R',rally:'G',net:'N',fit:'F'};r.reasons.forEach(x=>{const f=map[x];if(f&&sc[f]!=null)sc[f]+=.12})}
+ sc.P-=.05; // 근거 약함
+ return Object.keys(sc).sort((a,b)=>sc[b]-sc[a])[0]||'S';
+}
+
+/* ---------- 화면 ---------- */
+let tab='today';
+const $=id=>document.getElementById(id);
+function render(){
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+ const t=today();const L=activeLeagues();
+ $('hdr').textContent=L.map(l=>{const d=diffD(t,l.start);return (l.id==='mixed'?'혼복 ':'단식 ')+(d>0?'D-'+d:(t<=l.end?'진행 중':'끝'))}).join(' · ');
+ $('main').innerHTML=({today:vToday,plan:vPlan,factors:vFactors,match:vMatch,tests:vTests})[tab]();
+ if(tab==='plan'){const c=document.getElementById('curwk');if(c)c.scrollIntoView({block:'center'})}
+}
+function pill(s){
+ const t=today(),x=sst(s);const cls=x==='done'?'done':x==='skip'?'skip':'';
+ const mark=x==='done'?'✓':x==='skip'?'–':'';
+ return `<button class="pill ${cls} ${s.date===t?'today':''}" data-a="open" data-id="${s.id}">${mdw(s.date)} ${SES[s.type].sh}${s.open?' 개막':''} ${mark}</button>`;
+}
+function backupBanner(){
+ const n=st.tests.length+st.matches.length+Object.keys(st.sessions).length;
+ if(!n)return '';const d=st.lastExport?diffD(st.lastExport,today()):999;
+ if(d<14)return '';
+ return `<div class="banner">기록은 이 폰에만 있어요. ${st.lastExport?d+'일째 백업 안 함':'아직 백업 안 함'} <button class="btn s" data-a="export">백업 받기</button></div>`;
+}
+function vToday(){
+ const t=today(),P=plan(),all=P.flatMap(w=>w.s);
+ const next=all.filter(s=>s.date>=t&&!sst(s)).sort((a,b)=>a.date<b.date?-1:1)[0];
+ const missed=all.filter(s=>s.date<t&&s.date>=addD(t,-14)&&!sst(s));
+ const wk=P.find(w=>t>=w.start&&t<=w.end)||P[0];
+ const L=activeLeagues();
+ let h=backupBanner();
+ h+=`<div class="dd">`+L.map(l=>{const d=diffD(t,l.start);return `<div><div class="sub">${esc(l.name)}</div><div class="big">${d>0?'D-'+d:(t<=l.end?'진행 중':'끝')}</div><div class="sub">${mdw(l.start)} ~ ${mdw(l.end)}</div></div>`}).join('')+`</div>`;
+ const dl=st.settings.deadlines.filter(x=>x.date>=t).sort((a,b)=>a.date<b.date?-1:1).slice(0,3);
+ if(dl.length)h+=`<div class="card"><h2>다가오는 마감</h2>`+dl.map(x=>{const d=diffD(t,x.date);return `<div class="row" style="justify-content:space-between;padding:3px 0"><span>${esc(x.text)}</span><b class="${d<=7?'late':''}">${d===0?'오늘':'D-'+d} · ${md(x.date)}</b></div>`}).join('')+`</div>`;
+ if(missed.length)h+=`<div class="card"><h2>표시 안 한 세션 ${missed.length}개</h2>`+missed.map(s=>`<div class="row" style="justify-content:space-between;padding:3px 0"><span>${mdw(s.date)} ${SES[s.type].n}</span><span><button class="btn s" data-a="mark" data-id="${s.id}" data-v="done">했음</button> <button class="btn s" data-a="mark" data-id="${s.id}" data-v="skip">못 함</button></span></div>`).join('')+`</div>`;
+ if(wk)h+=`<div class="card"><div class="row" style="justify-content:space-between"><h2>이번 주 · W${wk.i+1}</h2><span class="chip" style="background:${PH[wk.ph].c}">${PH[wk.ph].n}</span></div><div class="sub">${PH[wk.ph].d}</div><div style="margin-top:6px">${wk.s.map(pill).join('')}${wk.off.map(o=>`<span class="pill off">${mdw(o.date)} ${esc(o.off)}</span>`).join('')}</div></div>`;
+ if(next)h+=sessionCard(next,true);
+ h+=goalsCard();
+ return h;
+}
+function goalsCard(){
+ const t=today();const L=activeLeagues();
+ let h=`<div class="card"><h2>목표</h2>`;
+ for(const l of L){
+  const ms=st.matches.filter(m=>m.kind===(l.id==='mixed'?'lm':'ls')&&m.date>=l.start&&m.date<=l.end);
+  const w=ms.filter(m=>m.res==='W').length,lo=ms.length-w;
+  if(l.id==='singles')h+=`<div style="margin:6px 0"><b>단식</b> ${esc(l.goal)}<div class="row" style="justify-content:space-between"><span class="sub">${w}승 ${lo}패</span><span class="sub">${w}/3</span></div><div class="bar"><i style="width:${Math.min(100,w/3*100)}%"></i></div></div>`;
+  else h+=`<div style="margin:6px 0"><b>혼복</b> ${esc(l.goal)}<div class="row" style="justify-content:space-between"><span class="sub">${w}승 ${lo}패</span><span class="sub">${ms.length?Math.round(w/ms.length*100)+'%':'-'}</span></div><div class="bar"><i style="width:${ms.length?w/ms.length*100:0}%"></i></div></div>`;
+ }
+ const r=recentAvg(3);
+ h+=`<h3>경기 지표 (최근 ${r?r.n:0}경기)</h3><table><tr><th>지표</th><th class="n">나</th><th class="n">3.5 평균</th><th class="n">목표</th></tr>`+BENCH.map(b=>{let v='-';if(r&&r[b.k]!=null)v=(b.k==='fs'||b.k==='gw')?Math.round(r[b.k]*100)+'%':r[b.k].toFixed(b.k==='df'?1:2);return `<tr><td>${b.n}</td><td class="n"><b>${v}</b></td><td class="n mut">${b.v35}</td><td class="n">${b.goal}</td></tr>`}).join('')+`</table>`;
+ const P=plan();const past=P.filter(w=>w.end<t).slice(-4);
+ if(past.length){const pl=past.reduce((a,w)=>a+w.s.length,0),dn=past.reduce((a,w)=>a+w.s.filter(s=>sst(s)==='done').length,0);h+=`<h3>꾸준함 (지난 ${past.length}주)</h3><div class="row" style="justify-content:space-between"><span class="sub">${dn}/${pl} 세션 · 목표 83%</span><b class="${pl&&dn/pl>=.83?'ok':'late'}">${pl?Math.round(dn/pl*100):0}%</b></div>`}
+ const f=weakest();h+=`<h3>지금 가장 먼 요소</h3><div>${FACTORS[f].n} <span class="sub">→ 다음 "약점" 세션이 이걸로</span></div>`;
+ return h+`</div>`;
+}
+function sessionCard(s,isNext){
+ const S=SES[s.type],rec=st.sessions[s.id]||{},bl=S.blocks();
+ const tot=bl.reduce((a,b)=>a+(b.m||0),0);
+ let h=`<div class="card"><div class="row" style="justify-content:space-between"><h2>${isNext?'다음: ':''}${mdw(s.date)} ${S.n}${s.open?' (개막)':''}</h2><span class="chip" style="background:${PH[s.ph].c}">${PH[s.ph].n}</span></div><div class="sub">${tot}분${S.who?' · '+S.who:''}${S.dyn?' · 지금 약점: '+FACTORS[weakest()].n:''}</div>`;
+ bl.forEach((b,j)=>{
+  h+=`<div class="blk"><div class="row" style="justify-content:space-between"><span class="t">${b.m?b.m+'분 · ':''}${esc(b.t)}</span>`;
+  if(b.test){const v=(st.tests.find(x=>x.t===b.test&&x.sid===s.id)||{}).v;h+=`<span><input type="number" inputmode="decimal" step="any" placeholder="${TESTS[b.test].u}" value="${v!=null?v:''}" data-a="tv" data-id="${s.id}" data-k="${b.test}"> <span class="sub">${TESTS[b.test].u}</span></span>`}
+  else if(b.pass){const p=(rec.pass||{})[j];h+=`<button class="tog ${p===true?'y':p===false?'n':''}" data-a="pass" data-id="${s.id}" data-j="${j}">${p===true?'통과':p===false?'아직':'통과?'}</button>`}
+  h+=`</div>`;
+  if(b.how)h+=`<div class="how">${esc(b.how)}</div>`;
+  if(b.test){const g=targets(b.test);if(g)h+=`<div class="pass">기준 ${g.b} → 1차 ${g.t1} → 2차 ${g.t2}</div>`}
+  if(b.pass)h+=`<div class="pass">통과: ${esc(b.pass)}</div>`;
+  if(b.cue)h+=`<div class="cue">${esc(b.cue)}</div>`;
+  h+=`</div>`;
+ });
+ if(S.solo)h+=`<div class="sub" style="margin-top:4px">${esc(S.solo)}</div>`;
+ h+=`<details><summary>비 오면</summary><div class="sub">${RAIN}</div></details>`;
+ const x=rec.st;
+ h+=`<div class="row" style="margin-top:10px"><button class="btn ${x==='done'?'':'p'}" data-a="mark" data-id="${s.id}" data-v="${x==='done'?'':'done'}">${x==='done'?'완료 취소':'완료'}</button><button class="btn" data-a="mark" data-id="${s.id}" data-v="${x==='skip'?'':'skip'}">${x==='skip'?'건너뜀 취소':'건너뜀'}</button><button class="btn" data-a="move" data-id="${s.id}">날짜 바꾸기</button></div>`;
+ return h+`</div>`;
+}
+function vPlan(){
+ const t=today(),P=plan(),L=activeLeagues();
+ let h=`<div class="card"><h2>역산 계획</h2><div class="sub">${L.map(l=>esc(l.name)+' '+md(l.start)+'~'+md(l.end)).join('<br>')}<br>주 ${st.settings.days.length}회 (${[...st.settings.days].sort((a,b)=>((a+6)%7)-((b+6)%7)).map(d=>DOW[d]).join('·')}). 4주마다 재측정. 세션을 누르면 내용이 나와요. 순서는 강제 아님.</div></div>`;
+ const dl=st.settings.deadlines;
+ for(const w of P){
+  const cur=t>=w.start&&t<=w.end;
+  const marks=[...L.filter(l=>l.start>=w.start&&l.start<=w.end).map(l=>(l.id==='mixed'?'혼복':'단식')+' 개막 '+md(l.start)),...L.filter(l=>l.end>=w.start&&l.end<=w.end).map(l=>(l.id==='mixed'?'혼복':'단식')+' 끝 '+md(l.end)),...dl.filter(x=>x.date>=w.start&&x.date<=w.end).map(x=>'마감 '+md(x.date))];
+  h+=`<div class="card" ${cur?'id="curwk" style="border-color:var(--acc);border-width:2px"':''}><div class="row" style="justify-content:space-between"><b>W${w.i+1} · ${md(w.start)}~${md(w.end)}</b><span class="chip" style="background:${PH[w.ph].c}">${PH[w.ph].n}</span></div>${marks.length?`<div class="sub">${marks.map(esc).join(' · ')}</div>`:''}<div>${w.s.map(pill).join('')}${w.off.map(o=>`<span class="pill off">${mdw(o.date)} ${esc(o.off)}</span>`).join('')}</div></div>`;
+ }
+ return h;
+}
+function spark(k){
+ const s=series(k);if(s.length<2)return '';const v=s.map(x=>x.v),mn=Math.min(...v),mx=Math.max(...v),r=(mx-mn)||1;
+ const pts=v.map((y,i)=>(i/(v.length-1)*60).toFixed(1)+','+(18-(y-mn)/r*16).toFixed(1)).join(' ');
+ return `<svg class="sp" width="62" height="20"><polyline fill="none" stroke="#2f7d4f" stroke-width="2" points="${pts}"/></svg>`;
+}
+function vFactors(){
+ const wf=weakest(),mOn=st.settings.mixedOn;
+ let h=`<div class="card"><h2>승리에 영향을 주는 요소</h2><div class="sub">비중 = 일주일 훈련 시간 배분. 근거 강도: 강 / 중 / 약. 프로 연구가 대부분이라 동호인에겐 "방향"으로만 써요. 지금 가장 먼 요소: <b>${FACTORS[wf].n}</b></div></div>`;
+ for(const f in FACTORS){
+  const F=FACTORS[f];let w=F.w;if(!mOn){if(f==='N')w=0;if(f==='G')w+=15}
+  h+=`<div class="card" ${f===wf?'style="border-color:var(--warn)"':''}><div class="row" style="justify-content:space-between"><h2>${F.n}</h2><span class="sub">비중 ${w}% · 근거 ${F.ev}</span></div><div class="bar"><i style="width:${w*3}%"></i></div><div style="margin-top:6px">${esc(F.why)}</div><div class="sub small">출처: ${esc(F.src)}</div><table style="margin-top:6px"><tr><th>측정</th><th class="n">기준</th><th class="n">최근</th><th class="n">1차·2차</th><th class="n">속도</th></tr>`;
+  for(const k of F.tests){const g=targets(k),p=pace(k);h+=`<tr><td>${TESTS[k].n} ${spark(k)}</td><td class="n">${g?g.b:'-'}</td><td class="n"><b>${g?g.last:'-'}</b></td><td class="n">${g?g.t1+' · '+g.t2:'-'}</td><td class="n ${p.cls}">${p.txt}</td></tr>`}
+  h+=`</table></div>`;
+ }
+ h+=`<div class="card"><h2>측정 방법</h2>`+Object.entries(TESTS).map(([k,x])=>`<div class="blk"><span class="t">${x.n}</span> <span class="sub">(${x.u}, ${FACTORS[x.f].n})</span><div class="how">${esc(x.how)}</div></div>`).join('')+`<div class="sub" style="margin-top:6px">목표 자동 설정: 첫 기록 = 기준. 20개짜리는 1차 +3(최대 18), 2차 +5(최대 19). 연속 랠리는 1차 +30%(최소 +3), 2차 +60%(최소 +5). 스파이더는 1차 -0.8초, 2차 -1.5초. 1차 = 첫 리그 개막, 2차 = 마지막 리그 끝. 측정 탭에서 바꿀 수 있어요.</div></div>`;
+ return h;
+}
+const KINDS={ls:'리그 단식',lm:'리그 혼복',ps:'연습 단식',pd:'연습 복식'};
+const CNT=[['fi','첫 서브 IN'],['fo','첫 서브 OUT'],['df','더블폴트'],['re','리턴 미스'],['ue','언포스드 에러'],['w','위너'],['bps','BP 막음'],['bpl','BP 내줌']];
+const CNTD=[['po','포치 시도'],['nw','네트 득점'],['nl','네트 실점']];
+const WHY=[['serve','서브'],['ret','리턴'],['rally','랠리 에러'],['net','네트'],['fit','체력'],['mind','멘탈']];
+function vMatch(){
+ const lv=st.live;
+ if(lv){
+  const dbl=lv.kind==='lm'||lv.kind==='pd';
+  let h=`<div class="card"><div class="row" style="justify-content:space-between"><h2>${KINDS[lv.kind]} ${lv.opp?'vs '+esc(lv.opp):''}</h2><span class="sub">${mdw(lv.date)}</span></div><div class="sub">누를 때마다 +1. 첫 서브 OUT 뒤 세컨도 나가면 "더블폴트"도 누르기.</div></div><div class="grid">`;
+  for(const[k,n]of[...CNT,...(dbl?CNTD:[])])h+=`<button class="cnt" data-a="inc" data-k="${k}"><b>${lv.c[k]||0}</b>${n}</button>`;
+  h+=`</div><div class="row" style="margin:10px 0"><button class="btn" data-a="undo">되돌리기</button><button class="btn" data-a="cancelLive">기록 버리기</button></div>`;
+  h+=`<div class="card"><h2>끝내기</h2><div class="row"><label>내 게임 <input type="number" inputmode="numeric" id="gw" style="width:60px" value="${lv.gw!=null?lv.gw:''}"></label><label>상대 게임 <input type="number" inputmode="numeric" id="gl" style="width:60px" value="${lv.gl!=null?lv.gl:''}"></label></div><div class="row" style="margin-top:8px"><input type="text" id="score" placeholder="스코어 (예: 6-4 3-6 10-8)" style="flex:1"></div><div class="row" style="margin-top:8px"><span class="sub">결과</span><button class="tog ${lv.res==='W'?'y':''}" data-a="res" data-v="W">승</button><button class="tog ${lv.res==='L'?'n':''}" data-a="res" data-v="L">패</button></div><div style="margin-top:8px"><span class="sub">가장 많이 잃은 이유 (1~2개)</span><br>${WHY.map(([k,n])=>`<button class="tog ${(lv.why||[]).includes(k)?'y':''}" data-a="why" data-k="${k}" style="margin:3px 3px 0 0">${n}</button>`).join('')}</div><button class="btn p" style="margin-top:10px;width:100%" data-a="endLive">저장</button></div>`;
+  return h;
+ }
+ let h=`<div class="card"><h2>새 경기 기록</h2><div class="row"><select id="mk">${Object.entries(KINDS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select><input type="text" id="mo" placeholder="상대 (선택)" style="flex:1;min-width:120px"><input type="date" id="mdate" value="${today()}"></div><button class="btn p" style="margin-top:8px;width:100%" data-a="startLive">시작</button></div>`;
+ const r=recentAvg(5);
+ h+=`<div class="card"><h2>최근 ${r?r.n:0}경기 평균</h2><table><tr><th>지표</th><th class="n">나</th><th class="n">3.5</th><th class="n">4.0</th><th class="n">목표</th></tr>`+BENCH.map(b=>{let v='-';if(r&&r[b.k]!=null)v=(b.k==='fs'||b.k==='gw')?Math.round(r[b.k]*100)+'%':r[b.k].toFixed(b.k==='df'?1:2);return `<tr><td>${b.n}</td><td class="n"><b>${v}</b></td><td class="n mut">${b.v35}</td><td class="n mut">${b.v40}</td><td class="n">${b.goal}</td></tr>`}).join('')+`</table><div class="sub small">3.5·4.0 평균: SwingVision 25만+ 세션(2026). 위너:에러는 같은 레벨에선 거의 안 변해요.</div></div>`;
+ const ms=[...st.matches].sort((a,b)=>a.date<b.date?1:-1);
+ h+=`<div class="card"><h2>경기 ${ms.length}개</h2>`+(ms.length?`<table><tr><th>날짜</th><th>종류</th><th class="n">게임</th><th class="n">1st</th><th class="n">DF</th><th></th></tr>`+ms.map(m=>{const s=mstat(m);return `<tr><td>${md(m.date)}</td><td>${KINDS[m.kind]}${m.opp?'<br><span class="sub">'+esc(m.opp)+'</span>':''}</td><td class="n"><b class="${m.res==='W'?'ok':m.res==='L'?'badc':''}">${m.res||''}</b> ${m.gw}-${m.gl}</td><td class="n">${s.fs!=null?Math.round(s.fs*100)+'%':'-'}</td><td class="n">${s.df}</td><td class="n"><button class="btn s" data-a="delMatch" data-id="${m.id}">✕</button></td></tr>`}).join('')+`</table>`:'<div class="sub">아직 없음. 첫 경기는 기준 측정 주 연습 세트.</div>')+`</div>`;
+ return h;
+}
+function vTests(){
+ const t=today();
+ let h=backupBanner()+`<div class="card"><h2>측정 기록하기</h2><div class="row"><select id="tk">${Object.entries(TESTS).map(([k,x])=>`<option value="${k}">${x.n}</option>`).join('')}</select><input type="number" inputmode="decimal" step="any" id="tvv" placeholder="값" style="width:80px"><input type="date" id="tdd" value="${t}"><button class="btn p" data-a="addTest">저장</button></div><div class="sub" style="margin-top:4px">세션 안에서 입력해도 같은 곳에 쌓여요.</div></div>`;
+ h+=`<div class="card"><h2>목표와 속도</h2><table><tr><th>측정</th><th class="n">기준</th><th class="n">최근</th><th class="n">1차</th><th class="n">2차</th><th class="n">속도</th></tr>`;
+ for(const k in TESTS){if(TESTS[k].f==='N'&&!st.settings.mixedOn)continue;const g=targets(k),p=pace(k);h+=`<tr><td>${TESTS[k].n} ${spark(k)}</td><td class="n">${g?g.b:'-'}</td><td class="n"><b>${g?g.last:'-'}</b></td><td class="n">${g?`<button class="btn s" data-a="setT" data-k="${k}" data-w="t1">${g.t1}</button>`:'-'}</td><td class="n">${g?`<button class="btn s" data-a="setT" data-k="${k}" data-w="t2">${g.t2}</button>`:'-'}</td><td class="n ${p.cls}">${p.txt}</td></tr>`}
+ const[d1,d2]=targetDates();
+ h+=`</table><div class="sub small">1차 = ${md(d1)} (첫 개막), 2차 = ${md(d2)} (마지막 리그 끝). 목표 숫자를 누르면 바꿀 수 있어요.</div></div>`;
+ const ts=[...st.tests].sort((a,b)=>a.d<b.d?1:-1).slice(0,30);
+ if(ts.length)h+=`<div class="card"><h2>최근 기록</h2><table>`+ts.map(x=>`<tr><td>${md(x.d)}</td><td>${TESTS[x.t].n}</td><td class="n"><b>${x.v}</b> ${TESTS[x.t].u}</td><td class="n"><button class="btn s" data-a="delTest" data-id="${x.id}">✕</button></td></tr>`).join('')+`</table></div>`;
+ h+=`<div class="card"><h2>데이터</h2><div class="row"><button class="btn" data-a="export">백업 받기 (.json)</button><button class="btn" data-a="import">백업 불러오기</button><button class="btn" data-a="summary">요약 복사 (Slack용)</button></div><div class="sub" style="margin-top:4px">기록은 이 기기 브라우저에만 저장돼요. 마지막 백업: ${st.lastExport?md(st.lastExport):'없음'}</div></div>`;
+ h+=vSettings();
+ return h;
+}
+function vSettings(){
+ const S=st.settings;
+ let h=`<div class="card"><h2>설정</h2><div class="sub">날짜를 바꾸면 계획이 다시 역산돼요.</div>`;
+ S.leagues.forEach((l,i)=>{h+=`<h3>${l.id==='mixed'?'혼복':'단식'} 리그</h3><input type="text" data-s="lname" data-i="${i}" value="${esc(l.name)}" style="width:100%"><div class="row" style="margin-top:6px"><input type="date" data-s="lstart" data-i="${i}" value="${l.start}"> ~ <input type="date" data-s="lend" data-i="${i}" value="${l.end}"></div><input type="text" data-s="lgoal" data-i="${i}" value="${esc(l.goal)}" style="width:100%;margin-top:6px">`});
+ h+=`<div class="row" style="margin-top:8px"><label><input type="checkbox" data-s="mixedOn" ${S.mixedOn?'checked':''}> 혼복 참가 (끄면 복식 세션이 단식으로 바뀜)</label></div>`;
+ h+=`<h3>훈련 요일 (3개 권장)</h3><div>${[1,2,3,4,5,6,0].map(d=>`<button class="tog ${S.days.includes(d)?'y':''}" data-a="day" data-d="${d}" style="margin:2px">${DOW[d]}</button>`).join('')}</div>`;
+ h+=`<h3>계획 시작일</h3><input type="date" data-s="planStart" value="${S.planStart}">`;
+ h+=`<h3>못 치는 날</h3>`+Object.entries(S.blackout).sort().map(([d,x])=>`<div class="row" style="justify-content:space-between"><span>${mdw(d)} ${esc(x)}</span><button class="btn s" data-a="delOff" data-d="${d}">✕</button></div>`).join('')+`<div class="row" style="margin-top:6px"><input type="date" id="offd"><input type="text" id="offt" placeholder="이유" style="width:110px"><button class="btn s" data-a="addOff">추가</button></div>`;
+ h+=`<h3>마감</h3>`+S.deadlines.map((x,i)=>`<div class="row" style="justify-content:space-between"><span>${md(x.date)} ${esc(x.text)}</span><button class="btn s" data-a="delDl" data-i="${i}">✕</button></div>`).join('')+`<div class="row" style="margin-top:6px"><input type="date" id="dld"><input type="text" id="dlt" placeholder="내용" style="flex:1;min-width:110px"><button class="btn s" data-a="addDl">추가</button></div>`;
+ h+=`<div style="margin-top:12px"><button class="btn s" data-a="reset">전부 지우고 처음부터</button></div></div>`;
+ return h;
+}
+
+/* ---------- 동작 ---------- */
+function openSheet(html){$('sheetIn').innerHTML=html+`<button class="btn" style="width:100%;margin-top:6px" data-a="close">닫기</button>`;$('sheet').classList.add('on')}
+function closeSheet(){$('sheet').classList.remove('on')}
+let openId=null;
+function refresh(){if($('sheet').classList.contains('on')&&openId){const s=sessBy(openId);if(s)openSheet(sessionCard(s,false))}render()}
+function summary(){
+ const t=today(),P=plan(),wk=P.find(w=>t>=w.start&&t<=w.end);
+ const lines=[`[테니스 시즌 요약 ${t}]`];
+ if(wk)lines.push(`이번 주 W${wk.i+1} ${PH[wk.ph].n}: 세션 ${wk.s.filter(s=>sst(s)==='done').length}/${wk.s.length}`);
+ for(const k in TESTS){const g=targets(k);if(g)lines.push(`${TESTS[k].n}: ${g.last}${TESTS[k].u} (기준 ${g.b}, 1차 ${g.t1}, 2차 ${g.t2}, ${pace(k).txt})`)}
+ const r=recentAvg(3);if(r)lines.push(`최근 ${r.n}경기: 게임 ${r.gw!=null?Math.round(r.gw*100)+'%':'-'}, 첫 서브 ${r.fs!=null?Math.round(r.fs*100)+'%':'-'}, DF ${r.df!=null?r.df.toFixed(1):'-'}, 위너:에러 ${r.wue!=null?r.wue.toFixed(2):'-'}`);
+ lines.push(`가장 먼 요소: ${FACTORS[weakest()].n}`);
+ return lines.join('\n');
+}
+const act={
+ tab:d=>{tab=d.t;closeSheet();render();window.scrollTo(0,0)},
+ open:d=>{openId=d.id;const s=sessBy(d.id);if(s)openSheet(sessionCard(s,false))},
+ close:()=>{openId=null;closeSheet()},
+ mark:d=>{const r=st.sessions[d.id]=st.sessions[d.id]||{};r.st=d.v||undefined;if(!r.st)delete r.st;save();refresh()},
+ pass:d=>{const r=st.sessions[d.id]=st.sessions[d.id]||{};r.pass=r.pass||{};const c=r.pass[d.j];r.pass[d.j]=c===undefined?true:c===true?false:undefined;if(r.pass[d.j]===undefined)delete r.pass[d.j];save();refresh()},
+ move:d=>{const s=sessBy(d.id);const v=prompt('새 날짜 (YYYY-MM-DD)',s?s.date:d.id);if(!v)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return alert('형식: 2026-12-01');if(v===d.id)delete st.moves[d.id];else st.moves[d.id]=v;save();refresh()},
+ export:()=>{const b=new Blob([JSON.stringify(st,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tennis-season-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();st.lastExport=today();save();render()},
+ import:()=>$('imp').click(),
+ summary:async()=>{const s=summary();try{await navigator.clipboard.writeText(s);alert('복사했어요. Slack에 붙여 넣으면 Aside가 읽어요.')}catch(e){prompt('복사해서 쓰세요',s)}},
+ addTest:()=>{const k=$('tk').value,v=parseFloat($('tvv').value),d=$('tdd').value||today();if(isNaN(v))return;st.tests.push({id:Date.now()+''+Math.random().toString(36).slice(2,5),t:k,d,v});save();render()},
+ delTest:d=>{if(!confirm('이 기록 지울까요?'))return;st.tests=st.tests.filter(x=>x.id!==d.id);save();render()},
+ setT:d=>{const g=targets(d.k);const v=prompt(TESTS[d.k].n+' '+(d.w==='t1'?'1차':'2차')+' 목표 (빈칸 = 자동)',g[d.w]);if(v===null)return;st.targets[d.k]=st.targets[d.k]||{};if(v==='')delete st.targets[d.k][d.w];else if(!isNaN(parseFloat(v)))st.targets[d.k][d.w]=parseFloat(v);save();render()},
+ startLive:()=>{st.live={kind:$('mk').value,opp:$('mo').value.trim(),date:$('mdate').value||today(),c:{},log:[]};save();render()},
+ inc:d=>{st.live.c[d.k]=(st.live.c[d.k]||0)+1;st.live.log.push(d.k);save();if(navigator.vibrate)navigator.vibrate(15);render()},
+ undo:()=>{const k=st.live.log.pop();if(k)st.live.c[k]=Math.max(0,(st.live.c[k]||0)-1);save();render()},
+ res:d=>{keepLiveInputs();st.live.res=d.v;save();render()},
+ why:d=>{keepLiveInputs();const w=st.live.why=st.live.why||[];const i=w.indexOf(d.k);if(i>=0)w.splice(i,1);else w.push(d.k);save();render()},
+ cancelLive:()=>{if(!confirm('이 경기 기록을 버릴까요?'))return;st.live=null;save();render()},
+ endLive:()=>{keepLiveInputs();const lv=st.live;if(lv.gw==null||lv.gl==null)return alert('게임 수를 넣어 주세요');if(!lv.res)lv.res=lv.gw>lv.gl?'W':'L';st.matches.push({id:Date.now()+'',date:lv.date,kind:lv.kind,opp:lv.opp,gw:lv.gw,gl:lv.gl,res:lv.res,score:$('score').value.trim(),c:lv.c,why:lv.why||[]});st.live=null;save();render()},
+ delMatch:d=>{if(!confirm('이 경기 지울까요?'))return;st.matches=st.matches.filter(m=>m.id!==d.id);save();render()},
+ day:d=>{const n=+d.d,S=st.settings;if(S.days.includes(n)){if(S.days.length<=1)return;S.days=S.days.filter(x=>x!==n)}else S.days.push(n);save();render()},
+ addOff:()=>{const d=$('offd').value;if(!d)return;st.settings.blackout[d]=$('offt').value.trim()||'쉼';save();render()},
+ delOff:d=>{delete st.settings.blackout[d.d];save();render()},
+ addDl:()=>{const d=$('dld').value,t=$('dlt').value.trim();if(!d||!t)return;st.settings.deadlines.push({date:d,text:t});save();render()},
+ delDl:d=>{st.settings.deadlines.splice(+d.i,1);save();render()},
+ reset:()=>{if(!confirm('기록·설정을 전부 지울까요? (백업 먼저 받기 권장)'))return;st=JSON.parse(JSON.stringify(DEF));save();render()}
+};
+function keepLiveInputs(){const a=$('gw'),b=$('gl');if(!st.live||!a)return;st.live.gw=a.value===''?null:+a.value;st.live.gl=b.value===''?null:+b.value}
+document.addEventListener('click',e=>{
+ if(e.target.id==='sheet'){act.close();return}
+ const b=e.target.closest('[data-a]');if(!b||b.tagName==='INPUT')return;
+ const f=act[b.dataset.a];if(f)f(b.dataset,b);
+});
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.dataset.a==='tv'){const k=el.dataset.k,id=el.dataset.id,v=parseFloat(el.value);const s=sessBy(id);st.tests=st.tests.filter(x=>!(x.t===k&&x.sid===id));if(!isNaN(v))st.tests.push({id:Date.now()+k,t:k,d:s?s.date:id,v,sid:id});save();refresh();return}
+ const s=el.dataset.s;if(!s)return;const S=st.settings,i=+el.dataset.i;
+ if(s==='lname')S.leagues[i].name=el.value;
+ else if(s==='lgoal')S.leagues[i].goal=el.value;
+ else if(s==='lstart'&&el.value)S.leagues[i].start=el.value;
+ else if(s==='lend'&&el.value)S.leagues[i].end=el.value;
+ else if(s==='mixedOn')S.mixedOn=el.checked;
+ else if(s==='planStart'&&el.value)S.planStart=el.value;
+ save();render();
+});
+$('imp').addEventListener('change',async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{const s=JSON.parse(await f.text());if(s.v!==1||!s.settings)throw 0;if(!confirm('지금 기록을 이 백업으로 바꿀까요?'))return;st=s;save();render();alert('불러왔어요')}catch(x){alert('이 파일은 백업 파일이 아니에요')}
+ e.target.value='';
+});
+render();
+</script>
+</body>
+</html>
