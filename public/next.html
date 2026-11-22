@@ -100,7 +100,7 @@ const OKR_DEF=[
  {id:'o-S',disc:'S',title:'TLA 봄 단식 플레이오프 진출',start:'2026-11-23',end:'2027-03-14',lstart:'2027-01-19',krs:[{id:'k1',type:'wins',target:3},{id:'k2',type:'gamepct',target:55},{id:'k3',type:'factor',fid:'f-serve',target:5},{id:'k4',type:'freq',target:2.5}],ms:{}},
  {id:'o-D',disc:'D',title:'USTA 혼복 라인 승률 50%',start:'2026-11-23',end:'2027-04-04',lstart:'2027-01-09',krs:[{id:'k1',type:'winrate',target:50},{id:'k2',type:'gamepct',target:50},{id:'k3',type:'factor',fid:'f-net',target:10},{id:'k4',type:'count',target:4}],ms:{}}];
 let db={logs:[],factors:[],events:[],settings:[],todos:[],notes:[]};
-let tab='today',sel=TODAY,calM=TODAY.slice(0,7),ed=null,pick=false,fsel=null,adisc='S',toastT=null,okEdit=false,nd=null;
+let day=TODAY,gx={};let tab='today',sel=TODAY,calM=TODAY.slice(0,7),ed=null,pick=false,fsel=null,adisc='S',toastT=null,okEdit=false,nd=null;
 
 async function load(){const me=await (await fetch('/api/auth?me=1')).json();if(!me.authed){document.getElementById('app').innerHTML=`<div style="padding-top:30vh"><div class="h1">테니스</div><button class="btn" onclick="location.href='/api/auth?start=1'">Google로 계속하기</button></div>`;return}
  db={...db,...(await (await fetch('/api/db')).json())};render()}
@@ -172,20 +172,22 @@ function msLabel(o,d){if(d===o.end)return '목표';const ev=EV().find(e=>e.pri==
 /* 화면 */
 function render(){document.getElementById('nav').innerHTML=[['today','오늘'],['cal','캘린더'],['ana','분석'],['set','설정']].map(([k,n])=>`<button class="${tab===k&&!ed?'on':''}" data-a="tab" data-t="${k}">${n}</button>`).join('');
  document.getElementById('app').innerHTML=ed?vEdit():({today:vToday,cal:vCal,ana:vAna,set:vSet})[tab]()}
-function okrMini(){return `<div class="card" data-a="tab" data-t="ana" style="cursor:pointer"><div class="lbl">목표</div>${OKR().map(o=>{const ps=o.krs.map(k=>krP(k,krNow(o,k))).filter(v=>v!=null);const p=ps.length?ps.reduce((a,b)=>a+b,0)/ps.length:null;const nx=msDates(o).filter(d=>d>=TODAY).sort()[0];
- return `<div style="margin-top:10px"><div class="row sb"><b>${DN[o.disc]}</b><span class="mut" style="text-align:right">${esc(o.title)}</span></div><div class="bar ${p==null?'ex':''}"><i style="width:${(p==null?.2:p)*100}%"></i></div>${nx?`<div class="mut sm" style="margin-top:4px">다음 단계 ${md(nx)}: ${o.krs.map(k=>{const v=msVal(o,k,nx);return v==null?'':`${krName(k)} ${v}${KRT[k.type].u}`}).filter(Boolean).slice(0,2).join(' · ')}</div>`:''}</div>`}).join('')}</div>`}
+function okrMini(){return `<div class="card"><div class="lbl">목표</div>${OKR().map(o=>{const ps=o.krs.map(k=>krP(k,krNow(o,k))).filter(v=>v!=null);const p=ps.length?ps.reduce((a,b)=>a+b,0)/ps.length:null;const D=msDates(o).filter(d=>d>=TODAY).sort();const open=gx[o.id];
+ let h=`<div style="margin-top:10px"><button class="row sb" style="width:100%;text-align:left" data-a="gx" data-id="${o.id}"><span><b>${DN[o.disc]}</b> <span class="mut">${esc(o.title)}</span></span><span class="mut" style="font-size:18px">${open?'▴':'▾'}</span></button><div class="bar ${p==null?'ex':''}"><i style="width:${(p==null?.2:p)*100}%"></i></div>`;
+ if(open){h+=`<div style="margin:8px 0 0 4px">${o.krs.map(k=>{const v=krNow(o,k),q=krP(k,v);return `<div style="padding:6px 0"><div class="row sb sm"><span>${esc(krName(k))}</span><span class="mut">${v==null?'–':v} / <b style="color:var(--ink)">${k.target}</b>${KRT[k.type].u}</span></div><div class="bar" style="height:6px"><i style="width:${(q||0)*100}%"></i></div></div>`}).join('')}<div class="tl" style="margin-top:6px">${D.slice(0,3).map((d,i)=>`<div class="ms ${d===o.end?'goal':i===0?'next':''}" style="padding:4px 0 8px"><span class="nd" style="top:7px"></span><div class="row sb sm"><b>${msLabel(o,d)}</b><span class="mut">${md(d)}</span></div><div class="kv">${o.krs.map(k=>{const t=msVal(o,k,d);return t==null?'':`<span>${esc(krName(k))} <b>${t}</b>${KRT[k.type].u}</span>`}).join('')}</div></div>`).join('')}</div><button class="btn2" style="margin-top:6px" data-a="tab" data-t="ana" data-d="${o.disc}">전체 단계 · 조정 ›</button></div>`}
+ else if(D[0])h+=`<div class="mut sm" style="margin-top:4px">다음 단계 ${md(D[0])}: ${o.krs.map(k=>{const v=msVal(o,k,D[0]);return v==null?'':`${krName(k)} ${v}${KRT[k.type].u}`}).filter(Boolean).slice(0,2).join(' · ')}</div>`;
+ return h+'</div>'}).join('')}</div>`}
 function dayChips(s){const ws=mon(s.date);let h='<div class="days">';for(let k=0;k<7;k++){const d=addD(ws,k);h+=`<button class="${d===s.date?'on':''}" data-a="move" data-id="${s.id}" data-d="${d}">${DOW[pd(d).getDay()]}<b>${pd(d).getDate()}</b></button>`}
  return h+`<button data-a="move" data-id="${s.id}" data-d="${addD(s.date,7)}">다음<b>›</b></button><button data-a="rest" data-id="${s.id}" style="color:var(--r)">쉬기<b>–</b></button></div>`}
 function itemRow(s){return `<div class="item"><div class="row"><button class="ck" data-a="quickDone" data-id="${s.id}"></button><div class="it-t">${DN[s.disc]} ${kLabel(s.kind)}</div><button class="btn2" data-a="start" data-id="${s.id}">기록</button></div>${dayChips(s)}</div>`}
 function logLine(l){const t=l.kind==='drill'?`${DN[l.disc]} 드릴 · ${(l.drills||[]).length}개`:`${DN[l.disc]} ${l.league?'리그 ':''}${kLabel(l.kind)}${l.gw!=null&&l.gw!==''?` · ${l.gw}:${l.gl}`:''}`;return `<div class="item row" data-a="editLog" data-id="${l.id}" style="cursor:pointer"><span class="ck y">✓</span><div style="flex:1;min-width:0"><div class="it-t" style="font-size:17px">${t}</div>${l.memo?`<div class="mut sm">${esc(l.memo)}</div>`:''}</div><span class="mut">${md(l.date)}</span></div>`}
 function weekList(n,title){const ws=wkStart(n);let h=`<div class="card"><div class="row sb"><div class="lbl">${title}</div><span class="mut sm">W${n} · ${md(ws)}~</span></div>`;
- for(let k=0;k<7;k++){const d=addD(ws,k),L=logsOn(d),P=slotsOn(d);if(!L.length&&!P.length)continue;h+=`<div class="wkrow" data-a="goDay" data-d="${d}" style="cursor:pointer"><div class="wkd">${DOW[pd(d).getDay()]} ${pd(d).getDate()}</div><div class="row" style="flex-wrap:wrap;gap:6px">${L.map(l=>`<span class="pill done">${DN[l.disc]} ${kLabel(l.kind)}</span>`).join('')}${P.map(s=>`<span class="pill plan">${DN[s.disc]} ${kLabel(s.kind)}</span>`).join('')}</div></div>`}
+ for(let k=0;k<7;k++){const d=addD(ws,k),L=logsOn(d),P=slotsOn(d);if(!L.length&&!P.length)continue;h+=`<div class="wkrow" data-a="pickDay" data-d="${d}" style="cursor:pointer;${d===day?'background:#F4F6F3;border-radius:10px':''}"><div class="wkd">${DOW[pd(d).getDay()]} ${pd(d).getDate()}</div><div class="row" style="flex-wrap:wrap;gap:6px">${L.map(l=>`<span class="pill done">${DN[l.disc]} ${kLabel(l.kind)}</span>`).join('')}${P.map(s=>`<span class="pill plan">${DN[s.disc]} ${kLabel(s.kind)}</span>`).join('')}</div></div>`}
  return h+'</div>'}
-function vToday(){const n=wkOf(TODAY);let h=`<div class="top"><div class="h1">오늘</div><div class="mut">${md(TODAY)}</div></div>`+okrMini();
- const P=slotsOn(TODAY),L=logsOn(TODAY);
- h+=`<div class="card"><div class="lbl">오늘 할 것</div>${P.map(itemRow).join('')}${L.map(logLine).join('')}${!P.length&&!L.length?`<div class="item"><div class="it-t">쉬는 날</div>${(()=>{const nx=nextPlan(TODAY);return nx?`<div class="mut">다음: ${md(nx.d)} · ${DN[nx.s.disc]} ${kLabel(nx.s.kind)}</div>`:''})()}</div>`:''}<button class="btn2" style="margin-top:10px" data-a="startNew" data-d="${TODAY}">+ 오늘 기록 추가</button></div>`;
+function vToday(){const n=wkOf(day),isT=day===TODAY;let h=`<div class="top"><button class="btn2" data-a="dNav" data-v="-1">‹</button><div style="text-align:center"><div class="h1" style="font-size:24px">${isT?'오늘':md(day)}</div>${isT?`<div class="mut sm">${md(day)}</div>`:`<button class="mut sm" data-a="dToday" style="color:var(--g);font-weight:700">오늘로</button>`}</div><button class="btn2" data-a="dNav" data-v="1">›</button></div>`+okrMini();
+ const P=slotsOn(day),L=logsOn(day);
+ h+=`<div class="card"><div class="lbl">${isT?'오늘 할 것':md(day)+' 할 것'}</div>${P.map(itemRow).join('')}${L.map(logLine).join('')}${!P.length&&!L.length?`<div class="item"><div class="it-t">쉬는 날</div>${(()=>{const nx=nextPlan(day);return nx?`<button class="mut" data-a="pickDay" data-d="${nx.d}">다음: ${md(nx.d)} · ${DN[nx.s.disc]} ${kLabel(nx.s.kind)} ›</button>`:''})()}</div>`:''}<button class="btn2" style="margin-top:10px" data-a="startNew" data-d="${day}">+ 기록 추가</button></div>`;
  if(n>=1)h+=weekList(n,'이번 주');if(n+1>=1&&n+1<=lastW())h+=weekList(Math.max(1,n+1),'다음 주');return h}
-
 /* 기록 */
 function newDrillForm(){return `<div class="card"><div class="lbl">새 드릴</div><input class="inp" id="nd-name" placeholder="이름 (예: 세컨 서브 듀스 20개)" style="margin-top:8px" value="${esc(nd.name||'')}"><div class="chips">${FA().map(f=>`<button class="chip ${nd.fid===f.id?'on':''}" data-a="ndSet" data-k="fid" data-v="${f.id}">${esc(f.name)}</button>`).join('')}</div><div class="chips">${['S','D','SD'].map(k=>`<button class="chip ${nd.disc===k?'on':''}" data-a="ndSet" data-k="disc" data-v="${k}">${DN[k]}</button>`).join('')}</div><input class="inp" id="nd-desc" placeholder="한 줄 설명 (선택)" style="margin-top:8px" value="${esc(nd.desc||'')}"><div class="row" style="margin-top:10px"><button class="btn2" style="flex:1;background:var(--g);color:#fff" data-a="ndAdd">추가</button><button class="btn2" data-a="ndOff">취소</button></div></div>`}
 function vEdit(){const e=ed;let h=`<div class="top"><button class="btn2" data-a="cancel">닫기</button><div class="mut">${md(e.date)}</div></div>`;
@@ -242,7 +244,7 @@ function grabNd(){if(!nd)return;const a=document.getElementById('nd-name'),b=doc
 function okrSave(fn){const L=JSON.parse(JSON.stringify(OKR()));fn(L);save('settings',{...ST(),id:'main',okr:L},true)}
 function fClone(id){return JSON.parse(JSON.stringify(FA().find(x=>x.id===id)))}
 const act={
- tab:d=>{tab=d.t;ed=null;fsel=null;nd=null;render();scrollTo(0,0)},
+ tab:d=>{tab=d.t;if(d.d)adisc=d.d;ed=null;fsel=null;nd=null;render();scrollTo(0,0)},
  goDay:d=>{sel=d.d;calM=d.d.slice(0,7);tab='cal';ed=null;document.getElementById('toast').innerHTML='';render();scrollTo(0,0)},
  selD:d=>{sel=d.d;render()},
  mNav:d=>{const[y,m]=calM.split('-').map(Number);calM=ds(new Date(y,m-1+ +d.v,1,12)).slice(0,7);render()},
@@ -267,6 +269,7 @@ const act={
  fOpen:d=>{fsel=d.id;render();scrollTo(0,0)},fBack:()=>{fsel=null;render()},
  aDisc:d=>{adisc=d.v;render()},
  okEdit:()=>{okEdit=!okEdit;render()},
+ dNav:d=>{day=addD(day,+d.v);render()},dToday:()=>{day=TODAY;render()},pickDay:d=>{day=d.d;tab='today';ed=null;render();scrollTo(0,0)},gx:d=>{gx[d.id]=!gx[d.id];render()},
  ndOn:()=>{grabEd();nd={name:'',fid:(ed&&weakFid(ed.disc))||(FA()[0]||{}).id,disc:ed?ed.disc:'SD',desc:''};render();scrollTo(0,0)},ndOff:()=>{nd=null;render()},
  ndSet:d=>{grabNd();nd[d.k]=d.v;render()},
  ndAdd:()=>{grabNd();if(!nd.name.trim()||!nd.fid)return;const f=fClone(nd.fid);f.drills=f.drills||[];f.drills.push({name:nd.name.trim(),desc:nd.desc||'',disc:nd.disc,att:10});const key=f.id+':'+(f.drills.length-1);save('factors',f,true);
