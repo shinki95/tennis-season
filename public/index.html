@@ -234,7 +234,7 @@ function weekTodos(n){const P=plan(),w=P[n-1];const out=[];if(!w)return out;cons
  out.push({id:`W${n}-retro`,title:'회고 노트',type:'retro',auto:1,date:w.end});
  EV().filter(e=>e.type==='deadline'&&e.start>=w.start&&e.start<=w.end).forEach(e=>out.push({id:`W${n}-dl-${e.id}`,title:e.name,type:'deadline',date:e.start,auto:1}));
  const res=out.map(a=>{const s=db.todos.find(t=>t.id===a.id)||{};const r={...a,...s};
-  if(r.done==null){if(a.type==='session')r.done=L.length>=a.slot;else if(a.type==='video')r.done=L.some(hasVals);else if(a.type==='retro'){const nt=db.notes.find(x=>x.id===`W${n}`);r.done=!!(nt&&(nt.good||nt.hard||nt.next))}else r.done=false}return r}).filter(t=>!t.hidden);
+  if(r.done==null){if(a.type==='session')r.done=L.some(l=>l.todoId===a.id||(l.date===r.date&&!l.todoId));else if(a.type==='video')r.done=L.some(hasVals);else if(a.type==='retro'){const nt=db.notes.find(x=>x.id===`W${n}`);r.done=!!(nt&&(nt.good||nt.hard||nt.next))}else r.done=false}return r}).filter(t=>!t.hidden);
  db.todos.filter(t=>t.custom&&(t.week||(t.date?wkOf(t.date):0))===n).forEach(t=>res.push(t));
  const rk={deadline:0,session:1,video:2,retro:3};return res.map((x,i)=>({x,i})).sort((a,b)=>((a.x.date||'9')<(b.x.date||'9')?-1:(a.x.date||'9')>(b.x.date||'9')?1:((rk[a.x.type]??2)-(rk[b.x.type]??2))||a.i-b.i)).map(o=>o.x)}
 const dayTodos=d=>{const n=wkOf(d);return [n,n-1,n+1].flatMap(k=>weekTodos(k)).filter(x=>x.date===d)};
